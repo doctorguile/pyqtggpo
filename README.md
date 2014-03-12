@@ -5,14 +5,13 @@ This is a cross platform (Linux,  MacOSX, Windows) GUI client for
 [GGPO.net](http://ggpo.net/) written in python using the
 [pyqt4](http://www.riverbankcomputing.com/software/pyqt/download) framework.
 
-&copy;2014 papasi<br />
-GPL v2 License 
+&copy;2014 papasi GPL v2 License
 
 ## Features
-Support dark theme to reduce eye strain
-Autocomplete in chat
-More accurate GeoIP info
-Simple emoticons support
+- Support dark theme to reduce eye strain
+- Autocomplete in chat
+- More accurate GeoIP info
+- Simple emoticons support
 
 ## Installation
 Click the [Download ZIP](https://github.com/doctorguile/pyqtggpo/archive/master.zip) button at right and extract it to a folder.
@@ -69,12 +68,12 @@ Execute ```python main.py```
 
 Login with your ggpo credential
 
-Go to `Settings` => `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
+Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
 
 If you have GeoIP2 module installed, download
 [GeoLite2-Country.mmdb.gz](http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz)
-and extract GeoLite2-Country.mmdb to a folder.
-Go to `Settings` => `Locate GeoIP mmdb` and select the GeoLite2-Country.mmdb file you extracted.
+and extract GeoLite2-Country.mmdb to a folder.<br/>
+Go to `Settings` > `Locate GeoIP mmdb` and select the GeoLite2-Country.mmdb file.
 This will allow you to see the missing geoip info from the official ggpo client.
 
 ## Credits
