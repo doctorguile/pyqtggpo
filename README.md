@@ -49,6 +49,17 @@ Optional (for playing the challenger sound and better geo location support of pl
 
 3. Run Wine at least once (OSX will ask if you want to run this application downloaded from internet)
 
+4. Install pyqt4
+
+Easiest method with [Homebrew](http://brew.sh/)
+
+    ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+    brew install qt
+    brew install sip
+    brew install pyqt
+    sudo easy_install pip
+    pip install geoip2
+
 ### Windows
 Determine if your windows is 64 or 32-bit. 
 
