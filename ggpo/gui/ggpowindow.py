@@ -125,6 +125,7 @@ class GGPOWindow(QtGui.QMainWindow):
                                                   "ggpofba.exe (ggpofba.exe)")
         if fname:
             Settings.setValue(Settings.GGPOFBA_LOCATION, fname)
+            self.controller.checkInstallation()
 
     def locateGeoMMDB(self):
         fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate Geo mmdb file', os.path.expanduser("~"),

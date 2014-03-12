@@ -536,7 +536,7 @@ class Controller(QtCore.QObject):
             call(args, stdout=devnull, stderr=devnull)
             devnull.close()
         except OSError:
-            logger().error("Cannot execute FBA %s %s quark %s" % (wine, self.fba, quark))
+            logger().error("Cannot execute Wine %s FBA %s quark %s" % (wine, self.fba, quark))
 
     def saveIgnored(self):
         Settings.setPythonValue(Settings.IGNORED, self.ignored)
@@ -549,6 +549,10 @@ class Controller(QtCore.QObject):
                 inputs.append(self.udpSock)
             if self.tcpConnected:
                 inputs.append(self.tcpSock)
+            # windows doesn't allow select on 3 empty set
+            if not inputs:
+                time.sleep(1)
+                continue
             inputready, outputready, exceptready = select.select(inputs, [], [], self.selectTimeout)
             if not inputready:
                 self.sendPingQueries()
