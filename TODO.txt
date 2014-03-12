@@ -1,5 +1,4 @@
 package exe and dmg
-sh script for linux
 figure out how to apply ggpofba.ini
 
 check new version available

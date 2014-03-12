@@ -8,15 +8,11 @@ This is a cross platform (Linux,  MacOSX, Windows) GUI client for
 &copy;2014 papasi<br />
 GPL v2 License 
 
-## Credits
-Tony Cannon (Ponder) Tom Cannon (ProtomCannon)<br />
-For the original [ggpo client](http://ggpo.net), innovative p2p
-protocol and hosting the service for free
-
-Pau Oliva Fora (@pof)<br />
-For the amazing job of reverse engineering the client protocol
-and the [CLI client](http://poliva.github.io/ggpo/) that provides
-most of the ground work for this GUI port, as well as the wine installation instructions.
+## Features
+Support dark theme to reduce eye strain
+Autocomplete in chat
+More accurate GeoIP info
+Simple emoticons support
 
 ## Installation
 Click the [Download ZIP](https://github.com/doctorguile/pyqtggpo/archive/master.zip) button at right and extract it to a folder.
@@ -75,6 +71,23 @@ Login with your ggpo credential
 
 Go to `Settings` => `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
 
+If you have GeoIP2 module installed, download
+[GeoLite2-Country.mmdb.gz](http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz)
+and extract GeoLite2-Country.mmdb to a folder.
+Go to `Settings` => `Locate GeoIP mmdb` and select the GeoLite2-Country.mmdb file you extracted.
+This will allow you to see the missing geoip info from the official ggpo client.
+
+## Credits
+Tony Cannon (Ponder) Tom Cannon (ProtomCannon)<br />
+For the original [ggpo client](http://ggpo.net), innovative p2p
+protocol and hosting the service for free
+
+Pau Oliva Fora (@pof)<br />
+For the amazing job of reverse engineering the client protocol
+and the [CLI client](http://poliva.github.io/ggpo/) that provides
+most of the ground work for this GUI port, as well as the wine installation instructions.
+
 ## Screenshots
 ![alt text](http://i.imgur.com/E80zA9t.png "ggpo screenshot 0")
 ![alt text](http://i.imgur.com/ofh4mwQ.png "ggpo screenshot 1")
+
