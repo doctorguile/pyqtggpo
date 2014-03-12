@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>810</width>
+    <height>708</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GGPO</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>assets/icon-128.png</normaloff>assets/icon-128.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <property name="leftMargin">
+     <number>3</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>3</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QSplitter" name="uiSplitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QListWidget" name="uiChannelsList"/>
+      <widget class="QWidget" name="layoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="bottomMargin">
+         <number>3</number>
+        </property>
+        <item>
+         <widget class="QTextBrowser" name="uiChatHistoryTxtB">
+          <property name="acceptDrops">
+           <bool>false</bool>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="CompletionLineEdit" name="uiChatInputEdit"/>
+          </item>
+          <item>
+           <widget class="QToolButton" name="uiEmoticonTbtn">
+            <property name="text">
+             <string>:)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="uiAfkChk">
+            <property name="text">
+             <string>away</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QTableView" name="uiPlayersTableV"/>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>810</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuAction">
+    <property name="title">
+     <string>&amp;Action</string>
+    </property>
+    <addaction name="uiClearChatHistoryAct"/>
+    <addaction name="uiAwayAct"/>
+    <addaction name="uiEmoticonAct"/>
+    <addaction name="uiQuitAct"/>
+   </widget>
+   <widget class="QMenu" name="menuSetting">
+    <property name="title">
+     <string>S&amp;etting</string>
+    </property>
+    <addaction name="uiMuteChallengeSoundAct"/>
+    <addaction name="uiFontAct"/>
+    <addaction name="uiDarkThemeAct"/>
+    <addaction name="separator"/>
+    <addaction name="uiLocateGgpofbaAct"/>
+    <addaction name="uiLocateWineAct"/>
+    <addaction name="uiLocateGeommdbAct"/>
+    <addaction name="separator"/>
+    <addaction name="uiDebugLogAct"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="uiSRKForumAct"/>
+    <addaction name="uiSRKWikiAct"/>
+    <addaction name="uiJPWikiAct"/>
+    <addaction name="separator"/>
+    <addaction name="uiStrevivalAct"/>
+    <addaction name="uiHitboxViewerAct"/>
+    <addaction name="uiSafejumpGuideAct"/>
+    <addaction name="uiMatchVideosAct"/>
+    <addaction name="separator"/>
+    <addaction name="uiAboutAct"/>
+   </widget>
+   <addaction name="menuAction"/>
+   <addaction name="menuSetting"/>
+   <addaction name="menuAbout"/>
+  </widget>
+  <widget class="QStatusBar" name="uiStatusbar"/>
+  <action name="uiClearChatHistoryAct">
+   <property name="text">
+    <string>&amp;Clear chat history</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="uiAwayAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>A&amp;way from keyboard</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="uiQuitAct">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="uiMuteChallengeSoundAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Mute Challenge Sound</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
+  </action>
+  <action name="uiFontAct">
+   <property name="text">
+    <string>&amp;Font</string>
+   </property>
+  </action>
+  <action name="uiAboutAct">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="uiStrevivalAct">
+   <property name="text">
+    <string>Strategy &amp;&amp; &amp;News</string>
+   </property>
+  </action>
+  <action name="uiHitboxViewerAct">
+   <property name="text">
+    <string>Hitbox &amp;Viewer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
+  </action>
+  <action name="uiSafejumpGuideAct">
+   <property name="text">
+    <string>&amp;Safejump Guide</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+J</string>
+   </property>
+  </action>
+  <action name="uiMatchVideosAct">
+   <property name="text">
+    <string>&amp;Match Videos</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="uiSRKForumAct">
+   <property name="text">
+    <string>Shoryuken &amp;Forum</string>
+   </property>
+  </action>
+  <action name="uiSRKWikiAct">
+   <property name="text">
+    <string>Wiki (English)</string>
+   </property>
+  </action>
+  <action name="uiJPWikiAct">
+   <property name="text">
+    <string>Wiki (Japanese)</string>
+   </property>
+  </action>
+  <action name="uiDarkThemeAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Dark Theme</string>
+   </property>
+  </action>
+  <action name="uiDebugLogAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Debug Log</string>
+   </property>
+  </action>
+  <action name="uiEmoticonAct">
+   <property name="text">
+    <string>&amp;Insert Emoticon</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="uiLocateGgpofbaAct">
+   <property name="text">
+    <string>&amp;Locate ggpofba.exe</string>
+   </property>
+  </action>
+  <action name="uiLocateWineAct">
+   <property name="text">
+    <string>Locate &amp;Wine</string>
+   </property>
+  </action>
+  <action name="uiLocateGeommdbAct">
+   <property name="text">
+    <string>Locate &amp;Geo mmdb</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CompletionLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>ggpo/gui/completionlineedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>uiQuitAct</sender>
+   <signal>activated()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>353</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>uiClearChatHistoryAct</sender>
+   <signal>activated()</signal>
+   <receiver>uiChatHistoryTxtB</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>337</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>uiAwayAct</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>uiAfkChk</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>500</x>
+     <y>660</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>uiAfkChk</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>uiAwayAct</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>500</x>
+     <y>660</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
