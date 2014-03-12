@@ -139,6 +139,10 @@ def openURL(url):
     QtGui.QDesktopServices.openUrl(QtCore.QUrl(url))
 
 
+def packagePathJoin(*args):
+    return os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, *args))
+
+
 def replaceURLs(text):
     return re.sub(r'(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)',
                   r'<a href="\1">\1</a>', text)

@@ -46,8 +46,9 @@ class GGPOWindow(QtGui.QMainWindow):
         self.uiDebugLogAct.triggered.connect(self.__class__.debuglogTriggered)
         self.uiFontAct.triggered.connect(self.changeFont)
         self.uiAboutAct.triggered.connect(self.aboutDialog)
-        self.uiAfkChk.stateChanged.connect(self.toggleAFK)
+        self.uiAwayAct.triggered.connect(self.toggleAFK)
         self.uiMuteChallengeSoundAct.toggled.connect(self.__class__.toggleSound)
+        self.uiNotifyPlayerStateChangeAct.toggled.connect(self.__class__.toggleNotifyPlayerStateChange)
         self.uiSRKForumAct.triggered.connect(
             lambda: openURL('http://forums.shoryuken.com/categories/super-street-fighter-ii-turbo'))
         self.uiSRKWikiAct.triggered.connect(lambda: openURL('http://wiki.shoryuken.com/Super_Street_Fighter_2_Turbo'))
@@ -200,13 +201,13 @@ class GGPOWindow(QtGui.QMainWindow):
         self.uiChatHistoryTxtB.setHtml(replaceURLs(msg) + '<br>')
 
     def onPlayerStateChange(self, name, state):
-        if state == PlayerStates.QUIT:
-            self.notifyStateChange(name + " left")
-        elif state == PlayerStates.AVAILABLE:
-            self.notifyStateChange(name + " becomes available")
-        # elif state == PlayerStates.AFK:
-        elif state == PlayerStates.PLAYING:
-            self.notifyStateChange(name + " is in a game")
+        if Settings.value(Settings.NOTIFY_PLAYER_STATE_CHANGE):
+            if state == PlayerStates.QUIT:
+                self.notifyStateChange(name + " left")
+            elif state == PlayerStates.AVAILABLE:
+                self.notifyStateChange(name + " becomes available")
+            elif state == PlayerStates.PLAYING:
+                self.notifyStateChange(name + " is in a game")
         self.updateStatusBar()
 
     def onStatusMessage(self, msg):
@@ -215,6 +216,10 @@ class GGPOWindow(QtGui.QMainWindow):
     def restorePreference(self):
         if Settings.value(Settings.COLORTHEME):
             self.uiDarkThemeAct.setChecked(True)
+        if Settings.value(Settings.MUTE_CHALLENGE_SOUND):
+            self.uiMuteChallengeSoundAct.setChecked(True)
+        if Settings.value(Settings.NOTIFY_PLAYER_STATE_CHANGE):
+            self.uiNotifyPlayerStateChangeAct.setChecked(True)
         fontsetting = Settings.pythonValue(Settings.CHAT_HISTORY_FONT)
         if fontsetting:
             self.uiChatHistoryTxtB.setFont(QtGui.QFont(*fontsetting))
@@ -334,12 +339,11 @@ class GGPOWindow(QtGui.QMainWindow):
         self.uiSplitter.setSizes(sizes)
 
     def toggleAFK(self, state):
-        if state == Qt.Checked:
-            afk = True
-        else:
-            afk = False
-        self.controller.sendToggleAFK(afk)
-        Settings.setBoolean(Settings.AFK, afk)
+        self.controller.sendToggleAFK(state)
+
+    @staticmethod
+    def toggleNotifyPlayerStateChange(state):
+        Settings.setBoolean(Settings.NOTIFY_PLAYER_STATE_CHANGE, state)
 
     @staticmethod
     def toggleSound(state):
@@ -347,7 +351,3 @@ class GGPOWindow(QtGui.QMainWindow):
 
     def updateStatusBar(self):
         self.uiStatusbar.showMessage(self.controller.statusBarMessage())
-
-
-
-

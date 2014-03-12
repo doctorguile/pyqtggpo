@@ -134,6 +134,8 @@ class PlayerModel(QtCore.QAbstractTableModel):
         if role == Qt.DecorationRole and Qt_Orientation == Qt.Horizontal:
             if section == PlayerModel.IGNORE:
                 return QtGui.QIcon(':/assets/face-ignore.png')
+            elif section == PlayerModel.ACCEPT_CHALLENGE:
+                return QtGui.QIcon(':/images/swords.png')
 
     def onCellClicked(self, index):
         col = index.column()

@@ -6,12 +6,12 @@ from PyQt4.QtCore import QSettings
 # noinspection PyClassHasNoInit
 class Settings:
     # list of saved setting for autocomplete and avoid typos
-    AFK = 'AFK'
     IGNORED = 'ignored'
     SELECTED_CHANNEL = 'channel'
     USERNAME = 'username'
     PASSWORD = 'password'
     MUTE_CHALLENGE_SOUND = 'mute'
+    NOTIFY_PLAYER_STATE_CHANGE = 'notifyPlayerStateChange'
     WINDOW_GEOMETRY = 'mainWindowGeometry'
     WINDOW_STATE = 'mainWindowState'
     SPLITTER_STATE = 'splitterState'

@@ -37,8 +37,6 @@ def main(argv=None):
         window.setController(controller)
         window.restorePreference()
         controller.sendListChannels()
-        if Settings.value(Settings.AFK):
-            window.uiAwayAct.setChecked(True)
         window.show()
 
     logindialog = LoginDialog()

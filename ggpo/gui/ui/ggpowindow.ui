@@ -113,6 +113,7 @@
     <addaction name="uiLocateWineAct"/>
     <addaction name="uiLocateGeommdbAct"/>
     <addaction name="separator"/>
+    <addaction name="uiNotifyPlayerStateChangeAct"/>
     <addaction name="uiDebugLogAct"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
@@ -263,7 +264,15 @@
   </action>
   <action name="uiLocateGeommdbAct">
    <property name="text">
-    <string>Locate &amp;Geo mmdb</string>
+    <string>Locate &amp;GeoIP mmdb</string>
+   </property>
+  </action>
+  <action name="uiNotifyPlayerStateChangeAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Notify Player State Change</string>
    </property>
   </action>
  </widget>
@@ -326,9 +335,9 @@
   </connection>
   <connection>
    <sender>uiAfkChk</sender>
-   <signal>clicked(bool)</signal>
+   <signal>clicked()</signal>
    <receiver>uiAwayAct</receiver>
-   <slot>setChecked(bool)</slot>
+   <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>500</x>

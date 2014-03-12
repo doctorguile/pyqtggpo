@@ -10,7 +10,7 @@ from ggpo.gui.colortheme import ColorTheme
 from ggpo.common.protocol import Protocol
 from ggpo.common.playerstate import PlayerStates
 from ggpo.common.player import Player
-from ggpo.common.util import geolookup, isUnknownCountryCode, isWindows, findWine, logger
+from ggpo.common.util import geolookup, isUnknownCountryCode, isWindows, findWine, logger, isLinux, packagePathJoin
 from ggpo.common.settings import Settings
 from PyQt4 import QtCore
 
@@ -523,14 +523,17 @@ class Controller(QtCore.QObject):
             logger().error("Cannot execute FBA %s quark %s" % (self.fba, quark))
             return
         wine = ''
-        if not isWindows():
+        if isWindows():
+            args = [self.fba, quark]
+        else:
             wine = findWine()
             if not wine:
                 logger().error("Wine not installed")
                 return
-            args = [wine, self.fba, quark]
-        else:
-            args = [self.fba, quark]
+            if isLinux():
+                args = [packagePathJoin('scripts', 'ggpofba.sh'), wine, self.fba, quark]
+            else:
+                args = [wine, self.fba, quark]
         try:
             devnull = open(os.devnull, 'w')
             call(args, stdout=devnull, stderr=devnull)
