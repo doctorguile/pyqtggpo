@@ -58,7 +58,7 @@ Determine if your windows is 64 or 32-bit.
 ## Usage
 [Register a ggpo account](http://ggpo.net/forums/ucp.php?mode=register) if needed
 
-Execute ```main.py```
+Execute ```python main.py```
 
 Login with your ggpo credential
 

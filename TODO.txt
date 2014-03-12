@@ -1,7 +1,8 @@
 package exe and dmg
-check new version available
 sh script for linux
+figure out how to apply ggpofba.ini
 
+check new version available
 extract mp3 from resources?
 custom emoticons?
 how to set input lag?
