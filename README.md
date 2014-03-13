@@ -14,9 +14,10 @@ This is a cross platform (Linux,  MacOSX, Windows) GUI client for
 - Simple emoticons support
 
 ## Installation
-Click the [Download ZIP](https://github.com/doctorguile/pyqtggpo/archive/master.zip) button at right and extract it to a folder.
+Download pyqtggpo [zip](https://github.com/doctorguile/pyqtggpo/archive/master.zip) or [tarball](https://github.com/doctorguile/pyqtggpo/tarball/master) and extract it to a folder.
 
 Download and extract the official [ggpo-build-030.zip](http://ggpo.net/ggpo-build-030.zip) GGPO client to another folder.
+
 
 ### Linux
 1. Make sure you have [wine](http://www.winehq.org/) and
@@ -89,4 +90,3 @@ most of the ground work for this GUI port, as well as the wine installation inst
 ## Screenshots
 ![alt text](http://i.imgur.com/E80zA9t.png "ggpo screenshot 0")
 ![alt text](http://i.imgur.com/ofh4mwQ.png "ggpo screenshot 1")
-
