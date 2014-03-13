@@ -4,6 +4,7 @@ import socket
 import time
 import struct
 import select
+import errno
 from random import randint
 from subprocess import Popen
 from ggpo.gui.colortheme import ColorTheme
@@ -556,7 +557,12 @@ class Controller(QtCore.QObject):
             if not inputs:
                 time.sleep(1)
                 continue
-            inputready, outputready, exceptready = select.select(inputs, [], [], self.selectTimeout)
+            # http://stackoverflow.com/questions/13414029/catch-interrupted-system-call-in-threading
+            try:
+                inputready, outputready, exceptready = select.select(inputs, [], [], self.selectTimeout)
+            except select.error, ex:
+                if ex[0] != errno.EINTR:
+                    raise
             if not inputready:
                 self.sendPingQueries()
             else:
