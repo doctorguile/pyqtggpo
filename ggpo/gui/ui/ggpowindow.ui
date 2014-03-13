@@ -99,6 +99,8 @@
     <addaction name="uiClearChatHistoryAct"/>
     <addaction name="uiAwayAct"/>
     <addaction name="uiEmoticonAct"/>
+    <addaction name="uiFocusOnChatAct"/>
+    <addaction name="separator"/>
     <addaction name="uiQuitAct"/>
    </widget>
    <widget class="QMenu" name="menuSetting">
@@ -201,16 +203,10 @@
    <property name="text">
     <string>&amp;Safejump Guide</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+J</string>
-   </property>
   </action>
   <action name="uiMatchVideosAct">
    <property name="text">
     <string>&amp;Match Videos</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="uiSRKForumAct">
@@ -241,7 +237,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Debug Log</string>
+    <string>Debug &amp;Log</string>
    </property>
   </action>
   <action name="uiEmoticonAct">
@@ -273,6 +269,14 @@
    </property>
    <property name="text">
     <string>&amp;Notify Player State Change</string>
+   </property>
+  </action>
+  <action name="uiFocusOnChatAct">
+   <property name="text">
+    <string>&amp;Focus on chat</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+J</string>
    </property>
   </action>
  </widget>
@@ -346,6 +350,22 @@
     <hint type="destinationlabel">
      <x>-1</x>
      <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>uiFocusOnChatAct</sender>
+   <signal>activated()</signal>
+   <receiver>uiChatInputEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>355</x>
+     <y>668</y>
     </hint>
    </hints>
   </connection>
