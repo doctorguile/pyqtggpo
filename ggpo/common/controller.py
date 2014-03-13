@@ -557,6 +557,7 @@ class Controller(QtCore.QObject):
             if not inputs:
                 time.sleep(1)
                 continue
+            inputready, outputready, exceptready = None, None, None
             # http://stackoverflow.com/questions/13414029/catch-interrupted-system-call-in-threading
             try:
                 inputready, outputready, exceptready = select.select(inputs, [], [], self.selectTimeout)
@@ -568,6 +569,7 @@ class Controller(QtCore.QObject):
             else:
                 for stream in inputready:
                     if stream == self.tcpSock:
+                        data = None
                         # noinspection PyBroadException
                         try:
                             data = stream.recv(8192)
@@ -585,6 +587,7 @@ class Controller(QtCore.QObject):
                             self.selectLoopRunning = False
                             self.sigServerDisconnected.emit()
                     elif stream == self.udpSock:
+                        dgram = None
                         # on windows xp
                         # Python exception: error: [Errno 10054]
                         # An existing connection was forcibly closed by the remote host
@@ -593,8 +596,9 @@ class Controller(QtCore.QObject):
                             dgram, addr = self.udpSock.recvfrom(64)
                         except:
                             pass
-                        logger().info("UDP " + repr(dgram) + " from " + repr(addr))
-                        self.handleUdpResponse(dgram, addr)
+                        if dgram:
+                            logger().info("UDP " + repr(dgram) + " from " + repr(addr))
+                            self.handleUdpResponse(dgram, addr)
 
     def sendAcceptChallenge(self, name):
         if name in list(self.challengers):
