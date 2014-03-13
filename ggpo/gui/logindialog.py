@@ -2,7 +2,7 @@
 from PyQt4 import QtGui
 import base64
 import ggpo.gui
-from ggpo.common.util import openURL
+from ggpo.common.util import openURL, checkUpdate
 from ggpo.common import copyright
 from ggpo.common.settings import Settings
 
@@ -11,7 +11,10 @@ class LoginDialog(QtGui.QDialog):
     def __init__(self, parent=None):
         super(LoginDialog, self).__init__(parent)
         ggpo.gui.loadUi(__file__, self)
-        self.uiVersionLbl.setText(copyright.__version__)
+        versionLabel = 'v' + copyright.versionString()
+        if checkUpdate():
+            versionLabel += ' (Updates available) http://github.com/doctorguile/pyqtggpo'
+        self.uiVersionLbl.setText(versionLabel)
         self.controller = None
         if Settings.value(Settings.SAVE_USERNAME_PASSWORD):
             self.uiSavePasswordChk.setChecked(True)

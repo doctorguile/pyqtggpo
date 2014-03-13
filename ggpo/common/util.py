@@ -8,19 +8,16 @@ import logging
 import logging.handlers
 from PyQt4 import QtGui, QtCore
 from ggpo.common.settings import Settings
+from ggpo.common import copyright
 
 
-def checkUpdate(self):
-    VERSION = 1
-    versionurl = ''
-    downloadurl = ''
+def checkUpdate():
+    versionurl = 'https://raw.github.com/doctorguile/pyqtggpo/master/VERSION'
     #noinspection PyBroadException
     try:
-        response = urllib2.urlopen(versionurl)
-        latestVersion = response.read().strip()
-        if latestVersion != VERSION:
-            self.sigNewVersionAvailable.emit(latestVersion, downloadurl)
-            logger().info("New version " + latestVersion + " available at " + downloadurl)
+        response = urllib2.urlopen(versionurl, timeout=2)
+        latestVersion = int(response.read().strip())
+        return latestVersion > copyright.__version__
     except:
         pass
 

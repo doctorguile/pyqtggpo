@@ -15,9 +15,11 @@ __license__ = 'GPL'
 
 # define version information
 __requires__ = ['PyQt4']
-__version_info__ = (0, 0, 1)
-__version__ = 'v%i.%02i.%02i' % __version_info__
-__revision__ = __version__
+__version__ = 1
+
+
+def versionString():
+    return str(__version__/100.0)
 
 
 def about():
@@ -26,5 +28,5 @@ def about():
         extra += author + '\n' + url + "\n"
     return __copyright__ + ' ' + __author__ + "\n" + \
            'License: ' + __license__ + "\n" + \
-           'Version: ' + __version__ + "\n" + \
+           'Version: ' + versionString() + "\n" + \
            'Credits: ' + "\n" + extra
