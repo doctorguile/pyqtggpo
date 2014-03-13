@@ -75,6 +75,7 @@ class Controller(QtCore.QObject):
         self.ignored = Settings.pythonValue(Settings.IGNORED)
         if not self.ignored:
             self.ignored = set()
+        self.sigStatusMessage.connect(logger().info)
 
     def addIgnore(self, player):
         self.ignored.add(player)
@@ -105,7 +106,6 @@ class Controller(QtCore.QObject):
                 self.mp3 = mp3
         wine = findWine()
         if self.fba and wine:
-            logger().info('ggpo installation found')
             return True
         else:
             msg = ''
@@ -113,19 +113,16 @@ class Controller(QtCore.QObject):
                 msg += "ggpo installation not found\n"
             if not wine:
                 msg += "wine installation not found\n"
-            logger().error(msg)
             self.sigStatusMessage.emit(msg)
             return False
 
     def checkRom(self):
         if self.channel and self.channel != "lobby":
-            filename = self.rom + ".zip"
-            rom = self.ggpoPathJoin("ROMs", filename)
+            rom = self.ggpoPathJoin("ROMs", "{}.zip".format(self.rom))
             if os.path.isfile(rom):
                 return True
             else:
-                logger().info(rom + ' not found')
-                self.sigStatusMessage.emit(rom + ' not found. Required to play or spectate')
+                self.sigStatusMessage.emit('{} not found. Required to play or spectate'.format(rom))
         return False
 
     def connectTcp(self):
@@ -138,7 +135,7 @@ class Controller(QtCore.QObject):
             self.tcpSock.connect(('ggpo.net', 7000,))
             self.tcpConnected = True
         except Exception:
-            logger().error("Cannot connect to GGPO server")
+            self.sigStatusMessage.emit("Cannot connect to GGPO server")
             self.sigServerDisconnected.emit()
         return self.tcpConnected
 
@@ -151,9 +148,7 @@ class Controller(QtCore.QObject):
             self.udpSock.bind(('0.0.0.0', 6009,))
             self.udpConnected = True
         except socket.error:
-            msg = "Cannot bind to port udp/6009"
-            logger().error(msg)
-            self.sigStatusMessage.emit(msg)
+            self.sigStatusMessage.emit("Cannot bind to port udp/6009")
         return self.udpConnected
 
     def dispatch(self, seq, data):
@@ -179,7 +174,7 @@ class Controller(QtCore.QObject):
 
     def dispatchInbandData(self, seq, data):
         if not seq in self.tcpCommandsWaitingForResponse:
-            logger().error("We did not send this sequence to server " + str(seq) + " data " + repr(data))
+            logger().error("Sequence {} data {} not matched".format(seq, data))
             return
 
         origRequest = self.tcpCommandsWaitingForResponse[seq]
@@ -210,7 +205,7 @@ class Controller(QtCore.QObject):
                 logger().error("Unknown response for {}; seq {}; data {}".format(
                     Protocol.codeToString(origRequest), seq, repr(data)))
         else:
-            logger().info("Not handling {} response; seq {}; data {}".format(
+            logger().error("Not handling {} response; seq {}; data {}".format(
                 Protocol.codeToString(origRequest), seq, repr(data)))
 
     @staticmethod
@@ -222,7 +217,7 @@ class Controller(QtCore.QObject):
                 p2 = ''
                 return PlayerStates.QUIT, p1, p2, None, data
             elif code != 1:
-                logger().info("Unknown player state change code " + str(code))
+                logger().error("Unknown player state change code {}".format(code))
             state, data = Protocol.extractInt(data)
             p2, data = Protocol.extractTLV(data)
             if not p2:
@@ -308,10 +303,9 @@ class Controller(QtCore.QObject):
 
     def parseAuthResponse(self, data):
         if len(data) < 4:
-            logger().error("Unknown auth response " + repr(data))
+            logger().error("Unknown auth response {}".format(repr(data)))
             return
         result, data = Protocol.extractInt(data)
-        logger().info("Password response " + repr(result))
         if result == 0:
             self.selectTimeout = 15
             self.sigLoginSuccess.emit()
@@ -325,7 +319,7 @@ class Controller(QtCore.QObject):
                 self.udpSock.close()
                 self.udpConnected = False
             self.sigLoginFailed.emit()
-            logger().error("Login failed " + repr(result))
+            self.sigStatusMessage.emit("Login failed {}".format(result))
 
     def parseChallengeCancelledResponse(self, data):
         name, data = Protocol.extractTLV(data)
@@ -392,7 +386,7 @@ class Controller(QtCore.QObject):
             self.channels[room] = channel
         self.sigChannelsLoaded.emit()
         if len(data) > 0:
-            logger().info('Channel REMAINING DATA ' + str(len(data)) + ' - ' + data)
+            logger().error('Channel REMAINING DATA len {} {}'.format(len(data), repr(data)))
 
     def parseListUsersResponse(self, data):
         self.resetPlayers()
@@ -432,7 +426,7 @@ class Controller(QtCore.QObject):
                 self.playing[p1] = p2
         self.sigPlayersLoaded.emit()
         if len(data) > 0:
-            logger().info('List users - REMAINING DATA ' + str(len(data)) + ' - ' + repr(data))
+            logger().error('List users - REMAINING DATA len {} {}'.format(len(data), repr(data)))
 
     def parseMotdResponse(self, data):
         if not data:
@@ -497,7 +491,7 @@ class Controller(QtCore.QObject):
                 self.parsePlayerLeftResponse(p1)
             else:
                 logger().error(
-                    "Unknown state change payload state: (" + str(state) + ") " + repr(data))
+                    "Unknown state change payload state: {} {}".format(state, repr(data)))
             if state == PlayerStates.PLAYING:
                 msg = p1 + ' ' + PlayerStates.codeToString(state) + ' ' + p2
             else:
@@ -505,7 +499,7 @@ class Controller(QtCore.QObject):
             logger().info(msg)
             count -= 1
         if len(data) > 0:
-            logger().info("stateChangesResponse, remaining data " + repr(data))
+            logger().error("stateChangesResponse, remaining data {}".format(repr(data)))
 
     def removeIgnore(self, player):
         if player in self.ignored:
@@ -519,16 +513,19 @@ class Controller(QtCore.QObject):
         self.awayfromkb = {}
 
     def runFBA(self, quark):
-        if not self.fba or not self.checkRom():
-            logger().error("Cannot execute FBA %s quark %s" % (self.fba, quark))
+        if not self.checkRom():
+            return
+        if not self.fba:
+            self.sigStatusMessage.emit("Please configure Setting > Locate ggpofba.exe")
             return
         wine = ''
+        args = []
         if isWindows():
-            args = [self.fba, quark]
+            args = [self.fba, quark, '-w']
         else:
             wine = findWine()
             if not wine:
-                logger().error("Wine not installed")
+                self.sigStatusMessage.emit("Please configure Setting > Locate wine")
                 return
             if isLinux():
                 args = [packagePathJoin('scripts', 'ggpofba.sh'), wine, self.fba, quark]
@@ -539,7 +536,7 @@ class Controller(QtCore.QObject):
             call(args, stdout=devnull, stderr=devnull)
             devnull.close()
         except OSError:
-            logger().error("Cannot execute Wine %s FBA %s quark %s" % (wine, self.fba, quark))
+            self.sigStatusMessage.emit("Error executing " + " ".join(args))
 
     def saveIgnored(self):
         Settings.setPythonValue(Settings.IGNORED, self.ignored)
@@ -619,9 +616,8 @@ class Controller(QtCore.QObject):
             if channel in self.channels:
                 if channel != 'lobby':
                     self.rom = self.channels[channel]['rom']
-                    logger().info('changing rom to ' + self.rom)
             else:
-                logger().info('cannot change rom to ' + self.rom)
+                logger().error("Invalid channel {}".format(channel))
         self.sendAndRemember(Protocol.JOIN_CHANNEL, Protocol.packTLV(self.channel))
 
     def sendListChannels(self):
@@ -635,7 +631,6 @@ class Controller(QtCore.QObject):
 
     def sendPingQueries(self):
         if self.udpConnected:
-            logger().info('Updating pings')
             for name in self.available.keys() + self.awayfromkb.keys() + self.playing.keys():
                 p = self.players[name]
                 self.sendPingQuery(p)
