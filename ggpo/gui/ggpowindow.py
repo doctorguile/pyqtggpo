@@ -281,11 +281,8 @@ class GGPOWindow(QtGui.QMainWindow):
 
                 def play():
                     if not Settings.value(Settings.MUTE_CHALLENGE_SOUND):
-                        print 'playing sound'
+                        mediaObject.seek(0)
                         mediaObject.play()
-                    else:
-                        print 'not playing sound'
-
                 self.playChallengeSound = play
         except ImportError:
             pass
