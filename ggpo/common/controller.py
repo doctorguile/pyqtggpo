@@ -5,7 +5,7 @@ import time
 import struct
 import select
 from random import randint
-from subprocess import call
+from subprocess import Popen
 from ggpo.gui.colortheme import ColorTheme
 from ggpo.common.protocol import Protocol
 from ggpo.common.playerstate import PlayerStates
@@ -536,7 +536,7 @@ class Controller(QtCore.QObject):
                 args = [wine, self.fba, quark]
         try:
             devnull = open(os.devnull, 'w')
-            call(args, stdout=devnull, stderr=devnull)
+            Popen(args, stdout=devnull, stderr=devnull)
             devnull.close()
         except OSError:
             self.sigStatusMessage.emit("Error executing " + " ".join(args))
