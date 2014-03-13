@@ -14,7 +14,7 @@
    <string>GGPO</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="../../resources/ggpo.qrc">
     <normaloff>:/assets/icon-128.png</normaloff>:/assets/icon-128.png</iconset>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -140,14 +140,37 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="uiVersionLbl">
-       <property name="text">
-        <string>version</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QCommandLinkButton" name="uiNewVersionLink">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Updates Available...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="uiVersionLbl">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>version</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>

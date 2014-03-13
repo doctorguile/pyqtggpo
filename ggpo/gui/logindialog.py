@@ -11,9 +11,10 @@ class LoginDialog(QtGui.QDialog):
     def __init__(self, parent=None):
         super(LoginDialog, self).__init__(parent)
         ggpo.gui.loadUi(__file__, self)
+        self.uiNewVersionLink.clicked.connect(
+            lambda: openURL('http://github.com/doctorguile/pyqtggpo'))
+        self.uiNewVersionLink.setVisible(False)
         versionLabel = 'v' + copyright.versionString()
-        if checkUpdate():
-            versionLabel += ' (Updates available) http://github.com/doctorguile/pyqtggpo'
         self.uiVersionLbl.setText(versionLabel)
         self.controller = None
         if Settings.value(Settings.SAVE_USERNAME_PASSWORD):
@@ -30,6 +31,8 @@ class LoginDialog(QtGui.QDialog):
         self.uiLoginBtn.clicked.connect(self.login)
         self.uiRegisterLink.clicked.connect(
             lambda: openURL('http://ggpo.net/forums/ucp.php?mode=register'))
+        if checkUpdate():
+            self.uiNewVersionLink.setVisible(True)
 
     def displayErrorMessage(self, errmsg):
         self.uiErrorLbl.setText(errmsg)
