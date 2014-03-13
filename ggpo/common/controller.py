@@ -452,15 +452,15 @@ class Controller(QtCore.QObject):
         self.sigPlayerStateChange.emit(p1, PlayerStates.AVAILABLE)
 
     def parsePlayerLeftResponse(self, p1):
-        # print str(p1) + " has quit"
-        self.available.pop(p1, None)
-        self.awayfromkb.pop(p1, None)
-        self.playing.pop(p1, None)
-        if p1 in self.challengers:
-            del self.challenged[p1]
-        if p1 == self.challenged:
-            self.challenged = None
-        self.sigPlayerStateChange.emit(p1, PlayerStates.QUIT)
+        if p1:
+            self.available.pop(p1, None)
+            self.awayfromkb.pop(p1, None)
+            self.playing.pop(p1, None)
+            if p1 in self.challengers:
+                del self.challenged[p1]
+            if p1 == self.challenged:
+                self.challenged = None
+            self.sigPlayerStateChange.emit(p1, PlayerStates.QUIT)
 
     def parsePlayerStartGameResponse(self, p1, p2, playerinfo):
         self.addUser(**playerinfo)
@@ -472,6 +472,9 @@ class Controller(QtCore.QObject):
     def parseSpectateResponse(self, data):
         p1, data = Protocol.extractTLV(data)
         p2, data = Protocol.extractTLV(data)
+        # if the guy I challenged accepted, remove him as challenged
+        if self.challenged and self.challenged in [p1, p2] and self.username in [p1, p2]:
+            self.challenged = None
         # quark len(53) = 'quark:stream,ssf2t,challenge-07389-1393539605.46,7000'
         quark, data = Protocol.extractTLV(data)
         logger().info("Quark " + repr(quark))
@@ -579,9 +582,11 @@ class Controller(QtCore.QObject):
             self.challengers.remove(name)
 
     def sendAndForget(self, command, data=''):
+        logger().info('Sending {} seq {} {}'.format(Protocol.codeToString(command), self.sequence, repr(data)))
         self.sendtcp(struct.pack('!I', command) + data)
 
     def sendAndRemember(self, command, data=''):
+        logger().info('Sending {} seq {} {}'.format(Protocol.codeToString(command), self.sequence, repr(data)))
         self.tcpCommandsWaitingForResponse[self.sequence] = command
         self.sendtcp(struct.pack('!I', command) + data)
 
