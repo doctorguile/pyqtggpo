@@ -57,6 +57,7 @@ class Controller(QtCore.QObject):
         self.tcpCommandsWaitingForResponse = dict()
         self.udpSock = None
         self.udpConnected = False
+        self.selectLoopRunning = True
 
         self.username = ''
         self.channel = 'lobby'
@@ -290,7 +291,7 @@ class Controller(QtCore.QObject):
         secret = dgram[10:]
         remoteip, remoteport = addr
         if command == "GGPO PING":
-            self.udpSock.sendto("GGPO PONG {}".format(secret), addr)
+            self.sendudp("GGPO PONG {}".format(secret), addr)
             logger().info("send GGPO PONG {} to {}".format(secret, repr(addr)))
         if dgram[0:9] == "GGPO PONG":
             if secret in self.pinglist:
@@ -546,8 +547,7 @@ class Controller(QtCore.QObject):
         Settings.setPythonValue(Settings.IGNORED, self.ignored)
 
     def selectLoop(self):
-        running = True
-        while running:
+        while self.selectLoopRunning:
             inputs = []
             if self.udpConnected:
                 inputs.append(self.udpSock)
@@ -568,17 +568,31 @@ class Controller(QtCore.QObject):
             else:
                 for stream in inputready:
                     if stream == self.tcpSock:
-                        data = stream.recv(8192)
+                        # noinspection PyBroadException
+                        try:
+                            data = stream.recv(8192)
+                        except:
+                            self.tcpConnected = False
+                            self.selectLoopRunning = False
+                            self.sigServerDisconnected.emit()
+                            return
                         if data:
                             self.tcpData += data
                             self.handleTcpResponse()
                         else:
                             stream.close()
                             self.tcpConnected = False
+                            self.selectLoopRunning = False
                             self.sigServerDisconnected.emit()
-                            running = False
                     elif stream == self.udpSock:
-                        dgram, addr = self.udpSock.recvfrom(64)
+                        # on windows xp
+                        # Python exception: error: [Errno 10054]
+                        # An existing connection was forcibly closed by the remote host
+                        # noinspection PyBroadException
+                        try:
+                            dgram, addr = self.udpSock.recvfrom(64)
+                        except:
+                            pass
                         logger().info("UDP " + repr(dgram) + " from " + repr(addr))
                         self.handleUdpResponse(dgram, addr)
 
@@ -658,7 +672,7 @@ class Controller(QtCore.QObject):
         secret = str(num1) + " " + str(num2)
         message = "GGPO PING " + secret
         logger().info("send GGPO PING {} to {}".format(secret, repr(player.ip)))
-        self.udpSock.sendto(message, (player.ip, player.port))
+        self.sendudp(message, (player.ip, player.port, ))
         self.pinglist[secret] = (player.ip, player.player, time.time())
 
     def sendSpectateRequest(self, name):
@@ -677,8 +691,21 @@ class Controller(QtCore.QObject):
     def sendtcp(self, msg):
         # length of whole packet = length of sequence + length of msg
         payloadLen = 4 + len(msg)
-        self.tcpSock.send(struct.pack('!II', payloadLen, self.sequence) + msg)
+        # noinspection PyBroadException
+        try:
+            self.tcpSock.send(struct.pack('!II', payloadLen, self.sequence) + msg)
+        except:
+            self.tcpConnected = False
+            self.selectLoopRunning = False
+            self.sigServerDisconnected.emit()
         self.sequence += 1
+
+    def sendudp(self, msg, address):
+        # noinspection PyBroadException
+        try:
+            self.udpSock.sendto(msg, address)
+        except:
+            pass
 
     def statusBarMessage(self):
         u = len(self.playing) + len(self.available) + len(self.awayfromkb)
