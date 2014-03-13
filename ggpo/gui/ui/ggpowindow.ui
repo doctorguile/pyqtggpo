@@ -291,7 +291,7 @@
  <connections>
   <connection>
    <sender>uiQuitAct</sender>
-   <signal>activated()</signal>
+   <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>close()</slot>
    <hints>
@@ -307,7 +307,7 @@
   </connection>
   <connection>
    <sender>uiClearChatHistoryAct</sender>
-   <signal>activated()</signal>
+   <signal>triggered()</signal>
    <receiver>uiChatHistoryTxtB</receiver>
    <slot>clear()</slot>
    <hints>
@@ -355,7 +355,7 @@
   </connection>
   <connection>
    <sender>uiFocusOnChatAct</sender>
-   <signal>activated()</signal>
+   <signal>triggered()</signal>
    <receiver>uiChatInputEdit</receiver>
    <slot>setFocus()</slot>
    <hints>
