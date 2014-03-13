@@ -271,19 +271,16 @@ class GGPOWindow(QtGui.QMainWindow):
     def setupMediaPlayer(self):
         try:
             from PyQt4.phonon import Phonon
+            audioOutput = Phonon.AudioOutput(Phonon.MusicCategory, self)
+            mediaObject = Phonon.MediaObject(self)
+            Phonon.createPath(mediaObject, audioOutput)
+            mediaObject.setCurrentSource(Phonon.MediaSource(':/assets/challenger-comes.mp3'))
 
-            mp3path = self.controller.ggpoPathJoin('assets', 'challenger-comes.wav')
-            if os.path.isfile(mp3path):
-                audioOutput = Phonon.AudioOutput(Phonon.MusicCategory, self)
-                mediaObject = Phonon.MediaObject(self)
-                Phonon.createPath(mediaObject, audioOutput)
-                mediaObject.enqueue(Phonon.MediaSource(mp3path))
-
-                def play():
-                    if not Settings.value(Settings.MUTE_CHALLENGE_SOUND):
-                        mediaObject.seek(0)
-                        mediaObject.play()
-                self.playChallengeSound = play
+            def play():
+                if not Settings.value(Settings.MUTE_CHALLENGE_SOUND):
+                    mediaObject.seek(0)
+                    mediaObject.play()
+            self.playChallengeSound = play
         except ImportError:
             pass
 

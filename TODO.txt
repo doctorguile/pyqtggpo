@@ -1,7 +1,6 @@
 package exe and dmg
 figure out how to apply ggpofba.ini
 
-extract mp3 from resources?
 custom emoticons?
 how to set input lag?
 cliclient?
