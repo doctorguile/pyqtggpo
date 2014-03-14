@@ -537,11 +537,17 @@ class Controller(QtCore.QObject):
             else:
                 args = [wine, self.fba, quark]
         try:
-            devnull = open(os.devnull, 'w')
-            Popen(args, stdout=devnull, stderr=devnull)
-            devnull.close()
-        except OSError:
-            self.sigStatusMessage.emit("Error executing " + " ".join(args))
+            # starting python from cmd.exe and redirect stderr and we got
+            # python WindowsError(6, 'The handle is invalid')
+            # apparently it's still not fixed
+            if isWindows():
+                Popen(args)
+            else:
+                devnull = open(os.devnull, 'w')
+                Popen(args, stdout=devnull, stderr=devnull)
+                devnull.close()
+        except OSError, ex:
+            self.sigStatusMessage.emit("Error executing " + " ".join(args) + "\n" + repr(ex))
 
     def saveIgnored(self):
         Settings.setPythonValue(Settings.IGNORED, self.ignored)
