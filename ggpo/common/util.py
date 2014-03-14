@@ -22,6 +22,14 @@ def checkUpdate():
         pass
 
 
+def findGeoIPDB():
+    dbs = [Settings.value(Settings.GEOIP2DB_LOCATION), packagePathJoin('GeoLite2-City.mmdb'),
+           packagePathJoin('GeoLite2-Country.mmdb')]
+    for db in dbs:
+        if db and os.path.isfile(db):
+            return db
+
+
 def findURLs(url):
     return re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', url)
 
@@ -75,8 +83,8 @@ except ImportError:
 
 
 def geolookup(ip):
-    db = Settings.value(Settings.GEOIP2DB_LOCATION)
-    if not geoip2Installed or not db or not os.path.isfile(db):
+    db = findGeoIPDB()
+    if not geoip2Installed or not db:
         return 'unknown', '', ''
     # noinspection PyBroadException
     try:
