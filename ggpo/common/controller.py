@@ -548,7 +548,7 @@ class Controller(QtCore.QObject):
                 self.sigStatusMessage.emit("Please configure Setting > Locate wine")
                 return
             if isLinux():
-                args = [packagePathJoin('scripts', 'ggpofba.sh'), wine, self.fba, quark]
+                args = [packagePathJoin('ggpo', 'scripts', 'ggpofba.sh'), wine, self.fba, quark]
             else:
                 args = [wine, self.fba, quark]
         try:

@@ -23,7 +23,10 @@ def checkUpdate():
 
 
 def findGeoIPDB():
-    dbs = [Settings.value(Settings.GEOIP2DB_LOCATION), packagePathJoin('GeoLite2-City.mmdb'),
+    dbs = [Settings.value(Settings.GEOIP2DB_LOCATION),
+           os.path.join(os.getcwd(), 'GeoLite2-City.mmdb'),
+           packagePathJoin('GeoLite2-City.mmdb'),
+           os.path.join(os.getcwd(), 'GeoLite2-Country.mmdb'),
            packagePathJoin('GeoLite2-Country.mmdb')]
     for db in dbs:
         if db and os.path.isfile(db):
@@ -91,6 +94,7 @@ def geolookup(ip):
         reader = geoip2.database.Reader(db)
         response = reader.city(ip)
         cc = response.country.iso_code.lower()
+        print cc, response.country.name, response.city.name
         return cc, response.country.name, response.city.name
     except:
         return 'unknown', '', ''
@@ -145,7 +149,7 @@ def openURL(url):
 
 
 def packagePathJoin(*args):
-    return os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, *args))
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, *args))
 
 
 def replaceURLs(text):
