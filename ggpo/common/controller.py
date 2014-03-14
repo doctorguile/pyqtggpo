@@ -11,7 +11,8 @@ from ggpo.gui.colortheme import ColorTheme
 from ggpo.common.protocol import Protocol
 from ggpo.common.playerstate import PlayerStates
 from ggpo.common.player import Player
-from ggpo.common.util import geolookup, isUnknownCountryCode, isWindows, findWine, logger, isLinux, packagePathJoin
+from ggpo.common.util import geolookup, isUnknownCountryCode, isWindows, findWine, logger, isLinux, packagePathJoin, \
+    isOSX
 from ggpo.common.settings import Settings
 from PyQt4 import QtCore
 
@@ -63,7 +64,6 @@ class Controller(QtCore.QObject):
         self.channel = 'lobby'
         self.rom = ''
         self.fba = None
-        self.mp3 = None
         self.checkInstallation()
 
         self.challengers = set()
@@ -103,9 +103,6 @@ class Controller(QtCore.QObject):
         fba = Settings.value(Settings.GGPOFBA_LOCATION)
         if fba and os.path.isfile(fba):
             self.fba = os.path.abspath(fba)
-            mp3 = os.path.join(os.path.dirname(self.fba), "assets", "challenger-comes.mp3")
-            if os.path.isfile(mp3):
-                self.mp3 = mp3
         wine = findWine()
         if self.fba and wine:
             return True
@@ -505,6 +502,24 @@ class Controller(QtCore.QObject):
             count -= 1
         if len(data) > 0:
             logger().error("stateChangesResponse, remaining data {}".format(repr(data)))
+
+    # platform independent way of playing an external wave file
+    def playChallengeSound(self):
+        if not self.fba:
+            return
+        wavfile = os.path.join(os.path.dirname(self.fba), "assets", "challenger-comes.wav")
+        if not os.path.isfile(wavfile):
+            return
+        if isOSX():
+            Popen(["afplay", wavfile])
+        elif isWindows():
+            import winsound
+            winsound.PlaySound(wavfile, winsound.SND_FILENAME)
+        elif isLinux():
+            for cmd in ['/usr/bin/aplay', '/usr/bin/play', '/usr/bin/mplayer']:
+                if os.path.isfile(cmd):
+                    Popen([cmd, wavfile])
+                    return
 
     def removeIgnore(self, player):
         if player in self.ignored:

@@ -11,7 +11,7 @@ import ggpo.gui
 from ggpo.gui.playermodel import PlayerModel
 from ggpo.gui.emoticonsdialog import EmoticonDialog
 from ggpo.common import copyright, util
-from ggpo.common.util import logger, openURL, findURLs, replaceURLs, isWindows, findWine
+from ggpo.common.util import logger, openURL, findURLs, replaceURLs, isWindows, findWine, isOSX
 from ggpo.common.settings import Settings
 
 
@@ -269,6 +269,10 @@ class GGPOWindow(QtGui.QMainWindow):
             self.uiMuteChallengeSoundAct.setChecked(True)
 
     def setupMediaPlayer(self):
+        # can't properly install PyQt4.phonon on osx yet
+        if isOSX():
+            self.playChallengeSound = self.controller.playChallengeSound
+            return
         try:
             from PyQt4.phonon import Phonon
             audioOutput = Phonon.AudioOutput(Phonon.MusicCategory, self)
@@ -282,6 +286,7 @@ class GGPOWindow(QtGui.QMainWindow):
                     mediaObject.play()
             self.playChallengeSound = play
         except ImportError:
+            self.playChallengeSound = self.controller.playChallengeSound
             pass
 
     def setupUserTable(self):
