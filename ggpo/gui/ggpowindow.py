@@ -13,12 +13,14 @@ from ggpo.gui.emoticonsdialog import EmoticonDialog
 from ggpo.common import copyright, util
 from ggpo.common.util import logger, openURL, findURLs, replaceURLs, isWindows, findWine, isOSX
 from ggpo.common.settings import Settings
+from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
 
 
-class GGPOWindow(QtGui.QMainWindow):
+class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self, QWidget_parent=None):
         super(GGPOWindow, self).__init__(QWidget_parent)
-        ggpo.gui.loadUi(__file__, self)
+        # ggpo.gui.loadUi(__file__, self)
+        self.setupUi(self)
         self.controller = None
         self.channels = {}
         self.expectFirstChannelResponse = True

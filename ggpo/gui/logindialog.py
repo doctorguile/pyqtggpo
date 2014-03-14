@@ -5,12 +5,14 @@ import ggpo.gui
 from ggpo.common.util import openURL, checkUpdate
 from ggpo.common import copyright
 from ggpo.common.settings import Settings
+from ggpo.gui.ui.logindialog_ui import Ui_DialogLogin
 
 
-class LoginDialog(QtGui.QDialog):
+class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
     def __init__(self, parent=None):
         super(LoginDialog, self).__init__(parent)
-        ggpo.gui.loadUi(__file__, self)
+        # ggpo.gui.loadUi(__file__, self)
+        self.setupUi(self)
         self.uiNewVersionLink.clicked.connect(
             lambda: openURL('http://github.com/doctorguile/pyqtggpo'))
         self.uiNewVersionLink.setVisible(False)
