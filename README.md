@@ -21,11 +21,11 @@ Download and extract the official [ggpo-build-030.zip](http://ggpo.net/ggpo-buil
 
 ## Windows
 
-Download and extract [pyqtggpo.zip](https://github.com/doctorguile/pyqtggpo/releases/)
+1. Download and extract [pyqtggpo.zip](https://github.com/doctorguile/pyqtggpo/releases/)
 
-Double click pyqtggpo.exe, login with your ggpo credential
+2. Double click pyqtggpo.exe, login with your ggpo credential
 
-Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
+3. Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
 
 ## Mac
 ![alt text](http://i.imgur.com/Yas0DOm.png "Wine.app Downloads")
@@ -36,13 +36,15 @@ Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extr
 
 3. Run Wine at least once (OSX will ask if you want to run this application downloaded from internet)
 
-Download [PyQtGGPO.dmg](https://github.com/doctorguile/pyqtggpo/releases/)
+4. Download [PyQtGGPO.dmg](https://github.com/doctorguile/pyqtggpo/releases/)
 
-Double click PyQtGGPO.dmg to mount it, go to the mounted volume and drag `PyQtGGPO` app to your `Applications` folder
+5. Double click PyQtGGPO.dmg to mount it, go to the mounted volume and drag `PyQtGGPO` app to your `Applications` folder
 
-Run PyQtGGPO, login with your ggpo credential
+6. Right click PyQtGGPO, select `open` from the context menu. Confirm to run.
 
-Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
+7. login with your ggpo credential
+
+8. Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
 
 
 ## Linux
@@ -70,11 +72,11 @@ Either download and gunzip [pyqtggpo source tarball](https://github.com/doctorgu
 
 3. cd pyqtggpo && python main.py
 
-Login with your ggpo credential
+4. Login with your ggpo credential
 
-Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
+5. Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
 
-Go to `Settings` > `Locate GeoIP mmdb` and select the GeoLite2-Country.mmdb file.
+6. Go to `Settings` > `Locate GeoIP mmdb` and select the GeoLite2-Country.mmdb file.
 
 ## Credits
 Tony Cannon (Ponder) Tom Cannon (ProtomCannon)<br />
