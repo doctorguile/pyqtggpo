@@ -31,7 +31,7 @@ https://pypi.python.org/packages/source/P/PyInstaller/PyInstaller-2.1.zip
 
 ##Build with pyinstaller
 
-	pyinstaller -w -i ggpo/resources/img/icon.ico -n pyqtggpo --runtime-hook ggpo\scripts\runtimehook.py main.py
+	pyinstaller -w -i ggpo\resources\img\icon.ico -n pyqtggpo --runtime-hook ggpo\scripts\runtimehook.py main.py
     copy ggpo\gui\ui\*.* dist\pyqtggpo\ggpo\gui\ui\*.*
 
 
