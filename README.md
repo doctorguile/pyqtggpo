@@ -7,36 +7,27 @@ This is a cross platform (Linux,  MacOSX, Windows) GUI client for
 
 &copy;2014 papasi GPL v2 License
 
-## Features
+# Features
 - Support dark theme to reduce eye strain
 - Autocomplete in chat
 - More accurate GeoIP info
 - Simple emoticons support
 
-## Installation
-Download pyqtggpo [zip](https://github.com/doctorguile/pyqtggpo/archive/master.zip) or [tarball](https://github.com/doctorguile/pyqtggpo/tarball/master) and extract it to a folder.
+# Installation
 
-Download and extract the official [ggpo-build-030.zip](http://ggpo.net/ggpo-build-030.zip) GGPO client to another folder.
+[Register a ggpo account](http://ggpo.net/forums/ucp.php?mode=register) if needed
 
+Download and extract the official [ggpo-build-030.zip](http://ggpo.net/ggpo-build-030.zip) GGPO client to a folder.
 
-### Linux
-1. Make sure you have [wine](http://www.winehq.org/) and
-[pyqt4](http://www.riverbankcomputing.com/software/pyqt/download) installed 
-on your Linux distribution
+## Windows
 
-2. Run ```winecfg``` and check the option to "Emulate a virtual desktop"
+Download and extract [pyqtggpo.zip](https://github.com/doctorguile/pyqtggpo/releases/)
 
-To install on Debian based systems (ubuntu, etc), you can type this in a terminal
+Double click pyqtggpo.exe, login with your ggpo credential
 
-	sudo apt-get install wine python-qt4
+Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
 
-Optional (for playing the challenger sound and better geo location support of players)
-
-	sudo apt-get install python-qt4-phonon python-pip python-dev build-essential 
-	sudo pip install geoip2
-
-
-### Mac
+## Mac
 ![alt text](http://i.imgur.com/Yas0DOm.png "Wine.app Downloads")
 
 1. Go to "[Wine.app Downloads](http://winebottler.kronenberg.org/downloads)" and scroll to the middle section and download the Wine.app.
@@ -45,37 +36,45 @@ Optional (for playing the challenger sound and better geo location support of pl
 
 3. Run Wine at least once (OSX will ask if you want to run this application downloaded from internet)
 
-4. Install pyqt4
+Download [PyQtGGPO.dmg](https://github.com/doctorguile/pyqtggpo/releases/)
 
-Easiest method with [Homebrew](http://brew.sh/)
+Double click PyQtGGPO.dmg to mount it, go to the mounted volume and drag `PyQtGGPO` app to your `Applications` folder
 
-    ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-    brew install qt
-    brew install sip
-    brew install pyqt
-    sudo easy_install pip
-    pip install geoip2
+Run PyQtGGPO, login with your ggpo credential
 
-### Windows
-Determine if your windows is 64 or 32-bit. 
+Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
 
-1. Download and install [python 2.7.x for windows](http://python.org/download/releases/2.7.6/)
-2. Download and install [PyQt4-gpl-Py2.7-Qt4.8](http://www.riverbankcomputing.com/software/pyqt/download).
 
-## Usage
-[Register a ggpo account](http://ggpo.net/forums/ucp.php?mode=register) if needed
+## Linux
+Only source code distribution is available currently, you'll need
+[wine](http://www.winehq.org/) and
+[pyqt4](http://www.riverbankcomputing.com/software/pyqt/download)
+for your Linux distribution
 
-Execute ```python main.py```
+To install on Debian based systems (ubuntu, etc), you can type this in a terminal
+
+	sudo apt-get install wine python-qt4-phonon python-qt4 python-pip python-dev build-essential
+	sudo pip install geoip2
+
+Download GeoIP2 database [GeoLite2-Country.mmdb.gz](http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz)
+and gunzip GeoLite2-Country.mmdb to a folder.
+
+Either download and gunzip [pyqtggpo source tarball](https://github.com/doctorguile/pyqtggpo/tarball/master) or
+
+	sudo apt-get install git
+    git clone https://github.com/doctorguile/pyqtggpo.git
+
+1. Make sure you have wine installed
+
+2. Run ```winecfg``` and check the option to "Emulate a virtual desktop"
+
+3. cd pyqtggpo && python main.py
 
 Login with your ggpo credential
 
 Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
 
-If you have GeoIP2 module installed, download
-[GeoLite2-Country.mmdb.gz](http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz)
-and extract GeoLite2-Country.mmdb to a folder.<br/>
 Go to `Settings` > `Locate GeoIP mmdb` and select the GeoLite2-Country.mmdb file.
-This will allow you to see the missing geoip info from the official ggpo client.
 
 ## Credits
 Tony Cannon (Ponder) Tom Cannon (ProtomCannon)<br />

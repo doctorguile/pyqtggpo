@@ -1,8 +1,11 @@
 # Building on windows
 
-Install python 2.7 32-bit
+Determine if your windows is 64 or 32-bit.
 
-Install pyqt4 2.7 32-bit
+Download and install [python 2.7.x for windows](http://python.org/download/releases/2.7.6/)
+
+Download and install [PyQt4-gpl-Py2.7-Qt4.8](http://www.riverbankcomputing.com/software/pyqt/download).
+
 
 ##Install setuptools
 
@@ -58,13 +61,10 @@ https://pypi.python.org/packages/source/P/PyInstaller/PyInstaller-2.1.zip
 	pip install yolk
 	pip install PyInstaller
 	pip install geoip2
-	yolk -l
 	cd pyqtggpo/
-	rm -rf dist/pyqtggpo/
+	rm -rf dist
 	pyinstaller -w -i ggpo/resources/img/icon.icns -n pyqtggpo --runtime-hook ggpo/scripts/runtimehook.py main.py
-	deactivate
-	./dist/pyqtggpo/pyqtggpo
-
+	cp ~/Downloads/GeoLite2-Country.mmdb ./dist/PyQtGGPO.app/Contents/MacOS/
 	du -hs dist/pyqtggpo.app/
 	cd dist/
 	hdiutil create -srcfolder pyqtggpo.app/ -volname PyQtGGPO -fs HFS+ -fsargs '-c c=64,a=16,e=16' -format UDRW -size 60M PyQtGGPO_tmp.dmg
