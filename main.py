@@ -38,12 +38,16 @@ def main(argv=None):
         window.restorePreference()
         controller.sendListChannels()
         window.show()
+        window.raise_()
+        window.activateWindow()
 
     logindialog = LoginDialog()
     logindialog.setController(controller)
     logindialog.accepted.connect(loggedIn)
     logindialog.rejected.connect(sys.exit)
     logindialog.exec_()
+    logindialog.raise_()
+    logindialog.activateWindow()
 
     return app.exec_()
 
