@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pickle
+import os.path
 from PyQt4.QtCore import QSettings
 
 
@@ -25,7 +26,7 @@ class Settings:
     WINE_LOCATION = 'wineLocation'
     GEOIP2DB_LOCATION = 'geoip2dbLocation'
 
-    _settings = QSettings('ggpo.ini', QSettings.IniFormat)
+    _settings = QSettings(os.path.join(os.path.expanduser("~"), 'ggpo.ini'), QSettings.IniFormat)
 
     @staticmethod
     def setBoolean(key, val):

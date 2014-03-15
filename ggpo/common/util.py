@@ -9,7 +9,7 @@ import logging.handlers
 from PyQt4 import QtGui, QtCore
 from ggpo.common.settings import Settings
 from ggpo.common import copyright
-
+from os.path import expanduser
 
 def checkUpdate():
     versionurl = 'https://raw.github.com/doctorguile/pyqtggpo/master/VERSION'
@@ -131,7 +131,7 @@ def loggerInit():
     _logger = logging.getLogger('GGPO')
     _logger.setLevel(logging.INFO)
     fh = logging.handlers.RotatingFileHandler(
-        'ggpo.log', mode='a', maxBytes=100000, backupCount=4)
+        os.path.join(expanduser("~"), 'ggpo.log'), mode='a', maxBytes=100000, backupCount=4)
     if Settings.value(Settings.DEBUG_LOG):
         fh.setLevel(logging.INFO)
     else:
