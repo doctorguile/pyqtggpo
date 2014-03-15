@@ -33,8 +33,6 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
         self.uiLoginBtn.clicked.connect(self.login)
         self.uiRegisterLink.clicked.connect(
             lambda: openURL('http://ggpo.net/forums/ucp.php?mode=register'))
-        if checkUpdate():
-            self.uiNewVersionLink.setVisible(True)
 
     def displayErrorMessage(self, errmsg):
         self.uiErrorLbl.setText(errmsg)
@@ -81,3 +79,8 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
         controller.sigLoginFailed.connect(
             lambda: self.displayErrorMessage("Invalid username/password"))
         controller.sigStatusMessage.connect(self.displayErrorMessage)
+
+    def showEvent(self, QShowEvent):
+        QtGui.QDialog.showEvent(self, QShowEvent)
+        if checkUpdate():
+            self.uiNewVersionLink.setVisible(True)
