@@ -17,7 +17,7 @@ This is a cross platform (Linux,  MacOSX, Windows) GUI client for
 
 - [Register a ggpo account](http://ggpo.net/forums/ucp.php?mode=register) if needed
 
-- Download and extract the official [ggpo-build-030.zip](http://ggpo.net/ggpo-build-030.zip) GGPO client to a folder.
+- Download and extract the official [ggpo-build-030.zip](http://ggpo.net/ggpo-build-030.zip) GGPO client to a folder. Create a `ROMs` folder inside. You'll need to put the rom zip files in the `ROMs` directory.
 
 - [Open UDP ports 6000-6009 (inbound/outbound) and TCP port 7000 (outbound)](http://portforward.com/english/routers/port_forwarding/routerindex.htm) in your home network
 
