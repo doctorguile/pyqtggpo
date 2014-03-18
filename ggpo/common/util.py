@@ -7,6 +7,7 @@ import platform
 import logging
 import logging.handlers
 from PyQt4 import QtGui, QtCore
+from ggpo.common.runtime import *
 from ggpo.common.settings import Settings
 from ggpo.common import copyright
 from os.path import expanduser
@@ -38,15 +39,15 @@ def findURLs(url):
 
 
 def findWine():
-    if isWindows():
+    if IS_WINDOWS:
         return True
     saved = Settings.value(Settings.WINE_LOCATION)
     if saved and os.path.isfile(saved):
         return saved
     w = None
-    if isLinux():
+    if IS_LINUX:
         w = '/usr/bin/wine'
-    elif isOSX():
+    elif IS_OSX:
         w = '/Applications/Wine.app/Contents/Resources/bin/wine'
     if w and os.path.isfile(w):
         return w
@@ -71,27 +72,13 @@ def freegeoip(ip):
                 'zipcode': ''}
 
 
-geoip2Installed = False
-
-try:
-    # noinspection PyUnresolvedReferences
-    import geoip2.database
-    # http://dev.maxmind.com/geoip/geoip2/geolite2/
-    # https://github.com/maxmind/GeoIP2-python
-    # GeoLite2 databases are updated on the first Tuesday of each month.
-    # http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz
-    geoip2Installed = True
-except ImportError:
-    pass
-
-
 def geolookup(ip):
     db = findGeoIPDB()
-    if not geoip2Installed or not db:
+    if not GeoIP2Reader or not db:
         return 'unknown', '', ''
     # noinspection PyBroadException
     try:
-        reader = geoip2.database.Reader(db)
+        reader = GeoIP2Reader(db)
         response = reader.city(ip)
         cc = response.country.iso_code.lower()
         print cc, response.country.name, response.city.name
@@ -99,21 +86,8 @@ def geolookup(ip):
     except:
         return 'unknown', '', ''
 
-
-def isLinux():
-    return platform.system() == 'Linux'
-
-
-def isOSX():
-    return platform.system() == 'Darwin'
-
-
 def isUnknownCountryCode(cc):
     return not cc or cc == 'unknown'
-
-
-def isWindows():
-    return platform.system() == 'Windows'
 
 
 _loggerInitialzed = False

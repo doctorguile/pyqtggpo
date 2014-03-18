@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import QTextCodec
+from ggpo.common.runtime import *
 from ggpo.common.settings import Settings
-from ggpo.common.util import isOSX
 
 QTextCodec.setCodecForCStrings(QTextCodec.codecForName("utf-8"))
 
@@ -14,7 +14,7 @@ class MinSizePushButton(QtGui.QPushButton):
 
     def calcMinWidth(self):
         margin = 10
-        if isOSX():
+        if IS_OSX:
             margin = 25
         ampCount = self.text().count('&&')
         text = self.text().replace('&', '') + ('&' * ampCount)

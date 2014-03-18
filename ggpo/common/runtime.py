@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import platform
 
-__all__ = ['IS_WINDOWS', 'IS_OSX', 'IS_LINUX', 'Phonon', 'GeoIP2Reader']
+__all__ = ['IS_WINDOWS', 'IS_OSX', 'IS_LINUX', 'Phonon', 'GeoIP2Reader', 'winsound']
 
 IS_WINDOWS = False
 IS_OSX = False
@@ -15,12 +15,21 @@ elif _platform == 'Darwin':
 elif _platform == 'Linux':
     IS_LINUX = True
 
+Phonon = None
 try:
     from PyQt4.phonon import Phonon
 except ImportError:
-    Phonon = None
+    pass
 
+GeoIP2Reader = None
 try:
     from geoip2.database import Reader as GeoIP2Reader
 except ImportError:
-    GeoIP2Reader = None
+    pass
+
+winsound = None
+if IS_WINDOWS:
+    try:
+        import winsound
+    except ImportError:
+        pass

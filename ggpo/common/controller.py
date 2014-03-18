@@ -7,14 +7,14 @@ import select
 import errno
 from random import randint
 from subprocess import Popen
-from ggpo.gui.colortheme import ColorTheme
-from ggpo.common.protocol import Protocol
-from ggpo.common.playerstate import PlayerStates
-from ggpo.common.player import Player
-from ggpo.common.util import geolookup, isUnknownCountryCode, isWindows, findWine, logger, isLinux, packagePathJoin, \
-    isOSX
-from ggpo.common.settings import Settings
 from PyQt4 import QtCore
+from ggpo.common.runtime import *
+from ggpo.common.player import Player
+from ggpo.common.playerstate import PlayerStates
+from ggpo.common.protocol import Protocol
+from ggpo.common.settings import Settings
+from ggpo.common.util import geolookup, isUnknownCountryCode, findWine, logger, packagePathJoin
+from ggpo.gui.colortheme import ColorTheme
 
 
 class Controller(QtCore.QObject):
@@ -510,12 +510,11 @@ class Controller(QtCore.QObject):
         wavfile = os.path.join(os.path.dirname(self.fba), "assets", "challenger-comes.wav")
         if not os.path.isfile(wavfile):
             return
-        if isOSX():
+        if IS_OSX:
             Popen(["afplay", wavfile])
-        elif isWindows():
-            import winsound
+        elif IS_WINDOWS and winsound:
             winsound.PlaySound(wavfile, winsound.SND_FILENAME)
-        elif isLinux():
+        elif IS_LINUX:
             for cmd in ['/usr/bin/aplay', '/usr/bin/play', '/usr/bin/mplayer']:
                 if os.path.isfile(cmd):
                     Popen([cmd, wavfile])
@@ -540,14 +539,14 @@ class Controller(QtCore.QObject):
             return
         wine = ''
         args = []
-        if isWindows():
+        if IS_WINDOWS:
             args = [self.fba, quark, '-w']
         else:
             wine = findWine()
             if not wine:
                 self.sigStatusMessage.emit("Please configure Setting > Locate wine")
                 return
-            if isLinux():
+            if IS_LINUX:
                 args = [packagePathJoin('ggpo', 'scripts', 'ggpofba.sh'), wine, self.fba, quark]
             else:
                 args = [wine, self.fba, quark]
@@ -555,7 +554,7 @@ class Controller(QtCore.QObject):
             # starting python from cmd.exe and redirect stderr and we got
             # python WindowsError(6, 'The handle is invalid')
             # apparently it's still not fixed
-            if isWindows():
+            if IS_WINDOWS:
                 Popen(args)
             else:
                 devnull = open(os.devnull, 'w')

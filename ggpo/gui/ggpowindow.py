@@ -6,11 +6,12 @@ import logging.handlers
 from colortheme import ColorTheme
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
+from ggpo.common.runtime import *
 from ggpo.common import copyright, util
 from ggpo.common.cliclient import CLI
 from ggpo.common.playerstate import PlayerStates
 from ggpo.common.settings import Settings
-from ggpo.common.util import logger, openURL, findURLs, replaceURLs, isWindows, findWine, isOSX
+from ggpo.common.util import logger, openURL, findURLs, replaceURLs, findWine
 from ggpo.gui.emoticonsdialog import EmoticonDialog
 from ggpo.gui.playermodel import PlayerModel
 from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
@@ -35,11 +36,11 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiEmoticonTbtn.setDefaultAction(self.uiEmoticonAct)
         self.uiEmoticonTbtn.setText(':)')
         self.uiLocateGgpofbaAct.triggered.connect(self.locateGGPOFBA)
-        if isWindows():
+        if IS_WINDOWS:
             self.uiLocateWineAct.setVisible(False)
         else:
             self.uiLocateWineAct.triggered.connect(self.locateWine)
-        if util.geoip2Installed:
+        if GeoIP2Reader:
             self.uiLocateGeommdbAct.triggered.connect(self.locateGeoMMDB)
         else:
             self.uiLocateGeommdbAct.setVisible(False)
@@ -137,7 +138,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             Settings.setValue(Settings.GEOIP2DB_LOCATION, fname)
 
     def locateWine(self):
-        if isWindows():
+        if IS_WINDOWS:
             return
         defaultLocation = findWine()
         if not defaultLocation:
@@ -275,7 +276,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def setupMediaPlayer(self):
         # can't properly install PyQt4.phonon on osx yet
-        if isOSX():
+        if IS_OSX:
             self.playChallengeSound = self.controller.playChallengeSound
             return
         try:
@@ -306,7 +307,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         hh.resizeSection(PlayerModel.STATE, 25)
         width = hh.fontMetrics().boundingRect('Ping').width() + 18
         # windows's sort indicator is displayed at the top so no extra space needed
-        if not isWindows():
+        if not IS_WINDOWS:
             width += 10
         hh.resizeSection(PlayerModel.PING, width)
         hh.resizeSection(PlayerModel.IGNORE, 25)
