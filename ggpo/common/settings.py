@@ -25,6 +25,8 @@ class Settings:
     GGPOFBA_LOCATION = 'ggpofbaLocation'
     WINE_LOCATION = 'wineLocation'
     GEOIP2DB_LOCATION = 'geoip2dbLocation'
+    PLAYERVIEW_LAST_SORT = 'playerViewLastSort'
+    PLAYERVIEW_LAST_SORT_ORDER = 'playerViewLastSortOrder'
 
     _settings = QSettings(os.path.join(os.path.expanduser("~"), 'ggpo.ini'), QSettings.IniFormat)
 
