@@ -116,6 +116,8 @@ class Controller(QtCore.QObject):
             return False
 
     def checkRom(self):
+        if self.channel == 'unsupported':
+            return True
         if self.channel and self.channel != "lobby":
             rom = self.ggpoPathJoin("ROMs", "{}.zip".format(self.rom))
             if os.path.isfile(rom):

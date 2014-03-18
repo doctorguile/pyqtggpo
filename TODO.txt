@@ -1,4 +1,3 @@
-no need to check for rom in unsupported & lobby
 can't start game in lobby
 
 use backends for media player & db
