@@ -47,7 +47,6 @@ def geolookup(ip):
         try:
             response = _geoIP2Reader.city(ip)
             cc = response.country.iso_code.lower()
-            print cc, response.country.name, response.city.name
             return cc, response.country.name, response.city.name
         except:
             pass
