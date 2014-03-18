@@ -6,9 +6,6 @@ from PyQt4.QtCore import Qt
 
 
 #noinspection PyClassHasNoInit
-from ggpo.common.settings import Settings
-
-
 class PlayerModelState:
     AVAILABLE = 0
     PLAYING = 1
@@ -41,6 +38,8 @@ class PlayerModel(QtCore.QAbstractTableModel):
         self.controller = controller
         # [state, player, ping, opponent, ignored, country, opponent_country]
         self.players = []
+        self.lastSort = PlayerModel.DEFAULT_SORT
+        self.lastSortOrder = QtCore.Qt.AscendingOrder
         controller.sigPlayerStateChange.connect(self.reloadPlayers)
         controller.sigPlayersLoaded.connect(self.reloadPlayers)
         # TODO: optimize to only update challenge column?
@@ -189,9 +188,7 @@ class PlayerModel(QtCore.QAbstractTableModel):
                                  p, self.getPlayerStat(p, 'ping'),
                                  '', ignored,
                                  self.getPlayerStat(p, 'cc'), ''])
-        lastSort = Settings.value(Settings.PLAYERVIEW_LAST_SORT) or PlayerModel.DEFAULT_SORT
-        lastSortOrder = Settings.value(Settings.PLAYERVIEW_LAST_SORT_ORDER) or QtCore.Qt.AscendingOrder
-        self.sort(lastSort, lastSortOrder)
+        self.sort(self.lastSort, self.lastSortOrder)
         # idx1 = self.createIndex(0, 0)
         # idx2 = self.createIndex(len(self.players) - 1, PlayerModel.N_DISPLAY_COLS-1)
         # self.dataChanged.emit(idx1, idx2)
@@ -219,8 +216,8 @@ class PlayerModel(QtCore.QAbstractTableModel):
             reverse = False
             if order == QtCore.Qt.DescendingOrder:
                 reverse = True
-            Settings.setValue(Settings.PLAYERVIEW_LAST_SORT, col)
-            Settings.setValue(Settings.PLAYERVIEW_LAST_SORT_ORDER, order)
+            self.lastSort = col
+            self.lastSortOrder = order
             getter = operator.itemgetter(col)
             if col in [PlayerModel.PLAYER, PlayerModel.OPPONENT]:
                 keyfunc = lambda x: getter(x).lower()
