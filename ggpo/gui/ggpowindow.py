@@ -52,6 +52,12 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiAwayAct.triggered.connect(self.toggleAFK)
         self.uiMuteChallengeSoundAct.toggled.connect(self.__class__.toggleSound)
         self.uiNotifyPlayerStateChangeAct.toggled.connect(self.__class__.toggleNotifyPlayerStateChange)
+        self.uiToggleSidebarAction.triggered.connect(self.onToggleSidebarAction)
+        channelPart, chatHistoryPart, playerViewPart = range(3)
+        self.uiContractChannelSidebarAct.triggered.connect(self.onSplitterHotkeyResizeAction(channelPart, -1))
+        self.uiExpandChannelSidebarAct.triggered.connect(self.onSplitterHotkeyResizeAction(channelPart, +1))
+        self.uiContractPlayerListAct.triggered.connect(self.onSplitterHotkeyResizeAction(playerViewPart, -1))
+        self.uiExpandPlayerListAct.triggered.connect(self.onSplitterHotkeyResizeAction(playerViewPart, +1))
         self.uiSRKForumAct.triggered.connect(
             lambda: openURL('http://forums.shoryuken.com/categories/super-street-fighter-ii-turbo'))
         self.uiSRKWikiAct.triggered.connect(lambda: openURL('http://wiki.shoryuken.com/Super_Street_Fighter_2_Turbo'))
@@ -71,11 +77,11 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         layout.setContentsMargins(0, 0, 0, 0)
         button = QtGui.QToolButton(handle)
         button.setArrowType(QtCore.Qt.LeftArrow)
-        button.clicked.connect(self.splitterButtonClicked)
+        button.clicked.connect(self.onToggleSidebarAction)
         layout.addWidget(button)
         button = QtGui.QToolButton(handle)
         button.setArrowType(QtCore.Qt.RightArrow)
-        button.clicked.connect(self.splitterButtonClicked)
+        button.clicked.connect(self.onToggleSidebarAction)
         layout.addWidget(button)
         handle.setLayout(layout)
 
@@ -216,6 +222,40 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
     def onStatusMessage(self, msg):
         self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(msg))
 
+    def onToggleSidebarAction(self):
+        sizes = self.uiSplitter.sizes()
+        if sizes[0]:
+            self.lastSplitterExpandedSizes = sizes[:]
+            sizes[1] += sizes[0]
+            sizes[0] = 0
+        else:
+            if len(self.lastSplitterExpandedSizes) > 0:
+                sizes = self.lastSplitterExpandedSizes
+            elif sizes[1]:
+                sizes[0] = sizes[1] / 2
+                sizes[1] /= 2
+        self.uiSplitter.setSizes(sizes)
+
+    def onSplitterHotkeyResizeAction(self, part, growth):
+        def resizeCallback():
+            increment = 5
+            splitterPart, chatHistoryPart, playerViewPart = range(3)
+            sizes = self.uiSplitter.sizes()
+            if (growth > 0 and sizes[chatHistoryPart] < increment) or \
+                    (growth < 0 and sizes[part] == 0):
+                return
+            total = sizes[part] + sizes[chatHistoryPart]
+            if growth < 0:
+                increment = min(sizes[part], increment)
+                sizes[part] -= increment
+                sizes[chatHistoryPart] += increment
+            else:
+                increment = min(sizes[chatHistoryPart], increment)
+                sizes[part] += increment
+                sizes[chatHistoryPart] -= increment
+            self.uiSplitter.setSizes(sizes)
+        return resizeCallback
+
     def restorePreference(self):
         if Settings.value(Settings.COLORTHEME):
             self.uiDarkThemeAct.setChecked(True)
@@ -281,6 +321,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             return
         try:
             from PyQt4.phonon import Phonon
+
             audioOutput = Phonon.AudioOutput(Phonon.MusicCategory, self)
             mediaObject = Phonon.MediaObject(self)
             Phonon.createPath(mediaObject, audioOutput)
@@ -290,6 +331,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                 if not Settings.value(Settings.MUTE_CHALLENGE_SOUND):
                     mediaObject.seek(0)
                     mediaObject.play()
+
             self.playChallengeSound = play
         except ImportError:
             self.playChallengeSound = self.controller.playChallengeSound
@@ -328,20 +370,6 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         if index not in self.uiPlayersTableV.model().sortableColumns:
             self.uiPlayersTableV.horizontalHeader().setSortIndicator(
                 self.uiPlayersTableV.model().lastSort, self.uiPlayersTableV.model().lastSortOrder)
-
-    def splitterButtonClicked(self):
-        sizes = self.uiSplitter.sizes()
-        if sizes[0]:
-            self.lastSplitterExpandedSizes = sizes[:]
-            sizes[1] += sizes[0]
-            sizes[0] = 0
-        else:
-            if len(self.lastSplitterExpandedSizes) > 0:
-                sizes = self.lastSplitterExpandedSizes
-            elif sizes[1]:
-                sizes[0] = sizes[1] / 2
-                sizes[1] /= 2
-        self.uiSplitter.setSizes(sizes)
 
     def toggleAFK(self, state):
         self.controller.sendToggleAFK(state)

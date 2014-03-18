@@ -96,10 +96,17 @@
     <property name="title">
      <string>&amp;Action</string>
     </property>
-    <addaction name="uiClearChatHistoryAct"/>
     <addaction name="uiAwayAct"/>
-    <addaction name="uiEmoticonAct"/>
     <addaction name="uiFocusOnChatAct"/>
+    <addaction name="uiEmoticonAct"/>
+    <addaction name="uiClearChatHistoryAct"/>
+    <addaction name="separator"/>
+    <addaction name="uiToggleSidebarAction"/>
+    <addaction name="uiContractChannelSidebarAct"/>
+    <addaction name="uiExpandChannelSidebarAct"/>
+    <addaction name="separator"/>
+    <addaction name="uiContractPlayerListAct"/>
+    <addaction name="uiExpandPlayerListAct"/>
     <addaction name="separator"/>
     <addaction name="uiQuitAct"/>
    </widget>
@@ -140,7 +147,7 @@
   <widget class="QStatusBar" name="uiStatusbar"/>
   <action name="uiClearChatHistoryAct">
    <property name="text">
-    <string>&amp;Clear chat history</string>
+    <string>Clear chat his&amp;tory</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
@@ -151,10 +158,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>A&amp;way from keyboard</string>
+    <string>Away from k&amp;eyboard</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Y</string>
+    <string>Ctrl+E</string>
    </property>
   </action>
   <action name="uiQuitAct">
@@ -194,9 +201,6 @@
   <action name="uiHitboxViewerAct">
    <property name="text">
     <string>Hitbox &amp;Viewer</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="uiSafejumpGuideAct">
@@ -273,10 +277,50 @@
   </action>
   <action name="uiFocusOnChatAct">
    <property name="text">
-    <string>&amp;Focus on chat</string>
+    <string>Focus on c&amp;hat</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+J</string>
+    <string>Ctrl+H</string>
+   </property>
+  </action>
+  <action name="uiToggleSidebarAction">
+   <property name="text">
+    <string>Toggle Channel &amp;Sidebar</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="uiExpandChannelSidebarAct">
+   <property name="text">
+    <string>&amp;+ Expand Channel Sidebar</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+=</string>
+   </property>
+  </action>
+  <action name="uiContractChannelSidebarAct">
+   <property name="text">
+    <string>&amp;- Contract Channel Sidebar</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
+   </property>
+  </action>
+  <action name="uiContractPlayerListAct">
+   <property name="text">
+    <string>&amp;&gt; Contract Player List</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+.</string>
+   </property>
+  </action>
+  <action name="uiExpandPlayerListAct">
+   <property name="text">
+    <string>&amp;&lt; Expand Player List</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+,</string>
    </property>
   </action>
  </widget>
