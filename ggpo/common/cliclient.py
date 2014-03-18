@@ -60,7 +60,7 @@ class CLI:
                 controller.sigStatusMessage.emit("Challenging {}".format(name))
                 controller.sendChallenge(name)
             else:
-                controller.sigStatusMessage.emit("{} is not playing".format(name))
+                controller.sigStatusMessage.emit("{} is not available".format(name))
 
         def clidecline(name=None):
             if name:
