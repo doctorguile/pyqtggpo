@@ -23,4 +23,4 @@ Type `/help` to see a list of commands available
 /help - display help menu
 
 ## Fixes
-- display login button while waiting for response from ggpo.net
+- disable login button while waiting for response from ggpo.net

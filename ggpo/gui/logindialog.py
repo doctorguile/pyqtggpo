@@ -38,6 +38,8 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
         self.uiErrorLbl.setText(errmsg)
 
     def login(self):
+        if not self.uiLoginBtn.isEnabled():
+            return
         username = self.uiUsernameLine.text().strip()
         password = self.uiPasswordLine.text()
         self.uiErrorLbl.clear()
@@ -57,13 +59,28 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
             Settings.setValue(Settings.USERNAME, '')
             Settings.setValue(Settings.PASSWORD, '')
 
+        self.uiLoginBtn.setEnabled(False)
+
         if not self.controller.connectTcp():
             # noinspection PyCallByClass,PyTypeChecker,PyArgumentList
             QtGui.QMessageBox.warning(self, 'Error', "Cannot connect to ggpo.net")
+            self.uiLoginBtn.setEnabled(True)
             return -1
 
         self.controller.sendWelcome()
         self.controller.sendAuth(username, password)
+
+    def onLoginFailed(self):
+        self.uiLoginBtn.setEnabled(True)
+        self.displayErrorMessage("Invalid username/password")
+
+    def onServerDisconnected(self):
+        self.uiLoginBtn.setEnabled(True)
+        self.displayErrorMessage("Disconnected from ggpo.net.\nPlease restart application")
+
+    def onStatusMessage(self, msg):
+        self.uiLoginBtn.setEnabled(True)
+        self.displayErrorMessage(msg)
 
     # noinspection PyMethodMayBeStatic
     def savePassword(self, value):
@@ -71,14 +88,10 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
 
     def setController(self, controller):
         self.controller = controller
-        controller.sigServerDisconnected.connect(
-            lambda: self.displayErrorMessage("Disconnected from ggpo.net.\nPlease restart application"))
-        # TODO
-        # ggpo.sigNewVersionAvailable.connect(str, str)
+        controller.sigServerDisconnected.connect(self.onServerDisconnected)
         controller.sigLoginSuccess.connect(self.accept)
-        controller.sigLoginFailed.connect(
-            lambda: self.displayErrorMessage("Invalid username/password"))
-        controller.sigStatusMessage.connect(self.displayErrorMessage)
+        controller.sigLoginFailed.connect(self.onLoginFailed)
+        controller.sigStatusMessage.connect(self.onStatusMessage)
 
     def showEvent(self, QShowEvent):
         QtGui.QDialog.showEvent(self, QShowEvent)
