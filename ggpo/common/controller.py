@@ -624,7 +624,7 @@ class Controller(QtCore.QObject):
 
     def sendAcceptChallenge(self, name):
         if name in self.challengers:
-            self.sendAndRemember(Protocol.ACCEPT_CHALLENGE, Protocol.packTLV(name) + Protocol.packTLV(self.channel))
+            self.sendAndRemember(Protocol.ACCEPT_CHALLENGE, Protocol.packTLV(name) + Protocol.packTLV(self.rom))
             self.challengers.remove(name)
 
     def sendAndForget(self, command, data=''):
@@ -648,7 +648,7 @@ class Controller(QtCore.QObject):
 
     def sendChallenge(self, name):
         self.sendCancelChallenge()
-        self.sendAndRemember(Protocol.SEND_CHALLENGE, Protocol.packTLV(name) + Protocol.packTLV(self.channel))
+        self.sendAndRemember(Protocol.SEND_CHALLENGE, Protocol.packTLV(name) + Protocol.packTLV(self.rom))
         self.challenged = name
 
     def sendChat(self, line):
