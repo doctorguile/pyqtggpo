@@ -89,7 +89,11 @@ class ColorTheme:
 
     @staticmethod
     def statusHtml(txt):
-        return '<font color="#' + ColorTheme.SELECTED['status'] + '">' + cgi.escape(txt) + "</font>"
+        if txt:
+            txt = cgi.escape(txt)
+            txt = txt.replace("\n", "<br/>")
+            return '<font color="#' + ColorTheme.SELECTED['status'] + '">' + txt + "</font>"
+
 
 ColorTheme.LIGHT['count'] = len(ColorTheme.LIGHT['player'])
 ColorTheme.DARK['count'] = len(ColorTheme.DARK['player'])

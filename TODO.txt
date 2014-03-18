@@ -1,7 +1,10 @@
-package exe and dmg
-figure out how to apply ggpofba.ini
+no need to check for rom in unsupported & lobby
+can't start game in lobby
+
+use backends for media player & db
 
 custom emoticons?
 how to set input lag?
-cliclient?
+better feedback for cliclient
+add/remove ignore cli
 

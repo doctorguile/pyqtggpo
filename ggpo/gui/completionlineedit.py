@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt4.QtCore import Qt, QAbstractItemModel, QModelIndex, QEvent
 from PyQt4.QtGui import QLineEdit, QCompleter
+from ggpo.common.cliclient import CLI
 from ggpo.common.playerstate import PlayerStates
 
 
@@ -9,7 +10,7 @@ class PlayerNameCompletionModel(QAbstractItemModel):
         super(PlayerNameCompletionModel, self).__init__(parent)
         self.controller = None
         self._prefix = ''
-        self._data = ['ggs', 'brb', 'gtg']
+        self._data = CLI.commands.keys()
         self._filtered = self._data
         self._rowcount = len(self._data)
 
@@ -41,7 +42,8 @@ class PlayerNameCompletionModel(QAbstractItemModel):
             self.dataChanged.emit(self.createIndex(0, 0), self.createIndex(self._rowcount - 1, 0))
 
     def playersLoaded(self):
-        self._data = [p for p in self.controller.available.keys()] + \
+        self._data = CLI.commands.keys() + \
+                     [p for p in self.controller.available.keys()] + \
                      [p for p, p2 in self.controller.playing.items()] + \
                      [p for p in self.controller.awayfromkb.keys()]
         self._filtered = self._data
@@ -76,6 +78,8 @@ class PlayerNameCompleter(QCompleter):
 
 
 class CompletionLineEdit(QLineEdit):
+    NON_ALPHA = "~!@#$%^&*()_+{}|:\"<>?,./;'[]\\-="
+
     def __init__(self, parent=None):
         super(CompletionLineEdit, self).__init__(parent)
         self._completer = PlayerNameCompleter()
@@ -112,6 +116,8 @@ class CompletionLineEdit(QLineEdit):
             self.cursorWordBackward(False)
             self.cursorWordForward(True)
             self.del_()
+            if string[0] in self.NON_ALPHA:
+                string = string[1:]
             self.insert(string + ' ')
 
     def keyPressEvent(self, e):
@@ -125,9 +131,8 @@ class CompletionLineEdit(QLineEdit):
         if e.modifiers() & (Qt.ControlModifier | Qt.AltModifier | Qt.MetaModifier):
             return
 
-        eow = "~!@#$%^&*()_+{}|:\"<>?,./;'[]\\-="
         textUnderCursor = self.textUnderCursor()
-        if not e.text() or len(textUnderCursor) < 2 or e.text()[-1] in eow:
+        if not e.text() or len(textUnderCursor) < 2 or e.text()[-1] in self.NON_ALPHA:
             self._completer.popup().hide()
             return
         if self._completer.update(textUnderCursor):

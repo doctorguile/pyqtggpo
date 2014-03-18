@@ -6,13 +6,13 @@ import logging.handlers
 from colortheme import ColorTheme
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
-from ggpo.common.playerstate import PlayerStates
-import ggpo.gui
-from ggpo.gui.playermodel import PlayerModel
-from ggpo.gui.emoticonsdialog import EmoticonDialog
 from ggpo.common import copyright, util
-from ggpo.common.util import logger, openURL, findURLs, replaceURLs, isWindows, findWine, isOSX
+from ggpo.common.cliclient import CLI
+from ggpo.common.playerstate import PlayerStates
 from ggpo.common.settings import Settings
+from ggpo.common.util import logger, openURL, findURLs, replaceURLs, isWindows, findWine, isOSX
+from ggpo.gui.emoticonsdialog import EmoticonDialog
+from ggpo.gui.playermodel import PlayerModel
 from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
 
 
@@ -213,7 +213,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.updateStatusBar()
 
     def onStatusMessage(self, msg):
-        self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(cgi.escape(msg)))
+        self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(msg))
 
     def restorePreference(self):
         if Settings.value(Settings.COLORTHEME):
@@ -245,7 +245,10 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         line = self.uiChatInputEdit.text().strip()
         if line:
             self.uiChatInputEdit.clear()
-            self.controller.sendChat(line)
+            if line[0] == '/':
+                CLI.process(self.controller, self.uiAwayAct.setChecked, line)
+            else:
+                self.controller.sendChat(line)
 
     def setController(self, controller):
         self.controller = controller

@@ -622,7 +622,7 @@ class Controller(QtCore.QObject):
                             self.handleUdpResponse(dgram, addr)
 
     def sendAcceptChallenge(self, name):
-        if name in list(self.challengers):
+        if name in self.challengers:
             self.sendAndRemember(Protocol.ACCEPT_CHALLENGE, Protocol.packTLV(name) + Protocol.packTLV(self.channel))
             self.challengers.remove(name)
 

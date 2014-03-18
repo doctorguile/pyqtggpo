@@ -9,9 +9,10 @@ This is a cross platform (Linux,  MacOSX, Windows) GUI client for
 
 # Features
 - Support dark theme to reduce eye strain
-- Autocomplete in chat
 - More accurate GeoIP info
 - Simple emoticons support
+- Autocomplete in chat
+- Built in CLI commands in chat, type `/help` to see a list of commands
 
 # Installation
 

@@ -1,133 +1,86 @@
 # -*- coding: utf-8 -*-
-import sip
-# Tell qt to return python string instead of QString
-# These are only needed for Python v2 but are harmless for Python v3.
-sip.setapi('QString', 2)
-sip.setapi('QVariant', 2)
-import threading
-from playerstate import PlayerStates
-from controller import Controller
+from collections import OrderedDict
 
 
-def chatResponse(name, msg):
-    print "<" + name + "> " + msg
+# noinspection PyClassHasNoInit
+class CLI:
+    ARG_TYPE, HELPSTRING = range(2)
+    NO_ARG, REQUIRED_ARG, OPTIONAL_ARG = range(3)
 
+    commands = OrderedDict([
+        ("/away", [NO_ARG,  "away from keyboard"]),
+        ("/back", [NO_ARG, "become available to play"]),
+        ("/accept", [OPTIONAL_ARG, "accept incoming challenge"]),
+        ("/decline", [OPTIONAL_ARG, "decline incoming challenge"]),
+        ("/challenge", [REQUIRED_ARG, "challenge player"]),
+        ("/cancel", [NO_ARG,  "cancel outgoing challenge"]),
+        ("/watch", [REQUIRED_ARG,  "spectate a game"]),
+        ("/motd", [NO_ARG,  "clear screen and show message of the day"]),
+        ("/help", [NO_ARG,  "display help menu"])
+    ])
 
-def bailoutCallback(msg):
-    def bailout():
-        print msg
-        sys.exit()
+    # need cleaner api for AFK, passing an action is a hack for now
+    @classmethod
+    def process(cls, controller, afkSetChecked, line):
+        def cliaccept(name=None):
+            if not name:
+                for challenger in controller.challengers:
+                    name = challenger
+            if name:
+                controller.sendAcceptChallenge(name)
 
-    return bailout
+        def cliaway():
+            afkSetChecked(True)
+            controller.sendToggleAFK(1)
 
+        def cliback():
+            afkSetChecked(False)
+            controller.sendToggleAFK(0)
 
-def msgCallback(msg=''):
-    def printmsg(*args):
-        if args:
-            print msg + ' '.join(args)
-        else:
-            print msg
+        def clicancel():
+            controller.sendCancelChallenge(controller.challenged)
 
-    return printmsg
+        def clichallenge(name):
+            if name in controller.available:
+                controller.sendChallenge(name)
 
-
-def playerStateChange(name, state):
-    if state == PlayerStates.QUIT:
-        print '-!- ' + name + " left"
-    elif state == PlayerStates.AVAILABLE:
-        print '-!- ' + name + " becomes available"
-    elif state == PlayerStates.AFK:
-        print '-!- ' + name + " is away from keyboard"
-    elif state == PlayerStates.PLAYING:
-        print '-!- ' + name + " started a game"
-
-
-def cliclient(argv):
-    # thread = QtCore.QThread()
-    g = Controller()
-
-    if not g.connectTcp():
-        sys.exit()
-    g.connectUdp()
-
-    def refreshUsers():
-        print "-!- Player list"
-        for p in g.available.keys():
-            print p
-        for p in g.awayfromkb.keys():
-            print p + ' (AFK)'
-        for p, p2 in g.playing.items():
-            print p + ' vs ' + p2
-
-    def loadRooms():
-        keys = sorted(g.channels.keys())
-        for k in keys:
-            print k + ' - ' + g.channels[k]['title']
-
-    def readlineLoop():
-        commands = {
-            "/challenge": g.sendChallenge,
-            "/cancel": g.sendCancelChallenge,
-            "/accept": g.sendAcceptChallenge,
-            "/decline": g.sendDeclineChallenge,
-            "/watch": g.sendSpectateRequest,
-            "/join": g.sendJoinChannelRequest,
-            "/list": g.sendListChannels,
-            "/users": g.sendListUsers,
-            "/motd": g.sendMOTDRequest,
-            "/away": lambda: g.sendToggleAFK(1),
-            "/afk": lambda: g.sendToggleAFK(1),
-            "/back": lambda: g.sendToggleAFK(0),
-            "/exit": sys.exit,
-            "/quit": sys.exit,
-        }
-        commandsReqArg = ["challenge", "cancel", "accept", "decline", "watch", "join"]
-
-        while True:
-            line = sys.stdin.readline().strip()
-            if not line:
-                continue
-            words = line.split(None, 1)
-            cmd = words[0]
-            if cmd in commands:
-                cb = commands[cmd]
-                if cmd[1:] in commandsReqArg:
-                    if len(words) == 2:
-                        cb(words[1])
-                else:
-                    cb()
+        def clidecline(name=None):
+            if name:
+                controller.sendDeclineChallenge(name)
             else:
-                if line.startswith('/'):
-                    print "Available commands\n"
-                    print "\n".join(sorted(commands.keys()))
+                for challenger in controller.challengers:
+                    controller.sendDeclineChallenge(challenger)
+
+        def clihelp():
+            msg = "Available commands\n" + \
+                  "\n".join([k + (v[cls.ARG_TYPE] == cls.NO_ARG and " " or " [name]") + "  -  " + v[cls.HELPSTRING]
+                             for k, v in cls.commands.items()])
+            controller.sigStatusMessage.emit(msg)
+
+        def climotd():
+            controller.sendMOTDRequest()
+
+        def cliwatch(name):
+            if name in controller.playing.keys():
+                controller.sendSpectateRequest(name)
+
+        words = line.split(None, 1)
+        command = words[0]
+        if command in cls.commands:
+            cmd = cls.commands[command]
+            callback = locals()['cli' + command[1:]]
+            if cmd[cls.ARG_TYPE] == cls.NO_ARG:
+                callback()
+            elif cmd[cls.ARG_TYPE] == cls.REQUIRED_ARG:
+                if len(words) != 2:
+                    clihelp()
                 else:
-                    g.sendChat(line)
+                    callback(words[1])
+            elif cmd[cls.ARG_TYPE] == cls.OPTIONAL_ARG:
+                if len(words) >= 2:
+                    callback(words[1])
+                else:
+                    callback()
+        else:
+            clihelp()
 
-    g.sigServerDisconnected.connect(bailoutCallback('-!- Disconnected from server'))
-    g.sigLoginSuccess.connect(msgCallback('-!- Logged In'))
-    g.sigLoginFailed.connect(bailoutCallback('-!- Invalid username / password'))
-    g.sigActionFailed.connect(msgCallback('-!- Failed - '))
-    g.sigStatusMessage.connect(msgCallback('-!- '))
-    g.sigChallengeDeclined.connect(msgCallback('-!- Challege declined by '))
-    g.sigChallengeCancelled.connect(msgCallback('-!- Challege cancelled by '))
-    g.sigChallengeReceived.connect(msgCallback('-!- Challege sent by '))
-    g.sigMotdReceived.connect(msgCallback('-!- Message of the day - '))
-    g.sigPlayerStateChange.connect(playerStateChange)
-    g.sigChatReceived.connect(chatResponse)
-    g.sigPlayersLoaded.connect(refreshUsers)
-    g.sigChannelsLoaded.connect(loadRooms)
-
-    t = threading.Thread(target=g.selectLoop)
-    t.daemon = True
-    t.start()
-
-    g.sendWelcome()
-    g.sendAuth(argv[1], argv[2])
-    readlineLoop()
-
-
-if __name__ == '__main__':
-    import sys
-
-    print(sys.argv[0])
-    cliclient(sys.argv)
