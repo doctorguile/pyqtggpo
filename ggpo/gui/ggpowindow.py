@@ -7,6 +7,7 @@ import shutil
 from colortheme import ColorTheme
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
+from ggpo.common.geolookup import geolookupInit
 from ggpo.common.runtime import *
 from ggpo.common import copyright
 from ggpo.common.cliclient import CLI
@@ -146,6 +147,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                                                   "Geo mmdb (*.mmdb)")
         if fname:
             Settings.setValue(Settings.GEOIP2DB_LOCATION, fname)
+            geolookupInit()
 
     def locateUnsupportedSavestatesDirAct(self):
         d = QtGui.QFileDialog.getExistingDirectory(self, "Open Directory",

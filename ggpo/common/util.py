@@ -24,17 +24,6 @@ def checkUpdate():
         pass
 
 
-def findGeoIPDB():
-    dbs = [Settings.value(Settings.GEOIP2DB_LOCATION),
-           os.path.join(os.getcwd(), 'GeoLite2-City.mmdb'),
-           packagePathJoin('GeoLite2-City.mmdb'),
-           os.path.join(os.getcwd(), 'GeoLite2-Country.mmdb'),
-           packagePathJoin('GeoLite2-Country.mmdb')]
-    for db in dbs:
-        if db and os.path.isfile(db):
-            return db
-
-
 def findUnsupportedGamesavesDir():
     d = Settings.value(Settings.UNSUPPORTED_GAMESAVES_DIR)
     if d and os.path.isdir(d):
@@ -67,44 +56,6 @@ def findWine():
         w = '/Applications/Wine.app/Contents/Resources/bin/wine'
     if w and os.path.isfile(w):
         return w
-
-
-def freegeoip(ip):
-    url = 'http://freegeoip.net/json/'
-    try:
-        response = urllib2.urlopen(url + ip, timeout=1).read().strip()
-        return json.loads(response)
-    except urllib2.URLError:
-        return {'areacode': '',
-                'city': '',
-                'country_code': '',
-                'country_name': '',
-                'ip': ip,
-                'latitude': '',
-                'longitude': '',
-                'metro_code': '',
-                'region_code': '',
-                'region_name': '',
-                'zipcode': ''}
-
-
-def geolookup(ip):
-    db = findGeoIPDB()
-    if not GeoIP2Reader or not db:
-        return 'unknown', '', ''
-    # noinspection PyBroadException
-    try:
-        reader = GeoIP2Reader(db)
-        response = reader.city(ip)
-        cc = response.country.iso_code.lower()
-        print cc, response.country.name, response.city.name
-        return cc, response.country.name, response.city.name
-    except:
-        return 'unknown', '', ''
-
-
-def isUnknownCountryCode(cc):
-    return not cc or cc == 'unknown'
 
 
 _loggerInitialzed = False

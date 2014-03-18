@@ -1,6 +1,3 @@
-use backends for media player & db
-improve load geoip performance
 custom emoticons?
 how to set input lag?
 add/remove ignore cli
-sort is not maintained when new users joined

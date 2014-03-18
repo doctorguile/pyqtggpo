@@ -9,11 +9,12 @@ from random import randint
 from subprocess import Popen
 from PyQt4 import QtCore
 from ggpo.common.runtime import *
+from ggpo.common.geolookup import geolookup, isUnknownCountryCode
 from ggpo.common.player import Player
 from ggpo.common.playerstate import PlayerStates
 from ggpo.common.protocol import Protocol
 from ggpo.common.settings import Settings
-from ggpo.common.util import geolookup, isUnknownCountryCode, findWine, logger, packagePathJoin
+from ggpo.common.util import findWine, logger, packagePathJoin
 from ggpo.gui.colortheme import ColorTheme
 
 
@@ -96,7 +97,7 @@ class Controller(QtCore.QObject):
                 p = Player(**kwargs)
                 self.players[name] = p
                 self.sendPingQuery(p)
-                if isUnknownCountryCode(p.cc):
+                if isUnknownCountryCode(p.cc) or not p.city:
                     p.cc, p.country, p.city = geolookup(p.ip)
 
     def checkInstallation(self):
