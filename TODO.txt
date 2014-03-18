@@ -8,3 +8,4 @@ how to set input lag?
 better feedback for cliclient
 add/remove ignore cli
 
+append /help to MOTD
