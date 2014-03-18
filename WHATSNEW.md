@@ -9,6 +9,7 @@ Initial alpha source code release
 - Packaged app bundle for OSX and windows
 
 #Version 0.03
+- Support a database of ggpo unsupported game save states in the `Unsupported Games` room
 - Keyboard shortcuts for resizing splitter
 - Embedded command line interface as chat commands<br/>
 Type `/help` to see a list of commands available

@@ -13,6 +13,8 @@ This is a cross platform (Linux,  MacOSX, Windows) GUI client for
 - Simple emoticons support
 - Autocomplete in chat
 - Built in CLI commands in chat, type `/help` to see a list of commands
+- Support a database of ggpo unsupported game save states in the `Unsupported Games` room. `Action` > `Sync` / `Select`
+
 
 # Installation
 

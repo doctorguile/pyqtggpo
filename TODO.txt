@@ -4,4 +4,3 @@ custom emoticons?
 how to set input lag?
 add/remove ignore cli
 sort is not maintained when new users joined
-create thread to sync saved states?

@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 import cgi
-import json
 import logging
 import logging.handlers
 import os
-import re
 import shutil
-import urllib
-import urllib2
 from colortheme import ColorTheme
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
 from ggpo.common.runtime import *
-from ggpo.common import copyright, util
+from ggpo.common import copyright
 from ggpo.common.cliclient import CLI
 from ggpo.common.playerstate import PlayerStates
 from ggpo.common.settings import Settings
-from ggpo.common.util import logger, openURL, findURLs, replaceURLs, findWine, findUnsupportedGamesavesDir, sha256digest
+from ggpo.common.util import logger, openURL, findURLs, replaceURLs, findWine, findUnsupportedGamesavesDir
+from ggpo.common.unsupportedsavestates import UnsupportedSavestates
 from ggpo.gui.emoticonsdialog import EmoticonDialog
 from ggpo.gui.playermodel import PlayerModel
 from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
@@ -25,7 +22,6 @@ from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
 class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self, QWidget_parent=None):
         super(GGPOWindow, self).__init__(QWidget_parent)
-        # ggpo.gui.loadUi(__file__, self)
         self.setupUi(self)
         self.controller = None
         self.channels = {}
@@ -43,7 +39,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiLocateGgpofbaAct.triggered.connect(self.locateGGPOFBA)
         self.uiLocateUnsupportedSavestatesDirAct.triggered.connect(self.locateUnsupportedSavestatesDirAct)
         self.uiSelectUnsupportedSavestateAct.triggered.connect(self.selectUnsupportedSavestate)
-        self.uiSyncUnsupportedSavestatesAct.triggered.connect(lambda: QtCore.QTimer.singleShot(0, self.syncUnsupportedSavestatesAct))
+        self.uiSyncUnsupportedSavestatesAct.triggered.connect(lambda: UnsupportedSavestates.sync(self))
         if IS_WINDOWS:
             self.uiLocateWineAct.setVisible(False)
         else:
@@ -405,29 +401,6 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         if index not in self.uiPlayersTableV.model().sortableColumns:
             self.uiPlayersTableV.horizontalHeader().setSortIndicator(
                 self.uiPlayersTableV.model().lastSort, self.uiPlayersTableV.model().lastSortOrder)
-
-    def syncUnsupportedSavestatesAct(self):
-        d = findUnsupportedGamesavesDir()
-        if not d:
-            self.onStatusMessage('Unsupported Savestates Directory is not set')
-            return
-        # noinspection PyBroadException
-        try:
-            response = urllib2.urlopen('https://raw.github.com/afurlani/ggpostates/master/index.json', timeout=3)
-            games = json.load(response)
-            for filename, shahash in games.items():
-                if re.search(r'[^ .a-zA-Z0-9_-]', filename):
-                    logger().error("Filename {} looks suspicious, ignoring".format(filename))
-                    continue
-                localfile = os.path.join(d, filename)
-                if os.path.isfile(localfile) and sha256digest(localfile) == shahash:
-                    self.onStatusMessage('{} is update to date'.format(filename))
-                    continue
-                fileurl = "https://raw.github.com/afurlani/ggpostates/master/" + urllib.quote(filename)
-                urllib.urlretrieve(fileurl, localfile)
-                self.onStatusMessage('downloaded {}'.format(localfile))
-        except Exception, ex:
-            logger().error(str(ex))
 
     def toggleAFK(self, state):
         self.controller.sendToggleAFK(state)
