@@ -14,7 +14,7 @@ This is a cross platform (Linux,  MacOSX, Windows) GUI client for
 - Autocomplete in chat
 - Built in CLI commands in chat, type `/help` to see a list of commands
 - Support a database of ggpo unsupported game save states in the `Unsupported Games` room. `Action` > `Sync` / `Select`
-
+- See [What's New](https://github.com/doctorguile/pyqtggpo/blob/master/WHATSNEW.md) for a list of changes
 
 # Installation
 

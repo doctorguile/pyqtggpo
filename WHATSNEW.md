@@ -21,6 +21,8 @@ Type `/help` to see a list of commands available
     /challenge [name] - challenge player
     /cancel - cancel outgoing challenge
     /watch [name] - spectate a game
+    /ignore [name] - ignore a player
+    /unignore [name] - unignore a player
     /motd - clear screen and show message of the day
     /help - display help menu
 

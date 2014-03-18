@@ -80,10 +80,11 @@ class Controller(QtCore.QObject):
             self.ignored = set()
         self.sigStatusMessage.connect(logger().info)
 
-    def addIgnore(self, player):
-        self.ignored.add(player)
-        self.saveIgnored()
-        self.sigIgnoreAdded.emit(player)
+    def addIgnore(self, name):
+        if name != self.username:
+            self.ignored.add(name)
+            self.saveIgnored()
+            self.sigIgnoreAdded.emit(name)
 
     def addUser(self, **kwargs):
         if 'player' in kwargs:

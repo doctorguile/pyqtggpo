@@ -46,6 +46,9 @@ class PlayerModel(QtCore.QAbstractTableModel):
         controller.sigChallengeDeclined.connect(self.reloadPlayers)
         controller.sigChallengeReceived.connect(self.reloadPlayers)
         controller.sigChallengeCancelled.connect(self.reloadPlayers)
+        # This is very heavy-handed for handling the CLI add/remove changes
+        controller.sigIgnoreAdded.connect(self.reloadPlayers)
+        controller.sigIgnoreRemoved.connect(self.reloadPlayers)
 
     # noinspection PyMethodMayBeStatic
     def columnCount(self, QModelIndex_parent=None, *args, **kwargs):
@@ -204,11 +207,10 @@ class PlayerModel(QtCore.QAbstractTableModel):
             # noinspection PyUnresolvedReferences
             self.dataChanged.emit(modelIndex, modelIndex)
             player = self.players[row][PlayerModel.PLAYER]
-            if player != self.controller.username:
-                if value == Qt.Checked:
-                    self.controller.addIgnore(player)
-                else:
-                    self.controller.removeIgnore(player)
+            if value == Qt.Checked:
+                self.controller.addIgnore(player)
+            else:
+                self.controller.removeIgnore(player)
         return True
 
     def sort(self, col, order=None):

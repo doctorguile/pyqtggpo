@@ -15,6 +15,8 @@ class CLI:
         ("/challenge", [REQUIRED_ARG, "challenge player"]),
         ("/cancel", [NO_ARG, "cancel outgoing challenge"]),
         ("/watch", [REQUIRED_ARG, "spectate a game"]),
+        ("/ignore", [REQUIRED_ARG, "ignore a player"]),
+        ("/unignore", [REQUIRED_ARG, "unignore a player"]),
         ("/motd", [NO_ARG, "clear screen and show message of the day"]),
         ("/help", [NO_ARG, "display help menu"])
     ])
@@ -74,8 +76,20 @@ class CLI:
         def clihelp():
             controller.sigStatusMessage.emit(cls.helptext())
 
+        def cliignore(name):
+            if name in controller.ignored:
+                controller.sigStatusMessage.emit("{} is already in ignore list".format(name))
+            else:
+                controller.addIgnore(name)
+
         def climotd():
             controller.sendMOTDRequest()
+
+        def cliunignore(name):
+            if name in controller.ignored:
+                controller.removeIgnore(name)
+            else:
+                controller.sigStatusMessage.emit("{} is not in ignore list".format(name))
 
         def cliwatch(name):
             if name in controller.playing.keys():
