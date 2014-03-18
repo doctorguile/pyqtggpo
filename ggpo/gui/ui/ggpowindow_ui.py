@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ggpo/gui/ui/ggpowindow.ui'
 #
-# Created: Mon Mar 17 21:53:14 2014
+# Created: Tue Mar 18 01:10:01 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -128,6 +128,12 @@ class Ui_MainWindow(object):
         self.uiContractPlayerListAct.setObjectName(_fromUtf8("uiContractPlayerListAct"))
         self.uiExpandPlayerListAct = QtGui.QAction(MainWindow)
         self.uiExpandPlayerListAct.setObjectName(_fromUtf8("uiExpandPlayerListAct"))
+        self.uiLocateUnsupportedSavestatesDirAct = QtGui.QAction(MainWindow)
+        self.uiLocateUnsupportedSavestatesDirAct.setObjectName(_fromUtf8("uiLocateUnsupportedSavestatesDirAct"))
+        self.uiSyncUnsupportedSavestatesAct = QtGui.QAction(MainWindow)
+        self.uiSyncUnsupportedSavestatesAct.setObjectName(_fromUtf8("uiSyncUnsupportedSavestatesAct"))
+        self.uiSelectUnsupportedSavestateAct = QtGui.QAction(MainWindow)
+        self.uiSelectUnsupportedSavestateAct.setObjectName(_fromUtf8("uiSelectUnsupportedSavestateAct"))
         self.menuAction.addAction(self.uiAwayAct)
         self.menuAction.addAction(self.uiFocusOnChatAct)
         self.menuAction.addAction(self.uiEmoticonAct)
@@ -140,6 +146,9 @@ class Ui_MainWindow(object):
         self.menuAction.addAction(self.uiContractPlayerListAct)
         self.menuAction.addAction(self.uiExpandPlayerListAct)
         self.menuAction.addSeparator()
+        self.menuAction.addAction(self.uiSelectUnsupportedSavestateAct)
+        self.menuAction.addAction(self.uiSyncUnsupportedSavestatesAct)
+        self.menuAction.addSeparator()
         self.menuAction.addAction(self.uiQuitAct)
         self.menuSetting.addAction(self.uiMuteChallengeSoundAct)
         self.menuSetting.addAction(self.uiFontAct)
@@ -147,6 +156,7 @@ class Ui_MainWindow(object):
         self.menuSetting.addSeparator()
         self.menuSetting.addAction(self.uiLocateGgpofbaAct)
         self.menuSetting.addAction(self.uiLocateWineAct)
+        self.menuSetting.addAction(self.uiLocateUnsupportedSavestatesDirAct)
         self.menuSetting.addAction(self.uiLocateGeommdbAct)
         self.menuSetting.addSeparator()
         self.menuSetting.addAction(self.uiNotifyPlayerStateChangeAct)
@@ -207,8 +217,8 @@ class Ui_MainWindow(object):
         self.uiNotifyPlayerStateChangeAct.setText(QtGui.QApplication.translate("MainWindow", "&Notify Player State Change", None, QtGui.QApplication.UnicodeUTF8))
         self.uiFocusOnChatAct.setText(QtGui.QApplication.translate("MainWindow", "Focus on c&hat", None, QtGui.QApplication.UnicodeUTF8))
         self.uiFocusOnChatAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+H", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiToggleSidebarAction.setText(QtGui.QApplication.translate("MainWindow", "Toggle Channel &Sidebar", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiToggleSidebarAction.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+S", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiToggleSidebarAction.setText(QtGui.QApplication.translate("MainWindow", "To&ggle Channel Sidebar", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiToggleSidebarAction.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+G", None, QtGui.QApplication.UnicodeUTF8))
         self.uiExpandChannelSidebarAct.setText(QtGui.QApplication.translate("MainWindow", "&+ Expand Channel Sidebar", None, QtGui.QApplication.UnicodeUTF8))
         self.uiExpandChannelSidebarAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+=", None, QtGui.QApplication.UnicodeUTF8))
         self.uiContractChannelSidebarAct.setText(QtGui.QApplication.translate("MainWindow", "&- Contract Channel Sidebar", None, QtGui.QApplication.UnicodeUTF8))
@@ -217,5 +227,9 @@ class Ui_MainWindow(object):
         self.uiContractPlayerListAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+.", None, QtGui.QApplication.UnicodeUTF8))
         self.uiExpandPlayerListAct.setText(QtGui.QApplication.translate("MainWindow", "&< Expand Player List", None, QtGui.QApplication.UnicodeUTF8))
         self.uiExpandPlayerListAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+,", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiLocateUnsupportedSavestatesDirAct.setText(QtGui.QApplication.translate("MainWindow", "Locate &Unsupported Savestates Directory", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiSyncUnsupportedSavestatesAct.setText(QtGui.QApplication.translate("MainWindow", "S&ync Unsupported Savestates", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiSelectUnsupportedSavestateAct.setText(QtGui.QApplication.translate("MainWindow", "&Select Unsupported Savestate", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiSelectUnsupportedSavestateAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+S", None, QtGui.QApplication.UnicodeUTF8))
 
 from ggpo.gui.completionlineedit import CompletionLineEdit

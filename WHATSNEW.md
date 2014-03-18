@@ -13,15 +13,16 @@ Initial alpha source code release
 - Embedded command line interface as chat commands<br/>
 Type `/help` to see a list of commands available
 
-/away - away from keyboard
-/back - become available to play
-/accept [name] - accept incoming challenge
-/decline [name] - decline incoming challenge
-/challenge [name] - challenge player
-/cancel - cancel outgoing challenge
-/watch [name] - spectate a game
-/motd - clear screen and show message of the day
-/help - display help menu
+    /away - away from keyboard
+    /back - become available to play
+    /accept [name] - accept incoming challenge
+    /decline [name] - decline incoming challenge
+    /challenge [name] - challenge player
+    /cancel - cancel outgoing challenge
+    /watch [name] - spectate a game
+    /motd - clear screen and show message of the day
+    /help - display help menu
 
 ## Fixes
+- fixes send / receive challenge in 3s and kof rooms
 - disable login button while waiting for response from ggpo.net

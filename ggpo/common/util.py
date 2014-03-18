@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-import os
-import urllib2
-import re
-import json
-import platform
+import hashlib
 import logging
 import logging.handlers
+import json
+import os
+import re
+import urllib2
 from PyQt4 import QtGui, QtCore
 from ggpo.common.runtime import *
 from ggpo.common.settings import Settings
 from ggpo.common import copyright
 from os.path import expanduser
+
 
 def checkUpdate():
     versionurl = 'https://raw.github.com/doctorguile/pyqtggpo/master/VERSION'
@@ -32,6 +33,21 @@ def findGeoIPDB():
     for db in dbs:
         if db and os.path.isfile(db):
             return db
+
+
+def findUnsupportedGamesavesDir():
+    d = Settings.value(Settings.UNSUPPORTED_GAMESAVES_DIR)
+    if d and os.path.isdir(d):
+        return d
+    d = os.path.abspath(os.path.join(expanduser("~"), "ggpoUnsupportedGamesavestates"))
+    if d and os.path.isdir(d):
+        return d
+    # noinspection PyBroadException
+    try:
+        os.makedirs(d)
+        return d
+    except:
+        pass
 
 
 def findURLs(url):
@@ -86,6 +102,7 @@ def geolookup(ip):
     except:
         return 'unknown', '', ''
 
+
 def isUnknownCountryCode(cc):
     return not cc or cc == 'unknown'
 
@@ -129,3 +146,7 @@ def packagePathJoin(*args):
 def replaceURLs(text):
     return re.sub(r'(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)',
                   r'<a href="\1">\1</a>', text)
+
+
+def sha256digest(fname):
+    return hashlib.sha256(open(fname, 'rb').read()).hexdigest()

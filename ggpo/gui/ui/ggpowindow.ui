@@ -108,6 +108,9 @@
     <addaction name="uiContractPlayerListAct"/>
     <addaction name="uiExpandPlayerListAct"/>
     <addaction name="separator"/>
+    <addaction name="uiSelectUnsupportedSavestateAct"/>
+    <addaction name="uiSyncUnsupportedSavestatesAct"/>
+    <addaction name="separator"/>
     <addaction name="uiQuitAct"/>
    </widget>
    <widget class="QMenu" name="menuSetting">
@@ -120,6 +123,7 @@
     <addaction name="separator"/>
     <addaction name="uiLocateGgpofbaAct"/>
     <addaction name="uiLocateWineAct"/>
+    <addaction name="uiLocateUnsupportedSavestatesDirAct"/>
     <addaction name="uiLocateGeommdbAct"/>
     <addaction name="separator"/>
     <addaction name="uiNotifyPlayerStateChangeAct"/>
@@ -285,10 +289,10 @@
   </action>
   <action name="uiToggleSidebarAction">
    <property name="text">
-    <string>Toggle Channel &amp;Sidebar</string>
+    <string>To&amp;ggle Channel Sidebar</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+S</string>
+    <string>Ctrl+G</string>
    </property>
   </action>
   <action name="uiExpandChannelSidebarAct">
@@ -321,6 +325,24 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+,</string>
+   </property>
+  </action>
+  <action name="uiLocateUnsupportedSavestatesDirAct">
+   <property name="text">
+    <string>Locate &amp;Unsupported Savestates Directory</string>
+   </property>
+  </action>
+  <action name="uiSyncUnsupportedSavestatesAct">
+   <property name="text">
+    <string>S&amp;ync Unsupported Savestates</string>
+   </property>
+  </action>
+  <action name="uiSelectUnsupportedSavestateAct">
+   <property name="text">
+    <string>&amp;Select Unsupported Savestate</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
