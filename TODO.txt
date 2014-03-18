@@ -5,7 +5,5 @@ use backends for media player & db
 
 custom emoticons?
 how to set input lag?
-better feedback for cliclient
 add/remove ignore cli
-
-append /help to MOTD
+sort is not maintained when new users joined

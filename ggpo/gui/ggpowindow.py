@@ -207,7 +207,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiChannelsList.itemSelectionChanged.connect(self.joinChannel)
 
     def onMOTDReceived(self, channel, topic, msg):
-        self.uiChatHistoryTxtB.setHtml(replaceURLs(msg) + '<br>')
+        self.uiChatHistoryTxtB.setHtml(replaceURLs(msg) + '<br/><br/>' + CLI.helptext().replace("\n", "<br/>"))
 
     def onPlayerStateChange(self, name, state):
         if Settings.value(Settings.NOTIFY_PLAYER_STATE_CHANGE):
@@ -254,6 +254,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                 sizes[part] += increment
                 sizes[chatHistoryPart] -= increment
             self.uiSplitter.setSizes(sizes)
+
         return resizeCallback
 
     def restorePreference(self):
