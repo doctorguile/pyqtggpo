@@ -13,7 +13,8 @@ This is a cross platform (Linux,  MacOSX, Windows) GUI client for
 - Simple emoticons support
 - Autocomplete in chat
 - Built in CLI commands in chat, type `/help` to see a list of commands
-- Support a database of ggpo unsupported game save states in the `Unsupported Games` room. `Action` > `Sync` / `Select`
+- Support a database of ggpo unsupported game save states in the `Unsupported Games` room. `Action` > `Sync` / `Select`.
+[Contribute save states](https://github.com/afurlani/ggpostates/)
 - See [What's New](https://github.com/doctorguile/pyqtggpo/blob/master/WHATSNEW.md) for a list of changes
 
 # Installation
@@ -75,6 +76,11 @@ Pau Oliva Fora (@pof)<br />
 For the amazing job of reverse engineering the client protocol
 and the [CLI client](http://poliva.github.io/ggpo/) that provides
 most of the ground work for this GUI port, as well as the wine installation instructions.
+Contribute save states
+
+Andrew Furlani and Brendan O'Dowd<br/>
+For the original idea of Unsupported Savestates management and hosting the
+[database](https://github.com/afurlani/ggpostates/) of such savestates
 
 ## Screenshots
 ![alt text](http://i.imgur.com/E80zA9t.png "ggpo screenshot 0")
