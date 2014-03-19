@@ -79,8 +79,8 @@ most of the ground work for this GUI port, as well as the wine installation inst
 Contribute save states
 
 Andrew Furlani and Brendan O'Dowd<br/>
-For the original idea of Unsupported Savestates management and hosting the
-[database](https://github.com/afurlani/ggpostates/) of such savestates
+For the original idea of Unsupported Savestates Management and maintaining the
+[database](https://github.com/afurlani/ggpostates/) of savestates
 
 ## Screenshots
 ![alt text](http://i.imgur.com/E80zA9t.png "ggpo screenshot 0")
