@@ -61,7 +61,7 @@ Either download and gunzip [pyqtggpo source tarball](https://github.com/doctorgu
 
 1. Make sure you have wine installed
 2. Run ```winecfg``` and check the option to "Emulate a virtual desktop"
-3. cd pyqtggpo && python main.py
+3. `cd pyqtggpo ; python main.py`
 4. Login with your ggpo credential
 5. Go to `Settings` > `Locate ggpofba.exe` and select the ggpofba.exe file you extracted from the official client.
 6. Go to `Settings` > `Locate GeoIP mmdb` and select the GeoLite2-Country.mmdb file.
