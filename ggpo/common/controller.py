@@ -66,6 +66,7 @@ class Controller(QtCore.QObject):
         self.rom = ''
         self.fba = None
         self.checkInstallation()
+        self.unsupportedRom = ''
 
         self.challengers = set()
         self.challenged = None
@@ -654,6 +655,8 @@ class Controller(QtCore.QObject):
         self.challenged = name
 
     def sendChat(self, line):
+        if self.channel == 'unsupported' and self.unsupportedRom:
+            line = '[' + self.unsupportedRom + '] ' + line
         line = line.encode('utf-8')
         self.sendAndRemember(Protocol.CHAT, Protocol.packTLV(line))
 
@@ -734,6 +737,9 @@ class Controller(QtCore.QObject):
             self.udpSock.sendto(msg, address)
         except:
             pass
+
+    def setUnsupportedRom(self, rom):
+        self.unsupportedRom = rom
 
     def statusBarMessage(self):
         u = len(self.playing) + len(self.available) + len(self.awayfromkb)

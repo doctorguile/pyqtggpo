@@ -1,5 +1,6 @@
 custom emoticons?
 how to set input lag?
+ggpofba.ini for input lag? nLatencySmoothing 1
 
 http://newsgroup.xnview.com/viewtopic.php?t=16181
 http://developer.nokia.com/community/wiki/Glossy_Qt_stylesheet

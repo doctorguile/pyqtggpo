@@ -332,6 +332,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.onStatusMessage('Saved {} as unsupported_ggpo.fs'.format(bname))
             if self.controller.channel == 'unsupported':
                 self.controller.sendChat("* {} switches to {}".format(self.controller.username, bname))
+            self.controller.setUnsupportedRom(os.path.splitext(bname)[0])
 
     def setController(self, controller):
         self.controller = controller
