@@ -33,7 +33,9 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         self.addSplitterHandleToggleButton()
         self.uiChatInputEdit.returnPressed.connect(self.returnPressed)
+        self.uiCustomQssFileAct.toggled.connect(self.setCustomQss)
         self.uiDarkThemeAct.toggled.connect(ColorTheme.setDarkTheme)
+        self.uiNormalThemeAct.toggled.connect(ColorTheme.setNormalTheme)
         self.uiEmoticonAct.triggered.connect(self.insertEmoticon)
         self.uiEmoticonTbtn.setDefaultAction(self.uiEmoticonAct)
         self.uiEmoticonTbtn.setText(':)')
@@ -272,8 +274,15 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         return resizeCallback
 
     def restorePreference(self):
-        if Settings.value(Settings.COLORTHEME):
-            self.uiDarkThemeAct.setChecked(True)
+        theme = Settings.value(Settings.COLORTHEME)
+        if theme:
+            if theme == 'darkorange':
+                self.uiDarkThemeAct.setChecked(True)
+            elif theme == 'custom':
+                fname = Settings.value(Settings.CUSTOM_THEME_FILENAME)
+                self.setCustomQssfile(fname)
+        else:
+            self.uiNormalThemeAct.setChecked(True)
         if Settings.value(Settings.MUTE_CHALLENGE_SOUND):
             self.uiMuteChallengeSoundAct.setChecked(True)
         if Settings.value(Settings.NOTIFY_PLAYER_STATE_CHANGE):
@@ -346,6 +355,22 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             lambda: self.onStatusMessage("Disconnected from ggpo.net. Please restart application"))
         if Settings.value(Settings.MUTE_CHALLENGE_SOUND):
             self.uiMuteChallengeSoundAct.setChecked(True)
+
+    def setCustomQss(self, boolean):
+        if boolean:
+            fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate Qt Stylesheet qss file', os.path.expanduser("~"),
+                                                      "qss file (*.qss)")
+            self.setCustomQssfile(fname)
+
+    def setCustomQssfile(self, fname):
+        if fname and os.path.isfile(fname):
+            # noinspection PyBroadException
+            try:
+                QtGui.QApplication.instance().setStyleSheet(open(fname).read())
+                Settings.setValue(Settings.COLORTHEME, 'custom')
+                Settings.setValue(Settings.CUSTOM_THEME_FILENAME, fname)
+            except:
+                pass
 
     def setupMediaPlayer(self):
         # can't properly install PyQt4.phonon on osx yet

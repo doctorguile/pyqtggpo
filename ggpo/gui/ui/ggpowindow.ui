@@ -117,9 +117,18 @@
     <property name="title">
      <string>S&amp;etting</string>
     </property>
+    <widget class="QMenu" name="menuTheme">
+     <property name="title">
+      <string>Theme</string>
+     </property>
+     <addaction name="uiNormalThemeAct"/>
+     <addaction name="uiDarkThemeAct"/>
+     <addaction name="separator"/>
+     <addaction name="uiCustomQssFileAct"/>
+    </widget>
     <addaction name="uiMuteChallengeSoundAct"/>
     <addaction name="uiFontAct"/>
-    <addaction name="uiDarkThemeAct"/>
+    <addaction name="menuTheme"/>
     <addaction name="separator"/>
     <addaction name="uiLocateGgpofbaAct"/>
     <addaction name="uiLocateWineAct"/>
@@ -281,10 +290,10 @@
   </action>
   <action name="uiFocusOnChatAct">
    <property name="text">
-    <string>Focus on c&amp;hat</string>
+    <string>Foc&amp;us on chat</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+H</string>
+    <string>Ctrl+U</string>
    </property>
   </action>
   <action name="uiToggleSidebarAction">
@@ -343,6 +352,30 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="uiFireThemeAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Fire</string>
+   </property>
+  </action>
+  <action name="uiCustomQssFileAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Custom Qss File</string>
+   </property>
+  </action>
+  <action name="uiNormalThemeAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Normal</string>
    </property>
   </action>
  </widget>

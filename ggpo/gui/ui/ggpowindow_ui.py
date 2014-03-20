@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ggpo/gui/ui/ggpowindow.ui'
 #
-# Created: Tue Mar 18 01:10:01 2014
+# Created: Wed Mar 19 23:56:23 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -65,6 +65,11 @@ class Ui_MainWindow(object):
         self.menuAction.setObjectName(_fromUtf8("menuAction"))
         self.menuSetting = QtGui.QMenu(self.menubar)
         self.menuSetting.setObjectName(_fromUtf8("menuSetting"))
+        self.menuTheme = QtGui.QMenu(self.menuSetting)
+        self.menuTheme.setObjectName(_fromUtf8("menuTheme"))
+
+        ag = QtGui.QActionGroup(self.menuTheme, exclusive=True)
+
         self.menuAbout = QtGui.QMenu(self.menubar)
         self.menuAbout.setObjectName(_fromUtf8("menuAbout"))
         MainWindow.setMenuBar(self.menubar)
@@ -134,6 +139,12 @@ class Ui_MainWindow(object):
         self.uiSyncUnsupportedSavestatesAct.setObjectName(_fromUtf8("uiSyncUnsupportedSavestatesAct"))
         self.uiSelectUnsupportedSavestateAct = QtGui.QAction(MainWindow)
         self.uiSelectUnsupportedSavestateAct.setObjectName(_fromUtf8("uiSelectUnsupportedSavestateAct"))
+        self.uiCustomQssFileAct = QtGui.QAction(MainWindow)
+        self.uiCustomQssFileAct.setCheckable(True)
+        self.uiCustomQssFileAct.setObjectName(_fromUtf8("uiCustomQssFileAct"))
+        self.uiNormalThemeAct = QtGui.QAction(MainWindow)
+        self.uiNormalThemeAct.setCheckable(True)
+        self.uiNormalThemeAct.setObjectName(_fromUtf8("uiNormalThemeAct"))
         self.menuAction.addAction(self.uiAwayAct)
         self.menuAction.addAction(self.uiFocusOnChatAct)
         self.menuAction.addAction(self.uiEmoticonAct)
@@ -150,9 +161,13 @@ class Ui_MainWindow(object):
         self.menuAction.addAction(self.uiSyncUnsupportedSavestatesAct)
         self.menuAction.addSeparator()
         self.menuAction.addAction(self.uiQuitAct)
+        self.menuTheme.addAction(ag.addAction(self.uiNormalThemeAct))
+        self.menuTheme.addAction(ag.addAction(self.uiDarkThemeAct))
+        self.menuTheme.addSeparator()
+        self.menuTheme.addAction(ag.addAction(self.uiCustomQssFileAct))
         self.menuSetting.addAction(self.uiMuteChallengeSoundAct)
         self.menuSetting.addAction(self.uiFontAct)
-        self.menuSetting.addAction(self.uiDarkThemeAct)
+        self.menuSetting.addAction(self.menuTheme.menuAction())
         self.menuSetting.addSeparator()
         self.menuSetting.addAction(self.uiLocateGgpofbaAct)
         self.menuSetting.addAction(self.uiLocateWineAct)
@@ -189,6 +204,7 @@ class Ui_MainWindow(object):
         self.uiAfkChk.setText(QtGui.QApplication.translate("MainWindow", "away", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAction.setTitle(QtGui.QApplication.translate("MainWindow", "&Action", None, QtGui.QApplication.UnicodeUTF8))
         self.menuSetting.setTitle(QtGui.QApplication.translate("MainWindow", "S&etting", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuTheme.setTitle(QtGui.QApplication.translate("MainWindow", "Theme", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAbout.setTitle(QtGui.QApplication.translate("MainWindow", "&Help", None, QtGui.QApplication.UnicodeUTF8))
         self.uiClearChatHistoryAct.setText(QtGui.QApplication.translate("MainWindow", "Clear chat his&tory", None, QtGui.QApplication.UnicodeUTF8))
         self.uiClearChatHistoryAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+T", None, QtGui.QApplication.UnicodeUTF8))
@@ -215,8 +231,8 @@ class Ui_MainWindow(object):
         self.uiLocateWineAct.setText(QtGui.QApplication.translate("MainWindow", "Locate &Wine", None, QtGui.QApplication.UnicodeUTF8))
         self.uiLocateGeommdbAct.setText(QtGui.QApplication.translate("MainWindow", "Locate &GeoIP mmdb", None, QtGui.QApplication.UnicodeUTF8))
         self.uiNotifyPlayerStateChangeAct.setText(QtGui.QApplication.translate("MainWindow", "&Notify Player State Change", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiFocusOnChatAct.setText(QtGui.QApplication.translate("MainWindow", "Focus on c&hat", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiFocusOnChatAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+H", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiFocusOnChatAct.setText(QtGui.QApplication.translate("MainWindow", "Foc&us on chat", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiFocusOnChatAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+U", None, QtGui.QApplication.UnicodeUTF8))
         self.uiToggleSidebarAction.setText(QtGui.QApplication.translate("MainWindow", "To&ggle Channel Sidebar", None, QtGui.QApplication.UnicodeUTF8))
         self.uiToggleSidebarAction.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+G", None, QtGui.QApplication.UnicodeUTF8))
         self.uiExpandChannelSidebarAct.setText(QtGui.QApplication.translate("MainWindow", "&+ Expand Channel Sidebar", None, QtGui.QApplication.UnicodeUTF8))
@@ -231,5 +247,7 @@ class Ui_MainWindow(object):
         self.uiSyncUnsupportedSavestatesAct.setText(QtGui.QApplication.translate("MainWindow", "S&ync Unsupported Savestates", None, QtGui.QApplication.UnicodeUTF8))
         self.uiSelectUnsupportedSavestateAct.setText(QtGui.QApplication.translate("MainWindow", "&Select Unsupported Savestate", None, QtGui.QApplication.UnicodeUTF8))
         self.uiSelectUnsupportedSavestateAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+S", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiCustomQssFileAct.setText(QtGui.QApplication.translate("MainWindow", "Custom Qss File", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiNormalThemeAct.setText(QtGui.QApplication.translate("MainWindow", "&Normal", None, QtGui.QApplication.UnicodeUTF8))
 
 from ggpo.gui.completionlineedit import CompletionLineEdit

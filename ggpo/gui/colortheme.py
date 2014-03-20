@@ -69,8 +69,8 @@ class ColorTheme:
 
     @staticmethod
     def setDarkTheme(boolean):
-        qss = ''
         if boolean:
+            qss = ''
             ColorTheme.SELECTED = ColorTheme.DARK
             Settings.setValue(Settings.COLORTHEME, 'darkorange')
             # noinspection PyBroadException
@@ -82,10 +82,15 @@ class ColorTheme:
             except:
                 qss = ''
                 pass
-        else:
+            QtGui.QApplication.instance().setStyleSheet(qss)
+
+    @staticmethod
+    def setNormalTheme(boolean):
+        if boolean:
+            qss = ''
             ColorTheme.SELECTED = ColorTheme.LIGHT
             Settings.setValue(Settings.COLORTHEME, '')
-        QtGui.QApplication.instance().setStyleSheet(qss)
+            QtGui.QApplication.instance().setStyleSheet(qss)
 
     @staticmethod
     def statusHtml(txt):

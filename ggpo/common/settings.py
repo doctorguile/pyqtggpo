@@ -19,6 +19,7 @@ class Settings:
     TABLE_HEADER_STATE = 'tableHeaderState'
     EMOTICON_DIALOG_GEOMETRY = 'emoticonDialogGeometry'
     COLORTHEME = 'colortheme'
+    CUSTOM_THEME_FILENAME = 'customThemeFilename'
     CHAT_HISTORY_FONT = 'chatFont'
     DEBUG_LOG = 'debuglog'
     SAVE_USERNAME_PASSWORD = 'saveUsernameAndPassword'
