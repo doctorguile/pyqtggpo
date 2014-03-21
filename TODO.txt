@@ -1,6 +1,5 @@
 custom emoticons?
 how to set input lag?
 ggpofba.ini for input lag? nLatencySmoothing 1
-
-
+action button instead of qpushbutton for emoticons
 command history

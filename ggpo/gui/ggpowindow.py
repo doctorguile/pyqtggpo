@@ -22,7 +22,6 @@ from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
 
 
 class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
-
     @staticmethod
     def buildInStyleToActionName(styleName):
         return 'ui{}ThemeAct'.format(re.sub(r'[^a-zA-Z0-9]', '', styleName))
@@ -43,6 +42,13 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiEmoticonTbtn.setDefaultAction(self.uiEmoticonAct)
         self.uiEmoticonTbtn.setText(':)')
         self.addSplitterHandleToggleButton()
+
+    def onRemoteHasUpdates(self, added, updated, nochange):
+        totalchanged = added + updated
+        if totalchanged:
+            self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(
+                "{} savestate(s) are added/updated.\nGo to `Action > Sync Unsupported Savestates` for updates".format(
+                    totalchanged)))
 
     def aboutDialog(self):
         QtGui.QMessageBox.information(self, 'About', copyright.about())
@@ -171,6 +177,11 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             for url in urls:
                 chat += " <a href='" + url + "'>link</a>"
         self.uiChatHistoryTxtB.append(chat)
+
+    def onChannelJoined(self):
+        self.updateStatusBar()
+        if self.controller.channel == 'unsupported':
+            UnsupportedSavestates.check(self, self.onStatusMessage, self.onRemoteHasUpdates)
 
     def onListChannelsReceived(self):
         self.uiChannelsList.clear()
@@ -311,7 +322,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.setupMediaPlayer()
         self.setupUserTable()
         self.uiChatInputEdit.setController(controller)
-        controller.sigChannelJoined.connect(self.updateStatusBar)
+        controller.sigChannelJoined.connect(self.onChannelJoined)
         controller.sigPlayersLoaded.connect(self.updateStatusBar)
         controller.sigChannelsLoaded.connect(self.onListChannelsReceived)
         controller.sigMotdReceived.connect(self.onMOTDReceived)
@@ -359,6 +370,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         def setStyle(boolean):
             if boolean:
                 self.setStyleBuiltin(styleName)
+
         return setStyle
 
     def setupMediaPlayer(self):
@@ -394,7 +406,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiContractPlayerListAct.triggered.connect(self.onSplitterHotkeyResizeAction(playerViewPart, -1))
         self.uiExpandPlayerListAct.triggered.connect(self.onSplitterHotkeyResizeAction(playerViewPart, +1))
         self.uiSelectUnsupportedSavestateAct.triggered.connect(self.selectUnsupportedSavestate)
-        self.uiSyncUnsupportedSavestatesAct.triggered.connect(lambda: UnsupportedSavestates.sync(self))
+        self.uiSyncUnsupportedSavestatesAct.triggered.connect(lambda: UnsupportedSavestates.sync(self.onStatusMessage))
 
     def setupMenuHelp(self):
         self.uiSRKForumAct.triggered.connect(
@@ -429,6 +441,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
     def setupMenuTheme(self):
         # unfortunately Qt Designer doesn't support QActionGroup, we have to code it up
         actionTitleShortcuts = set()
+
         def actionTitle(title):
             shortcutFound = False
             ret = ''
@@ -440,6 +453,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                     shortcutFound = True
                 ret += c
             return ret
+
         self.uiMenuThemeGroup = QtGui.QActionGroup(self.uiMenuTheme, exclusive=True)
         self.uiDarkThemeAct = QtGui.QAction(actionTitle("Dark Orange"), self)
         self.uiDarkThemeAct.setCheckable(True)
