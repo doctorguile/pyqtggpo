@@ -47,3 +47,7 @@ Type `/help` to see a list of commands available
 
 ## Fixes
 - fixes error when someone who challenged you left the room
+
+
+#Version 0.05
+auto check for savestate changes when you join unsupported game channel
