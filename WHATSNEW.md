@@ -29,3 +29,21 @@ Type `/help` to see a list of commands available
 ## Fixes
 - fixes send / receive challenge in 3s and kof rooms
 - disable login button while waiting for response from ggpo.net
+
+
+#Version 0.04
+- Unsupported game room - Add rom prefix in chat
+- More themes and Custom Qt Stylesheet
+
+### Sample stylesheets
+[mame ui](http://qmc2.arcadehits.net/wordpress/style-sheets/)
+[dark orange](http://tech-artists.org/forum/showthread.php?2359-Release-Qt-dark-orange-stylesheet)
+[xp](http://newsgroup.xnview.com/viewtopic.php?t=16181)
+
+### QT stylesheet reference
+[reference](http://qt-project.org/doc/qt-4.8/stylesheet-reference.html)
+[examples](http://qt-project.org/doc/qt-4.8/stylesheet-examples.html)
+
+
+## Fixes
+- fixes error when someone who challenged you left the room

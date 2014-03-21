@@ -8,7 +8,7 @@ This is a cross platform (Linux,  MacOSX, Windows) GUI client for
 &copy;2014 papasi GPL v2 License
 
 # Features
-- Support dark theme to reduce eye strain
+- Support different Qt Stylesheets to reduce eye strain
 - More accurate GeoIP info
 - Simple emoticons support
 - Autocomplete in chat
