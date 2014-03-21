@@ -115,20 +115,16 @@
    </widget>
    <widget class="QMenu" name="menuSetting">
     <property name="title">
-     <string>S&amp;etting</string>
+     <string>S&amp;ettings</string>
     </property>
-    <widget class="QMenu" name="menuTheme">
+    <widget class="QMenu" name="uiMenuTheme">
      <property name="title">
-      <string>Theme</string>
+      <string>&amp;Theme</string>
      </property>
-     <addaction name="uiNormalThemeAct"/>
-     <addaction name="uiDarkThemeAct"/>
-     <addaction name="separator"/>
-     <addaction name="uiCustomQssFileAct"/>
     </widget>
     <addaction name="uiMuteChallengeSoundAct"/>
     <addaction name="uiFontAct"/>
-    <addaction name="menuTheme"/>
+    <addaction name="uiMenuTheme"/>
     <addaction name="separator"/>
     <addaction name="uiLocateGgpofbaAct"/>
     <addaction name="uiLocateWineAct"/>
@@ -246,7 +242,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Dark Theme</string>
+    <string>&amp;Dark Orange</string>
    </property>
   </action>
   <action name="uiDebugLogAct">

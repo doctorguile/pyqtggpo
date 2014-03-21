@@ -3,6 +3,7 @@ import cgi
 import logging
 import logging.handlers
 import os
+import re
 import shutil
 from colortheme import ColorTheme
 from PyQt4 import QtCore, QtGui
@@ -21,6 +22,11 @@ from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
 
 
 class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
+
+    @staticmethod
+    def buildInStyleToActionName(styleName):
+        return 'ui{}ThemeAct'.format(re.sub(r'[^a-zA-Z0-9]', '', styleName))
+
     def __init__(self, QWidget_parent=None):
         super(GGPOWindow, self).__init__(QWidget_parent)
         self.setupUi(self)
@@ -30,49 +36,13 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.lastSplitterExpandedSizes = []
         self.lastStateChangeMsg = ''
         self.playChallengeSound = lambda: None
-
-        self.addSplitterHandleToggleButton()
         self.uiChatInputEdit.returnPressed.connect(self.returnPressed)
-        self.uiCustomQssFileAct.toggled.connect(self.setCustomQss)
-        self.uiDarkThemeAct.toggled.connect(ColorTheme.setDarkTheme)
-        self.uiNormalThemeAct.toggled.connect(ColorTheme.setNormalTheme)
-        self.uiEmoticonAct.triggered.connect(self.insertEmoticon)
+        self.setupMenuAction()
+        self.setupMenuSettings()
+        self.setupMenuHelp()
         self.uiEmoticonTbtn.setDefaultAction(self.uiEmoticonAct)
         self.uiEmoticonTbtn.setText(':)')
-        self.uiLocateGgpofbaAct.triggered.connect(self.locateGGPOFBA)
-        self.uiLocateUnsupportedSavestatesDirAct.triggered.connect(self.locateUnsupportedSavestatesDirAct)
-        self.uiSelectUnsupportedSavestateAct.triggered.connect(self.selectUnsupportedSavestate)
-        self.uiSyncUnsupportedSavestatesAct.triggered.connect(lambda: UnsupportedSavestates.sync(self))
-        if IS_WINDOWS:
-            self.uiLocateWineAct.setVisible(False)
-        else:
-            self.uiLocateWineAct.triggered.connect(self.locateWine)
-        if GeoIP2Reader:
-            self.uiLocateGeommdbAct.triggered.connect(self.locateGeoMMDB)
-        else:
-            self.uiLocateGeommdbAct.setVisible(False)
-        if Settings.value(Settings.DEBUG_LOG):
-            self.uiDebugLogAct.setChecked(True)
-        self.uiDebugLogAct.triggered.connect(self.__class__.debuglogTriggered)
-        self.uiFontAct.triggered.connect(self.changeFont)
-        self.uiAboutAct.triggered.connect(self.aboutDialog)
-        self.uiAwayAct.triggered.connect(self.toggleAFK)
-        self.uiMuteChallengeSoundAct.toggled.connect(self.__class__.toggleSound)
-        self.uiNotifyPlayerStateChangeAct.toggled.connect(self.__class__.toggleNotifyPlayerStateChange)
-        self.uiToggleSidebarAction.triggered.connect(self.onToggleSidebarAction)
-        channelPart, chatHistoryPart, playerViewPart = range(3)
-        self.uiContractChannelSidebarAct.triggered.connect(self.onSplitterHotkeyResizeAction(channelPart, -1))
-        self.uiExpandChannelSidebarAct.triggered.connect(self.onSplitterHotkeyResizeAction(channelPart, +1))
-        self.uiContractPlayerListAct.triggered.connect(self.onSplitterHotkeyResizeAction(playerViewPart, -1))
-        self.uiExpandPlayerListAct.triggered.connect(self.onSplitterHotkeyResizeAction(playerViewPart, +1))
-        self.uiSRKForumAct.triggered.connect(
-            lambda: openURL('http://forums.shoryuken.com/categories/super-street-fighter-ii-turbo'))
-        self.uiSRKWikiAct.triggered.connect(lambda: openURL('http://wiki.shoryuken.com/Super_Street_Fighter_2_Turbo'))
-        self.uiJPWikiAct.triggered.connect(lambda: openURL('http://sf2.gamedb.info/wiki/'))
-        self.uiStrevivalAct.triggered.connect(lambda: openURL('http://www.strevival.com/'))
-        self.uiHitboxViewerAct.triggered.connect(lambda: openURL('http://www.strevival.com/hitbox/'))
-        self.uiSafejumpGuideAct.triggered.connect(lambda: openURL('http://www.strevival.com/hitbox/st-safejump/'))
-        self.uiMatchVideosAct.triggered.connect(lambda: openURL('http://www.strevival.com/yt/'))
+        self.addSplitterHandleToggleButton()
 
     def aboutDialog(self):
         QtGui.QMessageBox.information(self, 'About', copyright.about())
@@ -281,8 +251,10 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             elif theme == 'custom':
                 fname = Settings.value(Settings.CUSTOM_THEME_FILENAME)
                 self.setCustomQssfile(fname)
-        else:
-            self.uiNormalThemeAct.setChecked(True)
+            else:
+                cleanname = self.buildInStyleToActionName(theme)
+                if hasattr(self, cleanname):
+                    getattr(self, cleanname).setChecked(True)
         if Settings.value(Settings.MUTE_CHALLENGE_SOUND):
             self.uiMuteChallengeSoundAct.setChecked(True)
         if Settings.value(Settings.NOTIFY_PLAYER_STATE_CHANGE):
@@ -354,14 +326,14 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         controller.sigStatusMessage.connect(self.onStatusMessage)
         controller.sigServerDisconnected.connect(
             lambda: self.onStatusMessage("Disconnected from ggpo.net. Please restart application"))
-        if Settings.value(Settings.MUTE_CHALLENGE_SOUND):
-            self.uiMuteChallengeSoundAct.setChecked(True)
 
-    def setCustomQss(self, boolean):
-        if boolean:
-            fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate Qt Stylesheet qss file', os.path.expanduser("~"),
-                                                      "qss file (*.qss)")
-            self.setCustomQssfile(fname)
+    def setCustomQss(self):
+        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate Qt Stylesheet qss file', os.path.expanduser("~"),
+                                                  "qss file (*.qss)")
+        if self.setCustomQssfile(fname):
+            for a in self.uiMenuThemeGroup.actions():
+                if a.isChecked():
+                    a.setChecked(False)
 
     def setCustomQssfile(self, fname):
         if fname and os.path.isfile(fname):
@@ -370,8 +342,24 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                 QtGui.QApplication.instance().setStyleSheet(open(fname).read())
                 Settings.setValue(Settings.COLORTHEME, 'custom')
                 Settings.setValue(Settings.CUSTOM_THEME_FILENAME, fname)
+                ColorTheme.SELECTED = ColorTheme.SAFE
+                return True
             except:
                 pass
+
+    def setStyleBuiltin(self, styleName):
+        if styleName in QtGui.QStyleFactory.keys():
+            ColorTheme.SELECTED = ColorTheme.LIGHT
+            QtGui.QApplication.instance().setStyleSheet('')
+            QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(styleName))
+            QtGui.QApplication.setPalette(QtGui.QApplication.style().standardPalette())
+            Settings.setValue(Settings.COLORTHEME, styleName)
+
+    def setStyleCallback(self, styleName):
+        def setStyle(boolean):
+            if boolean:
+                self.setStyleBuiltin(styleName)
+        return setStyle
 
     def setupMediaPlayer(self):
         # can't properly install PyQt4.phonon on osx yet
@@ -395,6 +383,79 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         except ImportError:
             self.playChallengeSound = self.controller.playChallengeSound
             pass
+
+    def setupMenuAction(self):
+        self.uiAwayAct.triggered.connect(self.toggleAFK)
+        self.uiEmoticonAct.triggered.connect(self.insertEmoticon)
+        self.uiToggleSidebarAction.triggered.connect(self.onToggleSidebarAction)
+        channelPart, chatHistoryPart, playerViewPart = range(3)
+        self.uiContractChannelSidebarAct.triggered.connect(self.onSplitterHotkeyResizeAction(channelPart, -1))
+        self.uiExpandChannelSidebarAct.triggered.connect(self.onSplitterHotkeyResizeAction(channelPart, +1))
+        self.uiContractPlayerListAct.triggered.connect(self.onSplitterHotkeyResizeAction(playerViewPart, -1))
+        self.uiExpandPlayerListAct.triggered.connect(self.onSplitterHotkeyResizeAction(playerViewPart, +1))
+        self.uiSelectUnsupportedSavestateAct.triggered.connect(self.selectUnsupportedSavestate)
+        self.uiSyncUnsupportedSavestatesAct.triggered.connect(lambda: UnsupportedSavestates.sync(self))
+
+    def setupMenuHelp(self):
+        self.uiSRKForumAct.triggered.connect(
+            lambda: openURL('http://forums.shoryuken.com/categories/super-street-fighter-ii-turbo'))
+        self.uiSRKWikiAct.triggered.connect(lambda: openURL('http://wiki.shoryuken.com/Super_Street_Fighter_2_Turbo'))
+        self.uiJPWikiAct.triggered.connect(lambda: openURL('http://sf2.gamedb.info/wiki/'))
+        self.uiStrevivalAct.triggered.connect(lambda: openURL('http://www.strevival.com/'))
+        self.uiHitboxViewerAct.triggered.connect(lambda: openURL('http://www.strevival.com/hitbox/'))
+        self.uiSafejumpGuideAct.triggered.connect(lambda: openURL('http://www.strevival.com/hitbox/st-safejump/'))
+        self.uiMatchVideosAct.triggered.connect(lambda: openURL('http://www.strevival.com/yt/'))
+        self.uiAboutAct.triggered.connect(self.aboutDialog)
+
+    def setupMenuSettings(self):
+        self.uiMuteChallengeSoundAct.toggled.connect(self.__class__.toggleSound)
+        self.uiFontAct.triggered.connect(self.changeFont)
+        self.setupMenuTheme()
+        self.uiLocateGgpofbaAct.triggered.connect(self.locateGGPOFBA)
+        if IS_WINDOWS:
+            self.uiLocateWineAct.setVisible(False)
+        else:
+            self.uiLocateWineAct.triggered.connect(self.locateWine)
+        self.uiLocateUnsupportedSavestatesDirAct.triggered.connect(self.locateUnsupportedSavestatesDirAct)
+        if GeoIP2Reader:
+            self.uiLocateGeommdbAct.triggered.connect(self.locateGeoMMDB)
+        else:
+            self.uiLocateGeommdbAct.setVisible(False)
+        self.uiNotifyPlayerStateChangeAct.toggled.connect(self.__class__.toggleNotifyPlayerStateChange)
+        if Settings.value(Settings.DEBUG_LOG):
+            self.uiDebugLogAct.setChecked(True)
+        self.uiDebugLogAct.triggered.connect(self.__class__.debuglogTriggered)
+
+    def setupMenuTheme(self):
+        # unfortunately Qt Designer doesn't support QActionGroup, we have to code it up
+        actionTitleShortcuts = set()
+        def actionTitle(title):
+            shortcutFound = False
+            ret = ''
+            for c in title:
+                l = c.lower()
+                if not shortcutFound and l in 'abcdefghijklmnopqrstuvwxy' and l not in actionTitleShortcuts:
+                    ret += '&'
+                    actionTitleShortcuts.add(l)
+                    shortcutFound = True
+                ret += c
+            return ret
+        self.uiMenuThemeGroup = QtGui.QActionGroup(self.uiMenuTheme, exclusive=True)
+        self.uiDarkThemeAct = QtGui.QAction(actionTitle("Dark Orange"), self)
+        self.uiDarkThemeAct.setCheckable(True)
+        self.uiDarkThemeAct.toggled.connect(ColorTheme.setDarkTheme)
+        self.uiMenuTheme.addAction(self.uiMenuThemeGroup.addAction(self.uiDarkThemeAct))
+        for k in QtGui.QStyleFactory.keys():
+            act = QtGui.QAction(actionTitle(k), self)
+            act.setCheckable(True)
+            self.uiMenuTheme.addAction(self.uiMenuThemeGroup.addAction(act))
+            cleanname = self.buildInStyleToActionName(k)
+            setattr(self, cleanname, act)
+            if hasattr(self, cleanname):
+                getattr(self, cleanname).toggled.connect(self.setStyleCallback(k))
+        self.uiCustomQssFileAct = QtGui.QAction(actionTitle("Custom Qss stylesheet"), self)
+        self.uiCustomQssFileAct.triggered.connect(self.setCustomQss)
+        self.uiMenuTheme.addAction(self.uiCustomQssFileAct)
 
     def setupUserTable(self):
         model = PlayerModel(self.controller)

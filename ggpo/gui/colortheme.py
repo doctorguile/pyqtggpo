@@ -7,9 +7,11 @@ from ggpo.common.settings import Settings
 
 # noinspection PyClassHasNoInit
 class ColorTheme:
+    originalStyle = None
+    originalPalette = None
+
     # http://dmcritchie.mvps.org/excel/colors.htm
     LIGHT = {
-        'status': 'C0C0C0',
         'player': ['993300',
                    '003366',
                    '333399',
@@ -35,7 +37,6 @@ class ColorTheme:
     }
 
     DARK = {
-        'status': '808080',
         'player': ['FF6600',
                    'FF9900',
                    '99CC00',
@@ -53,7 +54,7 @@ class ColorTheme:
                    'CCFFCC',
                    '99CCFF',
                    'CC99FF',
-                   'FFFFFF',
+                   'ECECEC',
                    '9999FF',
                    'FFFFCC',
                    'CCFFFF',
@@ -61,11 +62,21 @@ class ColorTheme:
                    'CCCCFF']
     }
 
+    SAFE = {
+        'player': ['FF6600', 'CC99FF', '00CCFF', '00FF00',
+                    '9999FF', 'FF8080', 'FF00FF', '33CCCC', '99CC00']
+    }
+
     SELECTED = LIGHT
 
     @staticmethod
     def getPlayerColor(playerid):
         return '#' + ColorTheme.SELECTED['player'][playerid % ColorTheme.SELECTED['count']]
+
+    @classmethod
+    def saveDefaultStyle(cls):
+        cls.originalStyle = QtGui.QApplication.style().objectName()
+        cls.originalPalette = QtGui.QApplication.palette()
 
     @staticmethod
     def setDarkTheme(boolean):
@@ -82,23 +93,27 @@ class ColorTheme:
             except:
                 qss = ''
                 pass
+            QtGui.QApplication.setStyle(ColorTheme.originalStyle)
+            QtGui.QApplication.setPalette(ColorTheme.originalPalette)
             QtGui.QApplication.instance().setStyleSheet(qss)
 
     @staticmethod
     def setNormalTheme(boolean):
         if boolean:
-            qss = ''
             ColorTheme.SELECTED = ColorTheme.LIGHT
+            QtGui.QApplication.setStyle(ColorTheme.originalStyle)
+            QtGui.QApplication.setPalette(ColorTheme.originalPalette)
             Settings.setValue(Settings.COLORTHEME, '')
-            QtGui.QApplication.instance().setStyleSheet(qss)
+            QtGui.QApplication.instance().setStyleSheet('')
 
     @staticmethod
     def statusHtml(txt):
         if txt:
             txt = cgi.escape(txt)
             txt = txt.replace("\n", "<br/>")
-            return '<font color="#' + ColorTheme.SELECTED['status'] + '">' + txt + "</font>"
+            return '<font color="#808080">' + txt + "</font>"
 
 
 ColorTheme.LIGHT['count'] = len(ColorTheme.LIGHT['player'])
 ColorTheme.DARK['count'] = len(ColorTheme.DARK['player'])
+ColorTheme.SAFE['count'] = len(ColorTheme.SAFE['player'])

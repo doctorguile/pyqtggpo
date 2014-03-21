@@ -248,14 +248,12 @@ class Controller(QtCore.QObject):
             return state, p1, p2, playerinfo, data
 
     def getPlayerColor(self, name):
-        if name == 'ponder':
+        if name == self.username or name == 'ponder':
             return '#ff0000'
-        elif name != self.username and name in self.players:
+        elif name in self.players:
             if hasattr(self.players[name], 'id'):
                 return ColorTheme.getPlayerColor(self.players[name].id)
-        if Settings.value(Settings.COLORTHEME) == 'darkorange':
-            return '#ececec'
-        return '#000000'
+        return '#808080'
 
     def ggpoPathJoin(self, *args):
         if self.fba:
@@ -461,7 +459,7 @@ class Controller(QtCore.QObject):
             self.awayfromkb.pop(p1, None)
             self.playing.pop(p1, None)
             if p1 in self.challengers:
-                del self.challenged[p1]
+                del self.challengers[p1]
             if p1 == self.challenged:
                 self.challenged = None
             self.sigPlayerStateChange.emit(p1, PlayerStates.QUIT)

@@ -3,11 +3,13 @@
 import sip
 # Tell qt to return python string instead of QString
 # These are only needed for Python v2 but are harmless for Python v3.
+
 sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
 from PyQt4 import QtGui, QtCore
 from ggpo.common.controller import Controller
 from ggpo.common.settings import Settings
+from ggpo.gui.colortheme import ColorTheme
 from ggpo.gui.ggpowindow import GGPOWindow
 from ggpo.gui.logindialog import LoginDialog
 # noinspection PyUnresolvedReferences
@@ -23,7 +25,7 @@ def main(argv=None):
         app.setQuitOnLastWindowClosed(True)
         app.setOrganizationName("GGPO")
         QtCore.QCoreApplication.setApplicationName("GGPO")
-
+    ColorTheme.saveDefaultStyle()
     controller = Controller()
     thread = QtCore.QThread()
     controller.moveToThread(thread)
