@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ggpo/gui/ui/ggpowindow.ui'
 #
-# Created: Sat Mar 22 12:07:05 2014
+# Created: Sat Mar 22 14:43:05 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -66,8 +66,10 @@ class Ui_MainWindow(object):
         self.menuAction.setObjectName(_fromUtf8("menuAction"))
         self.menuSetting = QtGui.QMenu(self.menubar)
         self.menuSetting.setObjectName(_fromUtf8("menuSetting"))
-        self.uiMenuTheme = QtGui.QMenu(self.menuSetting)
-        self.uiMenuTheme.setObjectName(_fromUtf8("uiMenuTheme"))
+        self.uiThemeMenu = QtGui.QMenu(self.menuSetting)
+        self.uiThemeMenu.setObjectName(_fromUtf8("uiThemeMenu"))
+        self.uiSmoothingMenu = QtGui.QMenu(self.menuSetting)
+        self.uiSmoothingMenu.setObjectName(_fromUtf8("uiSmoothingMenu"))
         self.menuAbout = QtGui.QMenu(self.menubar)
         self.menuAbout.setObjectName(_fromUtf8("menuAbout"))
         MainWindow.setMenuBar(self.menubar)
@@ -146,6 +148,8 @@ class Ui_MainWindow(object):
         self.uiNormalThemeAct = QtGui.QAction(MainWindow)
         self.uiNormalThemeAct.setCheckable(True)
         self.uiNormalThemeAct.setObjectName(_fromUtf8("uiNormalThemeAct"))
+        self.action0 = QtGui.QAction(MainWindow)
+        self.action0.setObjectName(_fromUtf8("action0"))
         self.menuAction.addAction(self.uiAwayAct)
         self.menuAction.addAction(self.uiFocusOnChatAct)
         self.menuAction.addAction(self.uiEmoticonAct)
@@ -164,7 +168,8 @@ class Ui_MainWindow(object):
         self.menuAction.addAction(self.uiQuitAct)
         self.menuSetting.addAction(self.uiMuteChallengeSoundAct)
         self.menuSetting.addAction(self.uiFontAct)
-        self.menuSetting.addAction(self.uiMenuTheme.menuAction())
+        self.menuSetting.addAction(self.uiThemeMenu.menuAction())
+        self.menuSetting.addAction(self.uiSmoothingMenu.menuAction())
         self.menuSetting.addSeparator()
         self.menuSetting.addAction(self.uiLocateGgpofbaAct)
         self.menuSetting.addAction(self.uiLocateWineAct)
@@ -201,7 +206,8 @@ class Ui_MainWindow(object):
         self.uiAfkChk.setText(QtGui.QApplication.translate("MainWindow", "away", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAction.setTitle(QtGui.QApplication.translate("MainWindow", "&Action", None, QtGui.QApplication.UnicodeUTF8))
         self.menuSetting.setTitle(QtGui.QApplication.translate("MainWindow", "S&ettings", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiMenuTheme.setTitle(QtGui.QApplication.translate("MainWindow", "&Theme", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiThemeMenu.setTitle(QtGui.QApplication.translate("MainWindow", "&Theme", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiSmoothingMenu.setTitle(QtGui.QApplication.translate("MainWindow", "Smoothing / Input &lag", None, QtGui.QApplication.UnicodeUTF8))
         self.menuAbout.setTitle(QtGui.QApplication.translate("MainWindow", "&Help", None, QtGui.QApplication.UnicodeUTF8))
         self.uiClearChatHistoryAct.setText(QtGui.QApplication.translate("MainWindow", "Clear chat his&tory", None, QtGui.QApplication.UnicodeUTF8))
         self.uiClearChatHistoryAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+T", None, QtGui.QApplication.UnicodeUTF8))
@@ -247,5 +253,6 @@ class Ui_MainWindow(object):
         self.uiFireThemeAct.setText(QtGui.QApplication.translate("MainWindow", "&Fire", None, QtGui.QApplication.UnicodeUTF8))
         self.uiCustomQssFileAct.setText(QtGui.QApplication.translate("MainWindow", "Custom Qss File", None, QtGui.QApplication.UnicodeUTF8))
         self.uiNormalThemeAct.setText(QtGui.QApplication.translate("MainWindow", "&Normal", None, QtGui.QApplication.UnicodeUTF8))
+        self.action0.setText(QtGui.QApplication.translate("MainWindow", "0", None, QtGui.QApplication.UnicodeUTF8))
 
 from ggpo.gui.completionlineedit import CompletionLineEdit

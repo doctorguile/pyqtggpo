@@ -11,6 +11,7 @@ class Settings:
     SELECTED_CHANNEL = 'channel'
     USERNAME = 'username'
     PASSWORD = 'password'
+    SMOOTHING = 'smoothing'
     MUTE_CHALLENGE_SOUND = 'mute'
     NOTIFY_PLAYER_STATE_CHANGE = 'notifyPlayerStateChange'
     WINDOW_GEOMETRY = 'mainWindowGeometry'

@@ -6,6 +6,7 @@ import json
 import os
 import re
 import urllib2
+from collections import defaultdict
 from PyQt4 import QtGui, QtCore
 from ggpo.common.runtime import *
 from ggpo.common.settings import Settings
@@ -22,6 +23,18 @@ def checkUpdate():
         return latestVersion > copyright.__version__
     except:
         pass
+
+
+def defaultdictinit(startdic):
+    if not startdic:
+        raise KeyError
+    d = None
+    for v in startdic.values():
+        d = defaultdict(type(v))
+        break
+    for k, v in startdic.items():
+        d[k] = v
+    return d
 
 
 def findUnsupportedGamesavesDir():

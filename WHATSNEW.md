@@ -55,3 +55,8 @@ Type `/help` to see a list of commands available
 #Version 0.06
 - Support recall chat history with up and down arrow keys
 - Fix emoticon button size issue
+
+#Version 0.07
+- Add smooth networking settings like in official client
+- Add a custom scheme url for accept decline challenge.
+- Use green color for links

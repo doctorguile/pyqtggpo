@@ -14,7 +14,8 @@ from ggpo.common import copyright
 from ggpo.common.cliclient import CLI
 from ggpo.common.playerstate import PlayerStates
 from ggpo.common.settings import Settings
-from ggpo.common.util import logger, openURL, findURLs, replaceURLs, findWine, findUnsupportedGamesavesDir
+from ggpo.common.util import logger, openURL, findURLs, replaceURLs, findWine, findUnsupportedGamesavesDir, \
+    defaultdictinit
 from ggpo.common.unsupportedsavestates import UnsupportedSavestates
 from ggpo.gui.emoticonsdialog import EmoticonDialog
 from ggpo.gui.playermodel import PlayerModel
@@ -22,7 +23,6 @@ from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
 
 
 class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
-
     def __init__(self, QWidget_parent=None):
         super(GGPOWindow, self).__init__(QWidget_parent)
         self.setupUi(self)
@@ -40,6 +40,10 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiEmoticonTbtn.setText(':)')
         self.addSplitterHandleToggleButton()
         self.uiChatHistoryTxtB.anchorClicked.connect(self.onAnchorClicked)
+
+    @staticmethod
+    def buildInSmoothingToActionName(smooth):
+        return 'uiSmoothing{}Act'.format(smooth)
 
     @staticmethod
     def buildInStyleToActionName(styleName):
@@ -281,6 +285,11 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                 cleanname = self.buildInStyleToActionName(theme)
                 if hasattr(self, cleanname):
                     getattr(self, cleanname).setChecked(True)
+        smooth = Settings.value(Settings.SMOOTHING)
+        if smooth:
+            cleanname = self.buildInSmoothingToActionName(smooth)
+            if hasattr(self, cleanname):
+                getattr(self, cleanname).setChecked(True)
         if Settings.value(Settings.MUTE_CHALLENGE_SOUND):
             self.uiMuteChallengeSoundAct.setChecked(True)
         if Settings.value(Settings.NOTIFY_PLAYER_STATE_CHANGE):
@@ -438,6 +447,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiMuteChallengeSoundAct.toggled.connect(self.__class__.toggleSound)
         self.uiFontAct.triggered.connect(self.changeFont)
         self.setupMenuTheme()
+        self.setupMenuSmoothing()
         self.uiLocateGgpofbaAct.triggered.connect(self.locateGGPOFBA)
         if IS_WINDOWS:
             self.uiLocateWineAct.setVisible(False)
@@ -452,6 +462,23 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         if Settings.value(Settings.DEBUG_LOG):
             self.uiDebugLogAct.setChecked(True)
         self.uiDebugLogAct.triggered.connect(self.__class__.debuglogTriggered)
+
+    def setupMenuSmoothing(self):
+        # unfortunately Qt Designer doesn't support QActionGroup, we have to code it up
+        self.uiMenuSmoothingGroup = QtGui.QActionGroup(self.uiSmoothingMenu, exclusive=True)
+        def onSmoothingToggled(boolean):
+            if boolean:
+                result = re.search(r'[0-9]+', self.sender().text())
+                if result:
+                    Settings.setValue(Settings.SMOOTHING, result.group(0))
+        desc = defaultdictinit({0: ' More jerky', 1: ' Default', 10: ' Laggy'})
+        for smooth in range(11):
+            act = QtGui.QAction('&' + str(smooth) + desc[smooth], self)
+            act.setCheckable(True)
+            act.toggled.connect(onSmoothingToggled)
+            self.uiSmoothingMenu.addAction(self.uiMenuSmoothingGroup.addAction(act))
+            cleanname = self.buildInSmoothingToActionName(smooth)
+            setattr(self, cleanname, act)
 
     def setupMenuTheme(self):
         # unfortunately Qt Designer doesn't support QActionGroup, we have to code it up
@@ -469,22 +496,21 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                 ret += c
             return ret
 
-        self.uiMenuThemeGroup = QtGui.QActionGroup(self.uiMenuTheme, exclusive=True)
+        self.uiMenuThemeGroup = QtGui.QActionGroup(self.uiThemeMenu, exclusive=True)
         self.uiDarkThemeAct = QtGui.QAction(actionTitle("Dark Orange"), self)
         self.uiDarkThemeAct.setCheckable(True)
         self.uiDarkThemeAct.toggled.connect(ColorTheme.setDarkTheme)
-        self.uiMenuTheme.addAction(self.uiMenuThemeGroup.addAction(self.uiDarkThemeAct))
+        self.uiThemeMenu.addAction(self.uiMenuThemeGroup.addAction(self.uiDarkThemeAct))
         for k in QtGui.QStyleFactory.keys():
             act = QtGui.QAction(actionTitle(k), self)
             act.setCheckable(True)
-            self.uiMenuTheme.addAction(self.uiMenuThemeGroup.addAction(act))
+            act.toggled.connect(self.setStyleCallback(k))
+            self.uiThemeMenu.addAction(self.uiMenuThemeGroup.addAction(act))
             cleanname = self.buildInStyleToActionName(k)
             setattr(self, cleanname, act)
-            if hasattr(self, cleanname):
-                getattr(self, cleanname).toggled.connect(self.setStyleCallback(k))
         self.uiCustomQssFileAct = QtGui.QAction(actionTitle("Custom Qss stylesheet"), self)
         self.uiCustomQssFileAct.triggered.connect(self.setCustomQss)
-        self.uiMenuTheme.addAction(self.uiCustomQssFileAct)
+        self.uiThemeMenu.addAction(self.uiCustomQssFileAct)
 
     def setupUserTable(self):
         model = PlayerModel(self.controller)

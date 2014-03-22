@@ -120,14 +120,20 @@
     <property name="title">
      <string>S&amp;ettings</string>
     </property>
-    <widget class="QMenu" name="uiMenuTheme">
+    <widget class="QMenu" name="uiThemeMenu">
      <property name="title">
       <string>&amp;Theme</string>
      </property>
     </widget>
+    <widget class="QMenu" name="uiSmoothingMenu">
+     <property name="title">
+      <string>Smoothing / Input &amp;lag</string>
+     </property>
+    </widget>
     <addaction name="uiMuteChallengeSoundAct"/>
     <addaction name="uiFontAct"/>
-    <addaction name="uiMenuTheme"/>
+    <addaction name="uiThemeMenu"/>
+    <addaction name="uiSmoothingMenu"/>
     <addaction name="separator"/>
     <addaction name="uiLocateGgpofbaAct"/>
     <addaction name="uiLocateWineAct"/>
@@ -375,6 +381,11 @@
    </property>
    <property name="text">
     <string>&amp;Normal</string>
+   </property>
+  </action>
+  <action name="action0">
+   <property name="text">
+    <string>0</string>
    </property>
   </action>
  </widget>

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 import socket
 import time
 import struct
@@ -480,6 +481,12 @@ class Controller(QtCore.QObject):
         # quark len(53) = 'quark:stream,ssf2t,challenge-07389-1393539605.46,7000'
         quark, data = Protocol.extractTLV(data)
         logger().info("Quark " + repr(quark))
+        if quark.startswith('quark:served'):
+            smooth = Settings.value(Settings.SMOOTHING)
+            if smooth:
+                match = re.search(r'[0-9]+', smooth)
+                if match:
+                    quark += ',{}'.format(match.group(0))
         self.runFBA(quark)
 
     def parseStateChangesResponse(self, data):
@@ -553,6 +560,8 @@ class Controller(QtCore.QObject):
                 args = [packagePathJoin('ggpo', 'scripts', 'ggpofba.sh'), wine, self.fba, quark]
             else:
                 args = [wine, self.fba, quark]
+
+        logger().info(" ".join(args))
         try:
             # starting python from cmd.exe and redirect stderr and we got
             # python WindowsError(6, 'The handle is invalid')
