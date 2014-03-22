@@ -6,21 +6,6 @@ from ggpo.common.settings import Settings
 
 QTextCodec.setCodecForCStrings(QTextCodec.codecForName("utf-8"))
 
-
-class MinSizePushButton(QtGui.QPushButton):
-    def __init__(self, *__args):
-        super(MinSizePushButton, self).__init__(*__args)
-        self.setMaximumWidth(self.calcMinWidth())
-
-    def calcMinWidth(self):
-        margin = 10
-        if IS_OSX:
-            margin = 25
-        ampCount = self.text().count('&&')
-        text = self.text().replace('&', '') + ('&' * ampCount)
-        return self.fontMetrics().boundingRect(text).width() + margin
-
-
 class FlowLayout(QtGui.QLayout):
     def __init__(self, parent=None, margin=10, spacing=-1):
         super(FlowLayout, self).__init__(parent)
@@ -195,8 +180,10 @@ class EmoticonDialog(QtGui.QDialog):
         self._value = ''
         flowLayout = FlowLayout(self)
         for emoticon in _emoticons.split("\n"):
-            btn = MinSizePushButton(emoticon)
-            btn.clicked.connect(self.buttonOnClickCallback(emoticon))
+            act = QtGui.QAction(emoticon, self)
+            act.triggered.connect(self.onActionTriggered)
+            btn = QtGui.QToolButton(self)
+            btn.setDefaultAction(act)
             flowLayout.addWidget(btn)
         self.setLayout(flowLayout)
         self.setWindowTitle("Insert emoticon")
@@ -204,11 +191,9 @@ class EmoticonDialog(QtGui.QDialog):
         self.finished.connect(self.saveGeometrySettings)
         self.rejected.connect(self.saveGeometrySettings)
 
-    def buttonOnClickCallback(self, value):
-        def callback(_):
-            self._value = value
-            self.accept()
-        return callback
+    def onActionTriggered(self):
+        self._value = self.sender().text()
+        self.accept()
 
     def saveGeometrySettings(self):
         Settings.setValue(Settings.EMOTICON_DIALOG_GEOMETRY, self.saveGeometry())
