@@ -86,29 +86,55 @@ class CompletionLineEdit(QLineEdit):
         self._completer.setWidget(self)
         # noinspection PyUnresolvedReferences
         self._completer.activated.connect(self.insertCompletion)
+        self.isEditingHistory = False
+        self.permHistory = []
+        self.editingHistory = None
+        self.editingIndex = 0
+        self.returnPressed.connect(self.onReturnPressed)
+        self.textChanged.connect(self.onTextChanged)
 
     def completer(self):
         return self._completer
 
     def event(self, evt):
-        if (evt.type() == QEvent.KeyPress) and (evt.key() == Qt.Key_Tab):
-            if self._completer.popup().isVisible():
-                completion = None
-                model = self._completer.model()
-                selmodel = self._completer.popup().selectionModel()
-                selectedIndexes = selmodel.selectedIndexes()
-                if selectedIndexes:
-                    # user highlighted one of the completion
-                    completion = model.data(selectedIndexes[0], Qt.EditRole)
-                else:
-                    # non empty list of completions to choose from and user hit Tab
-                    # we pick the first one for them
-                    if model.rowCount() > 0:
-                        completion = model.data(model.index(0, 0), Qt.EditRole)
-                if completion:
-                    self._completer.popup().close()
-                    self.insertCompletion(completion)
-                    return True
+        if evt.type() == QEvent.KeyPress:
+            if evt.key() == Qt.Key_Up:
+                if self.isEditingHistory:
+                    if self.editingIndex > 0:
+                        self.editingIndex -= 1
+                        self.setText(self.editingHistory[self.editingIndex])
+                elif len(self.permHistory) > 0:
+                    self.isEditingHistory = True
+                    self.editingHistory = self.permHistory[:]
+                    self.editingIndex = len(self.editingHistory) - 1
+                    self.editingHistory.append(self.text())
+                    self.setText(self.editingHistory[self.editingIndex])
+                return True
+            elif evt.key() == Qt.Key_Down:
+                if self.isEditingHistory:
+                    lastIndex = len(self.editingHistory) - 1
+                    if self.editingIndex < lastIndex:
+                        self.editingIndex += 1
+                        self.setText(self.editingHistory[self.editingIndex])
+                return True
+            elif evt.key() == Qt.Key_Tab:
+                if self._completer.popup().isVisible():
+                    completion = None
+                    model = self._completer.model()
+                    selmodel = self._completer.popup().selectionModel()
+                    selectedIndexes = selmodel.selectedIndexes()
+                    if selectedIndexes:
+                        # user highlighted one of the completion
+                        completion = model.data(selectedIndexes[0], Qt.EditRole)
+                    else:
+                        # non empty list of completions to choose from and user hit Tab
+                        # we pick the first one for them
+                        if model.rowCount() > 0:
+                            completion = model.data(model.index(0, 0), Qt.EditRole)
+                    if completion:
+                        self._completer.popup().close()
+                        self.insertCompletion(completion)
+                        return True
         return QLineEdit.event(self, evt)
 
     def insertCompletion(self, string):
@@ -142,6 +168,18 @@ class CompletionLineEdit(QLineEdit):
             self._completer.complete(cr)
         else:
             self._completer.popup().hide()
+
+    def onReturnPressed(self):
+        if self.text():
+            self.isEditingHistory = False
+            self.editingHistory = None
+            newtext = self.text()
+            self.permHistory = [x for x in self.permHistory if x != newtext]
+            self.permHistory.append(newtext)
+
+    def onTextChanged(self, txt):
+        if self.isEditingHistory:
+            self.editingHistory[self.editingIndex] = txt
 
     def setController(self, controller):
         self._completer.model().setController(controller)
