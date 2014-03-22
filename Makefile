@@ -20,14 +20,14 @@ qrc: $(QRCPYFILES)
 clean:
 	rm -f $(UIPYFILES) $(UIPYFILES:.py=.pyc) $(QRCPYFILES:.py=.pyc) 
 
-osxapp:
+app:
 	pyinstaller -w -i ggpo/resources/img/icon.icns -n PyQtGGPO --runtime-hook ggpo/scripts/runtimehook.py main.py
 
-osxdmg:
+dmg:
 	cd dist; \
 	hdiutil create -srcfolder PyQtGGPO.app -volname PyQtGGPO -fs HFS+ -fsargs '-c c=64,a=16,e=16' -format UDRW -size 60M PyQtGGPO_tmp.dmg; \
 	hdiutil convert PyQtGGPO_tmp.dmg -format UDZO -imagekey zlib-level=9 -o PyQtGGPO.dmg ; \
 	rm -f PyQtGGPO_tmp.dmg
 
-osxclean:
-	rm -rf dist
+cleanbuild:
+	rm -rf build dist
