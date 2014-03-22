@@ -22,9 +22,6 @@ from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
 
 
 class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
-    @staticmethod
-    def buildInStyleToActionName(styleName):
-        return 'ui{}ThemeAct'.format(re.sub(r'[^a-zA-Z0-9]', '', styleName))
 
     def __init__(self, QWidget_parent=None):
         super(GGPOWindow, self).__init__(QWidget_parent)
@@ -42,6 +39,22 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiEmoticonTbtn.setDefaultAction(self.uiEmoticonAct)
         self.uiEmoticonTbtn.setText(':)')
         self.addSplitterHandleToggleButton()
+        self.uiChatHistoryTxtB.anchorClicked.connect(self.onAnchorClicked)
+
+    @staticmethod
+    def buildInStyleToActionName(styleName):
+        return 'ui{}ThemeAct'.format(re.sub(r'[^a-zA-Z0-9]', '', styleName))
+
+    def onAnchorClicked(self, qurl):
+        if qurl.scheme() in ['http', 'https']:
+            QtGui.QDesktopServices.openUrl(qurl)
+        name = qurl.path()
+        if name:
+            if qurl.scheme() == 'accept':
+                self.controller.sendAcceptChallenge(name)
+            elif qurl.scheme() == 'decline':
+                self.controller.sendDeclineChallenge(name)
+                self.controller.sigStatusMessage.emit("Declined {}'s challenge".format(name))
 
     def onRemoteHasUpdates(self, added, updated, nochange):
         totalchanged = added + updated
@@ -163,7 +176,9 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def onChallengeReceived(self, name):
         c = self.controller.getPlayerColor(name)
-        chat = '<b><font color="' + c + '">' + cgi.escape(name) + "</font></b> challenged you"
+        chat = '<b><font color="' + c + '">' + cgi.escape(name) + "</font></b> challenged you - "
+        chat += "<a href='accept:" + name + "'><font color=green>accept</font></a>"
+        chat += " / <a href='decline:" + name + "'><font color=green>decline</font></a>"
         self.uiChatHistoryTxtB.append(chat)
         self.playChallengeSound()
         self.updateStatusBar()
@@ -175,7 +190,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         urls = findURLs(txt)
         if urls:
             for url in urls:
-                chat += " <a href='" + url + "'>link</a>"
+                chat += " <a href='" + url + "'><font color=green>link</font></a>"
         self.uiChatHistoryTxtB.append(chat)
 
     def onChannelJoined(self):

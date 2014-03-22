@@ -96,7 +96,7 @@ def packagePathJoin(*args):
 
 def replaceURLs(text):
     return re.sub(r'(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)',
-                  r'<a href="\1">\1</a>', text)
+                  r'<a href="\1"><font color=green>\1</font></a>', text)
 
 
 def sha256digest(fname):
