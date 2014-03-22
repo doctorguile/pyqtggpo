@@ -47,7 +47,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         totalchanged = added + updated
         if totalchanged:
             self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(
-                "{} savestate(s) are added/updated.\nGo to `Action > Sync Unsupported Savestates` for updates".format(
+                "{} savestate(s) added/updated.\nGo to `Action > Sync Unsupported Savestates` for updates".format(
                     totalchanged)))
 
     def aboutDialog(self):
