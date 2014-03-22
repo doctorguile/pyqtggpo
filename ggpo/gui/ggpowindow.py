@@ -55,10 +55,12 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         name = qurl.path()
         if name:
             if qurl.scheme() == 'accept':
-                self.controller.sendAcceptChallenge(name)
+                if name in self.controller.challengers:
+                    self.controller.sendAcceptChallenge(name)
             elif qurl.scheme() == 'decline':
-                self.controller.sendDeclineChallenge(name)
-                self.controller.sigStatusMessage.emit("Declined {}'s challenge".format(name))
+                if name in self.controller.challengers:
+                    self.controller.sendDeclineChallenge(name)
+                    self.controller.sigStatusMessage.emit("Declined {}'s challenge".format(name))
 
     def onRemoteHasUpdates(self, added, updated, nochange):
         totalchanged = added + updated
