@@ -342,11 +342,9 @@ class Controller(QtCore.QObject):
 
     def parseChallengeReceivedResponse(self, data):
         name, data = Protocol.extractTLV(data)
-        if name in self.ignored:
-            self.sendDeclineChallenge(name)
+        rom, data = Protocol.extractTLV(data)
+        if rom != self.rom or name in self.ignored:
             return
-        channel, data = Protocol.extractTLV(data)
-        # TODO check if channel is the same?
         self.challengers.add(name)
         self.sigChallengeReceived.emit(name)
 
