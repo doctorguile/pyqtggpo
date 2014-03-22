@@ -50,4 +50,8 @@ Type `/help` to see a list of commands available
 
 
 #Version 0.05
-auto check for savestate changes when you join unsupported game channel
+- auto check for savestate changes when you join unsupported game channel
+
+#Version 0.06
+- Support recall chat history with up and down arrow keys
+- Fix emoticon button size issue
