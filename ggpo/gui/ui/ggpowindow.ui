@@ -134,6 +134,7 @@
     <addaction name="uiFontAct"/>
     <addaction name="uiThemeMenu"/>
     <addaction name="uiSmoothingMenu"/>
+    <addaction name="uiCustomEmoticonsAct"/>
     <addaction name="separator"/>
     <addaction name="uiLocateGgpofbaAct"/>
     <addaction name="uiLocateWineAct"/>
@@ -386,6 +387,11 @@
   <action name="action0">
    <property name="text">
     <string>0</string>
+   </property>
+  </action>
+  <action name="uiCustomEmoticonsAct">
+   <property name="text">
+    <string>Custom &amp;Emoticons</string>
    </property>
   </action>
  </widget>

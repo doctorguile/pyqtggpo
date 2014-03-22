@@ -59,4 +59,5 @@ Type `/help` to see a list of commands available
 #Version 0.07
 - Add smooth networking settings like in official client
 - Add a custom scheme url for accept decline challenge.
+- Support custom emoticons
 - Use green color for links

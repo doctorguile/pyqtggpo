@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import QTextCodec
 from ggpo.common.runtime import *
 from ggpo.common.settings import Settings
-
-QTextCodec.setCodecForCStrings(QTextCodec.codecForName("utf-8"))
 
 class FlowLayout(QtGui.QLayout):
     def __init__(self, parent=None, margin=10, spacing=-1):
@@ -179,7 +176,14 @@ class EmoticonDialog(QtGui.QDialog):
             self.restoreGeometry(saved)
         self._value = ''
         flowLayout = FlowLayout(self)
-        for emoticon in _emoticons.split("\n"):
+        customEmoticons = Settings.value(Settings.CUSTOM_EMOTICONS)
+        if customEmoticons:
+            customEmoticons = filter(None, [line.strip()
+                                            for line in customEmoticons.split("\n")
+                                            if 0 < len(line) < 64])
+        else:
+            customEmoticons = []
+        for emoticon in customEmoticons + _emoticons.split("\n"):
             act = QtGui.QAction(emoticon, self)
             act.triggered.connect(self.onActionTriggered)
             btn = QtGui.QToolButton(self)

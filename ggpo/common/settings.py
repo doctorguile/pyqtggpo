@@ -21,6 +21,7 @@ class Settings:
     EMOTICON_DIALOG_GEOMETRY = 'emoticonDialogGeometry'
     COLORTHEME = 'colortheme'
     CUSTOM_THEME_FILENAME = 'customThemeFilename'
+    CUSTOM_EMOTICONS = 'customEmoticons'
     CHAT_HISTORY_FONT = 'chatFont'
     DEBUG_LOG = 'debuglog'
     SAVE_USERNAME_PASSWORD = 'saveUsernameAndPassword'

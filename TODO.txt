@@ -1,3 +1,0 @@
-custom emoticons?
-how to set input lag?
-ggpofba.ini for input lag? nLatencySmoothing 1

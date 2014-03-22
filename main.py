@@ -7,6 +7,7 @@ import sip
 sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
 from PyQt4 import QtGui, QtCore
+QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName("utf-8"))
 from ggpo.common.controller import Controller
 from ggpo.common.settings import Settings
 from ggpo.gui.colortheme import ColorTheme

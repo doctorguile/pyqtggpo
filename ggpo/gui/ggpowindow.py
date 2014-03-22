@@ -17,6 +17,7 @@ from ggpo.common.settings import Settings
 from ggpo.common.util import logger, openURL, findURLs, replaceURLs, findWine, findUnsupportedGamesavesDir, \
     defaultdictinit
 from ggpo.common.unsupportedsavestates import UnsupportedSavestates
+from ggpo.gui.customemoticonsdialog import CustomEmoticonsDialog
 from ggpo.gui.emoticonsdialog import EmoticonDialog
 from ggpo.gui.playermodel import PlayerModel
 from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
@@ -364,6 +365,11 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         controller.sigServerDisconnected.connect(
             lambda: self.onStatusMessage("Disconnected from ggpo.net. Please restart application"))
 
+    def setCustomEmoticons(self):
+        dlg = CustomEmoticonsDialog(self)
+        if dlg.exec_():
+            dlg.destroy()
+
     def setCustomQss(self):
         fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate Qt Stylesheet qss file', os.path.expanduser("~"),
                                                   "qss file (*.qss)")
@@ -450,6 +456,8 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiFontAct.triggered.connect(self.changeFont)
         self.setupMenuTheme()
         self.setupMenuSmoothing()
+        self.uiCustomEmoticonsAct.triggered.connect(self.setCustomEmoticons)
+
         self.uiLocateGgpofbaAct.triggered.connect(self.locateGGPOFBA)
         if IS_WINDOWS:
             self.uiLocateWineAct.setVisible(False)
