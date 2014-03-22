@@ -3,6 +3,7 @@
 # define authorship information
 __authors__ = ['papasi']
 __author__ = ','.join(__authors__)
+__url__ = 'https://github.com/doctorguile/pyqtggpo'
 __credits__ = [
     ('Tony Cannon (Ponder), Tom Cannon (ProtomCannon)',
      'http://ggpo.net'),
@@ -26,7 +27,7 @@ def about():
     extra = ''
     for author, url in __credits__:
         extra += author + '\n' + url + "\n"
-    return __copyright__ + ' ' + __author__ + "\n" + \
+    return __copyright__ + ' ' + __author__ + "\n" + __url__ + "\n" + \
            'License: ' + __license__ + "\n" + \
            'Version: ' + versionString() + "\n" + \
            'Credits: ' + "\n" + extra
