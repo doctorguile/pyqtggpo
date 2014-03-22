@@ -73,6 +73,20 @@ class CLI:
                     controller.sigStatusMessage.emit("Declined {}'s challenge".format(challenger))
                     controller.sendDeclineChallenge(challenger)
 
+        def cligeoip():
+            names = controller.available.keys() + controller.awayfromkb.keys() + controller.playing.keys()
+            names.sort(key=str.lower)
+            for n in names:
+                p = controller.players[n]
+                country = ''
+                if p.country:
+                    country = p.country.decode('utf-8', 'ignore')
+                city = ''
+                if p.city:
+                    city = p.city.decode('utf-8', 'ignore')
+                msg = u"{} {} {} {}".format(n, p.ip, country, city)
+                controller.sigStatusMessage.emit(msg)
+
         def clihelp():
             controller.sigStatusMessage.emit(cls.helptext())
 
@@ -97,6 +111,8 @@ class CLI:
             else:
                 controller.sigStatusMessage.emit("{} is not playing".format(name))
 
+        if line.startswith("/geo"):
+            return cligeoip()
         words = line.split(None, 1)
         command = words[0]
         if command in cls.commands:
