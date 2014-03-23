@@ -185,21 +185,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.updateStatusBar()
 
     def onChallengeReceived(self, name):
-        extrainfo = []
-        if name in self.controller.players:
-            p = self.controller.players[name]
-            if p.ping:
-                extrainfo.append('{}ms'.format(p.ping))
-            if p.country:
-                extrainfo.append(p.country.decode('utf-8', 'ignore'))
-        extrainfo = ', '.join(extrainfo)
-        if extrainfo:
-            extrainfo = '({}) '.format(extrainfo)
-        chat = self.controller.getPlayerPrefix(name, True)
-        chat += " challenged you - " + extrainfo
-        chat += "<a href='accept:" + name + "'><font color=green>accept</font></a>"
-        chat += " / <a href='decline:" + name + "'><font color=green>decline</font></a>"
-        self.uiChatHistoryTxtB.append(chat)
+        self.uiChatHistoryTxtB.append(self.controller.getPlayerChallengerText(name))
         self.playChallengeSound()
         self.updateStatusBar()
 
@@ -335,7 +321,11 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         if line:
             self.uiChatInputEdit.clear()
             if line[0] == '/':
-                CLI.process(self.controller, self.uiAwayAct.setChecked, line)
+                if line.startswith('/incoming'):
+                    for name in self.controller.challengers:
+                        self.uiChatHistoryTxtB.append(self.controller.getPlayerChallengerText(name))
+                else:
+                    CLI.process(self.controller, self.uiAwayAct.setChecked, line)
             else:
                 self.controller.sendChat(line)
 

@@ -12,6 +12,7 @@ class CLI:
         ("/back", [NO_ARG, "become available to play"]),
         ("/accept", [OPTIONAL_ARG, "accept incoming challenge"]),
         ("/decline", [OPTIONAL_ARG, "decline incoming challenge"]),
+        ("/incoming", [NO_ARG, "list all incoming challenges"]),
         ("/challenge", [REQUIRED_ARG, "challenge player"]),
         ("/cancel", [NO_ARG, "cancel outgoing challenge"]),
         ("/watch", [REQUIRED_ARG, "spectate a game"]),

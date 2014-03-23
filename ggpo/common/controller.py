@@ -249,6 +249,23 @@ class Controller(QtCore.QObject):
             )
             return state, p1, p2, playerinfo, data
 
+    def getPlayerChallengerText(self, name):
+        extrainfo = []
+        if name in self.players:
+            p = self.players[name]
+            if p.ping:
+                extrainfo.append('{}ms'.format(p.ping))
+            if p.country:
+                extrainfo.append(p.country.decode('utf-8', 'ignore'))
+        extrainfo = ', '.join(extrainfo)
+        if extrainfo:
+            extrainfo = '({}) '.format(extrainfo)
+        line = self.getPlayerPrefix(name, True)
+        line += " challenged you - " + extrainfo
+        line += "<a href='accept:" + name + "'><font color=green>accept</font></a>"
+        line += " / <a href='decline:" + name + "'><font color=green>decline</font></a>"
+        return line
+
     def getPlayerColor(self, name):
         if name == self.username or name == 'ponder':
             return '#ff0000'
