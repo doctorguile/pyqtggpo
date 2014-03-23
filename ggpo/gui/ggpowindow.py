@@ -17,6 +17,7 @@ from ggpo.common.settings import Settings
 from ggpo.common.util import logger, openURL, findURLs, replaceURLs, findWine, findUnsupportedGamesavesDir, \
     defaultdictinit
 from ggpo.common.unsupportedsavestates import UnsupportedSavestates
+from ggpo.common.allgames import *
 from ggpo.gui.customemoticonsdialog import CustomEmoticonsDialog
 from ggpo.gui.emoticonsdialog import EmoticonDialog
 from ggpo.gui.playermodel import PlayerModel
@@ -343,12 +344,16 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             fname = savestatesDialog.fsfile
             dst = os.path.join(os.path.dirname(self.controller.fba), 'savestates', 'unsupported_ggpo.fs')
             shutil.copy(fname, dst)
-            bname = os.path.basename(fname)
-            self.onStatusMessage('Saved {} as unsupported_ggpo.fs'.format(bname))
+            basefile = os.path.basename(fname)
+            basename = os.path.splitext(basefile)[0]
+            self.onStatusMessage('Saved {} as unsupported_ggpo.fs'.format(basefile))
             if self.controller.channel == 'unsupported':
                 self.controller.setUnsupportedRom('')
-                self.controller.sendChat("* {} switches to {}".format(self.controller.username, bname))
-            self.controller.setUnsupportedRom(os.path.splitext(bname)[0])
+                desc = ''
+                if basename in allgames:
+                    desc = ' {}'.format(allgames[basename][FBA_GAMEDB_DESCRIPTION])
+                self.controller.sendChat("* {} switches to [{}]{}".format(self.controller.username, basename, desc))
+            self.controller.setUnsupportedRom(basename)
 
     def setController(self, controller):
         self.controller = controller

@@ -25,6 +25,8 @@ def parseClrMameProDat(filename):
         print '{}:{},'.format(repr(k), repr(tbl[k]))
     print '}'
 
+FBA_GAMEDB_MANUFACTURER, FBA_GAMEDB_YEAR, FBA_GAMEDB_DESCRIPTION = range(3)
+
 allgames = {
 '1941':['Capcom', '1990', '1941 - Counter Attack (World)'],
 '1941j':['Capcom', '1990', '1941 - Counter Attack (Japan)'],
