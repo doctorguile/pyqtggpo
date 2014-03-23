@@ -10,7 +10,8 @@ from ggpo.gui.ui.savestatesdialog_ui import Ui_SavestatesDialog
 
 
 class SavestatesModel(QtCore.QAbstractTableModel):
-    NCOLUMNS = 4
+    N_DISPLAY_COLUMNS = 4
+    NAME, MANUFACTURER, YEAR, DESCRIPTION, FULLPATH = range(5)
 
     def __init__(self):
         super(SavestatesModel, self).__init__()
@@ -36,12 +37,12 @@ class SavestatesModel(QtCore.QAbstractTableModel):
         return len(self._data)
 
     def columnCount(self, parent=None, *args, **kwargs):
-        return SavestatesModel.NCOLUMNS
+        return SavestatesModel.N_DISPLAY_COLUMNS
 
     def flags(self, index):
         if index.isValid():
             return Qt.ItemIsEnabled | Qt.ItemIsSelectable
-        super(SavestatesModel, self).flags(index)
+        return super(SavestatesModel, self).flags(index)
 
     def headerData(self, section, orientation, role=None):
         if role == Qt.DisplayRole and orientation == Qt.Horizontal:
@@ -54,11 +55,6 @@ class SavestatesModel(QtCore.QAbstractTableModel):
             r = modelIndex.row()
             c = modelIndex.column()
             return self._data[r][c]
-            # filename = allgamesKeys[r]
-            # if c == 0:
-            #     return filename
-            # return allgames[filename][c - 1]
-
 
     def sort(self, col, order=None):
         reverse = True
@@ -91,11 +87,11 @@ class SavestatesDialog(QtGui.QDialog, Ui_SavestatesDialog):
         hh.setStretchLastSection(True)
         hh.setMinimumSectionSize(25)
         hh.setHighlightSections(False)
-        hh.resizeSection(0, 100)
-        hh.resizeSection(1, 100)
-        hh.resizeSection(2, 50)
+        hh.resizeSection(SavestatesModel.NAME, 100)
+        hh.resizeSection(SavestatesModel.MANUFACTURER, 100)
+        hh.resizeSection(SavestatesModel.YEAR, 50)
         self.uiSavestatesTblv.setSortingEnabled(True)
 
     def onAccepted(self):
         qModelIndex = self.uiSavestatesTblv.selectionModel().selectedRows()[0]
-        self.fsfile = self.model._data[qModelIndex.row()][4]
+        self.fsfile = self.model._data[qModelIndex.row()][SavestatesModel.FULLPATH]
