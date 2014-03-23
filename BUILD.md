@@ -6,6 +6,7 @@ Download and install [python 2.7.x for windows](http://python.org/download/relea
 
 Download and install [PyQt4-gpl-Py2.7-Qt4.8](http://www.riverbankcomputing.com/software/pyqt/download).
 
+Download and install [pywin32](http://sourceforge.net/projects/pywin32/)
 
 ##Install setuptools
 
@@ -35,7 +36,7 @@ https://pypi.python.org/packages/source/P/PyInstaller/PyInstaller-2.1.zip
 ##Build with pyinstaller
 
 	pyinstaller -w -i ggpo\resources\img\icon.ico -n pyqtggpo --runtime-hook ggpo\scripts\runtimehook.py main.py
-    copy ggpo\gui\ui\*.* dist\pyqtggpo\ggpo\gui\ui\*.*
+	copy %HOMEPATH%\Downloads\GeoLite2-Country.mmdb dist\pyqtggpo
 
 
 # Building on OSX
