@@ -20,6 +20,7 @@ from ggpo.common.unsupportedsavestates import UnsupportedSavestates
 from ggpo.gui.customemoticonsdialog import CustomEmoticonsDialog
 from ggpo.gui.emoticonsdialog import EmoticonDialog
 from ggpo.gui.playermodel import PlayerModel
+from ggpo.gui.savestatesdialog import SavestatesDialog
 from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
 
 
@@ -337,14 +338,15 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         if not d or not os.path.isdir(d):
             self.onStatusMessage('Unsupported Savestates Directory is not set')
             return
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Select fs file', d,
-                                                  "fs files (*.fs)")
-        if fname:
+        savestatesDialog = SavestatesDialog()
+        if savestatesDialog.exec_():
+            fname = savestatesDialog.fsfile
             dst = os.path.join(os.path.dirname(self.controller.fba), 'savestates', 'unsupported_ggpo.fs')
             shutil.copy(fname, dst)
             bname = os.path.basename(fname)
             self.onStatusMessage('Saved {} as unsupported_ggpo.fs'.format(bname))
             if self.controller.channel == 'unsupported':
+                self.controller.setUnsupportedRom('')
                 self.controller.sendChat("* {} switches to {}".format(self.controller.username, bname))
             self.controller.setUnsupportedRom(os.path.splitext(bname)[0])
 

@@ -67,3 +67,7 @@ Type `/help` to see a list of commands available
 - Allow double click on player names to challenge/cancel/spectate
 - Show Ping and Country for incoming challenge
 - Remove challenge/decline table column
+
+#Version 0.09
+- display game title etc info when selecting unsupported game savestates
+- support cli command `/incoming` to list all challengers
