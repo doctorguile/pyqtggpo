@@ -414,12 +414,15 @@ class Controller(QtCore.QObject):
             romname, data = Protocol.extractTLV(data)
             title, data = Protocol.extractTLV(data)
             unknown, data = Protocol.extractInt(data)
+            # 'sfa3': {'title': 'Street Fighter Alpha 3', 'rom': 'sfa3:sfa3u', 'room': 'sfa3'},
+            # 'sfa2': {'title': 'Street Fighter Alpha 2', 'rom': 'sfa2', 'room': 'sfa2'},
             channel = {
-                'rom': romname,
+                'rom': romname.split(':')[0],
                 'room': room,
                 'title': title,
             }
             self.channels[room] = channel
+        logger().info(repr(self.channels))
         self.sigChannelsLoaded.emit()
         if len(data) > 0:
             logger().error('Channel REMAINING DATA len {} {}'.format(len(data), repr(data)))
