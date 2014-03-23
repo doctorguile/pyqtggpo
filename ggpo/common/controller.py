@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import cgi
 import os
 import re
 import socket
@@ -255,6 +256,23 @@ class Controller(QtCore.QObject):
             if hasattr(self.players[name], 'id'):
                 return ColorTheme.getPlayerColor(self.players[name].id)
         return '#808080'
+
+    def getPlayerFlag(self, name):
+        if name in self.players:
+            p = self.players[name]
+            if p.cc:
+                return "<img src=':/flags/{}.png'/> ".format(p.cc)
+
+    def getPlayerPrefix(self, name, useFlag):
+        c = self.getPlayerColor(name)
+        icon = ''
+        if useFlag:
+            icon = self.getPlayerFlag(name)
+        if useFlag:
+            return '{}<b><font color="{}">{}</font></b> '.format(icon, c, cgi.escape(name))
+        else:
+            return '<b><font color="{}">{}</font></b> '.format(c, cgi.escape('<{}>'.format(name)))
+
 
     def ggpoPathJoin(self, *args):
         if self.fba:

@@ -25,10 +25,8 @@ class PlayerModel(QtCore.QAbstractTableModel):
 
     DEFAULT_SORT = PLAYER
 
-    # state, player, ping, opponent, ignore, accept challenge, decline challenge
-    displayColumns = ["", "Player", "Ping", "Opponent", "", "", ""]
-    ACCEPT_CHALLENGE = 5
-    DECLINE_CHALLENGE = 6
+    # state, player, ping, opponent, ignore
+    displayColumns = ["", "Player", "Ping", "Opponent", ""]
     N_DISPLAY_COLS = len(displayColumns)
 
     sortableColumns = [PLAYER, PING, OPPONENT]
@@ -44,8 +42,6 @@ class PlayerModel(QtCore.QAbstractTableModel):
         controller.sigPlayersLoaded.connect(self.reloadPlayers)
         # TODO: optimize to only update challenge column?
         controller.sigChallengeDeclined.connect(self.reloadPlayers)
-        controller.sigChallengeReceived.connect(self.reloadPlayers)
-        controller.sigChallengeCancelled.connect(self.reloadPlayers)
         # This is very heavy-handed for handling the CLI add/remove changes
         controller.sigIgnoreAdded.connect(self.reloadPlayers)
         controller.sigIgnoreRemoved.connect(self.reloadPlayers)
@@ -71,7 +67,6 @@ class PlayerModel(QtCore.QAbstractTableModel):
                     return self.controller.players[name].country + ', ' + self.controller.players[name].city
                 else:
                     return self.controller.players[name].country
-
         elif role == Qt.CheckStateRole and col == PlayerModel.IGNORE:
             return self.players[row][col]
         elif role == Qt.DecorationRole:
@@ -91,12 +86,6 @@ class PlayerModel(QtCore.QAbstractTableModel):
             icon_path = ':/flags/' + self.players[row][PlayerModel.COUNTRY] + '.png'
         elif col == PlayerModel.OPPONENT:
             icon_path = ':/flags/' + self.players[row][PlayerModel.OPPONENT_COUNTRY] + '.png'
-        elif col == PlayerModel.ACCEPT_CHALLENGE:
-            if self.players[row][PlayerModel.PLAYER] in self.controller.challengers:
-                icon_path = ':/images/sword-yes.png'
-        elif col == PlayerModel.DECLINE_CHALLENGE:
-            if self.players[row][PlayerModel.PLAYER] in self.controller.challengers:
-                icon_path = ':/images/sword-no.png'
         elif col == PlayerModel.STATE:
             val = self.players[row][col]
             if self.controller.challenged:
@@ -137,8 +126,6 @@ class PlayerModel(QtCore.QAbstractTableModel):
         if role == Qt.DecorationRole and Qt_Orientation == Qt.Horizontal:
             if section == PlayerModel.IGNORE:
                 return QtGui.QIcon(':/assets/face-ignore.png')
-            elif section == PlayerModel.ACCEPT_CHALLENGE:
-                return QtGui.QIcon(':/images/swords.png')
 
     def onCellClicked(self, index):
         col = index.column()
@@ -159,15 +146,26 @@ class PlayerModel(QtCore.QAbstractTableModel):
                 idx2 = self.createIndex(len(self.players) - 1, PlayerModel.STATE)
                 # noinspection PyUnresolvedReferences
                 self.dataChanged.emit(idx1, idx2)
-        if col in [PlayerModel.ACCEPT_CHALLENGE, PlayerModel.DECLINE_CHALLENGE]:
-            if col == PlayerModel.ACCEPT_CHALLENGE:
-                self.controller.sendAcceptChallenge(self.players[row][PlayerModel.PLAYER])
-            elif col == PlayerModel.DECLINE_CHALLENGE:
-                self.controller.sendDeclineChallenge(self.players[row][PlayerModel.PLAYER])
-            idx1 = self.createIndex(0, PlayerModel.ACCEPT_CHALLENGE)
-            idx2 = self.createIndex(len(self.players) - 1, PlayerModel.DECLINE_CHALLENGE)
-            # noinspection PyUnresolvedReferences
-            self.dataChanged.emit(idx1, idx2)
+
+    def onCellDoubleClicked(self, index):
+        col = index.column()
+        row = index.row()
+        if col == PlayerModel.PLAYER:
+            modified = False
+            if self.controller.challenged == self.players[row][PlayerModel.PLAYER]:
+                self.controller.sendCancelChallenge()
+                modified = True
+            elif self.players[row][PlayerModel.STATE] == PlayerModelState.AVAILABLE:
+                self.controller.sendChallenge(self.players[row][PlayerModel.PLAYER])
+                modified = True
+            elif self.players[row][PlayerModel.STATE] == PlayerModelState.PLAYING:
+                self.controller.sendSpectateRequest(self.players[row][PlayerModel.PLAYER])
+                modified = True
+            if modified:
+                idx1 = self.createIndex(0, PlayerModel.STATE)
+                idx2 = self.createIndex(len(self.players) - 1, PlayerModel.STATE)
+                # noinspection PyUnresolvedReferences
+                self.dataChanged.emit(idx1, idx2)
 
     # noinspection PyUnusedLocal
     def reloadPlayers(self, *args):

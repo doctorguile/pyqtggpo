@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ggpo/gui/ui/ggpowindow.ui'
 #
-# Created: Sat Mar 22 15:59:28 2014
+# Created: Sat Mar 22 18:35:35 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -152,6 +152,9 @@ class Ui_MainWindow(object):
         self.action0.setObjectName(_fromUtf8("action0"))
         self.uiCustomEmoticonsAct = QtGui.QAction(MainWindow)
         self.uiCustomEmoticonsAct.setObjectName(_fromUtf8("uiCustomEmoticonsAct"))
+        self.uiShowCountryFlagInChatAct = QtGui.QAction(MainWindow)
+        self.uiShowCountryFlagInChatAct.setCheckable(True)
+        self.uiShowCountryFlagInChatAct.setObjectName(_fromUtf8("uiShowCountryFlagInChatAct"))
         self.menuAction.addAction(self.uiAwayAct)
         self.menuAction.addAction(self.uiFocusOnChatAct)
         self.menuAction.addAction(self.uiEmoticonAct)
@@ -169,9 +172,9 @@ class Ui_MainWindow(object):
         self.menuAction.addSeparator()
         self.menuAction.addAction(self.uiQuitAct)
         self.menuSetting.addAction(self.uiMuteChallengeSoundAct)
-        self.menuSetting.addAction(self.uiFontAct)
         self.menuSetting.addAction(self.uiThemeMenu.menuAction())
         self.menuSetting.addAction(self.uiSmoothingMenu.menuAction())
+        self.menuSetting.addAction(self.uiFontAct)
         self.menuSetting.addAction(self.uiCustomEmoticonsAct)
         self.menuSetting.addSeparator()
         self.menuSetting.addAction(self.uiLocateGgpofbaAct)
@@ -180,6 +183,7 @@ class Ui_MainWindow(object):
         self.menuSetting.addAction(self.uiLocateGeommdbAct)
         self.menuSetting.addSeparator()
         self.menuSetting.addAction(self.uiNotifyPlayerStateChangeAct)
+        self.menuSetting.addAction(self.uiShowCountryFlagInChatAct)
         self.menuSetting.addAction(self.uiDebugLogAct)
         self.menuAbout.addAction(self.uiSRKForumAct)
         self.menuAbout.addAction(self.uiSRKWikiAct)
@@ -258,5 +262,6 @@ class Ui_MainWindow(object):
         self.uiNormalThemeAct.setText(QtGui.QApplication.translate("MainWindow", "&Normal", None, QtGui.QApplication.UnicodeUTF8))
         self.action0.setText(QtGui.QApplication.translate("MainWindow", "0", None, QtGui.QApplication.UnicodeUTF8))
         self.uiCustomEmoticonsAct.setText(QtGui.QApplication.translate("MainWindow", "Custom &Emoticons", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiShowCountryFlagInChatAct.setText(QtGui.QApplication.translate("MainWindow", "Show &country flag in chat", None, QtGui.QApplication.UnicodeUTF8))
 
 from ggpo.gui.completionlineedit import CompletionLineEdit

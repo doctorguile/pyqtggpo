@@ -61,3 +61,9 @@ Type `/help` to see a list of commands available
 - Add a custom scheme url for accept decline challenge.
 - Support custom emoticons
 - Use green color for links
+
+#Version 0.08
+- Option to show country flags in chat
+- Allow double click on player names to challenge/cancel/spectate
+- Show Ping and Country for incoming challenge
+- Remove challenge/decline table column

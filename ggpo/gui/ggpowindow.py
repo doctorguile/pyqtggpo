@@ -62,6 +62,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                 if name in self.controller.challengers:
                     self.controller.sendDeclineChallenge(name)
                     self.controller.sigStatusMessage.emit("Declined {}'s challenge".format(name))
+                    self.updateStatusBar()
 
     def onRemoteHasUpdates(self, added, updated, nochange):
         totalchanged = added + updated
@@ -165,10 +166,12 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         if fname:
             Settings.setValue(Settings.WINE_LOCATION, fname)
 
-    def notifyStateChange(self, msg):
+    def notifyStateChange(self, name, msg):
+        msg = name + msg
         if self.lastStateChangeMsg != msg:
             self.lastStateChangeMsg = msg
-            self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(msg))
+            flag = self.controller.getPlayerFlag(name) or ''
+            self.uiChatHistoryTxtB.append(flag + ColorTheme.statusHtml(msg))
 
     def onActionFailed(self, txt):
         self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(txt))
@@ -182,8 +185,18 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.updateStatusBar()
 
     def onChallengeReceived(self, name):
-        c = self.controller.getPlayerColor(name)
-        chat = '<b><font color="' + c + '">' + cgi.escape(name) + "</font></b> challenged you - "
+        extrainfo = []
+        if name in self.controller.players:
+            p = self.controller.players[name]
+            if p.ping:
+                extrainfo.append('{}ms'.format(p.ping))
+            if p.country:
+                extrainfo.append(p.country.decode('utf-8', 'ignore'))
+        extrainfo = ', '.join(extrainfo)
+        if extrainfo:
+            extrainfo = '({}) '.format(extrainfo)
+        chat = self.controller.getPlayerPrefix(name, True)
+        chat += " challenged you - " + extrainfo
         chat += "<a href='accept:" + name + "'><font color=green>accept</font></a>"
         chat += " / <a href='decline:" + name + "'><font color=green>decline</font></a>"
         self.uiChatHistoryTxtB.append(chat)
@@ -191,9 +204,8 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.updateStatusBar()
 
     def onChatReceived(self, name, txt):
-        c = self.controller.getPlayerColor(name)
-        chat = '<b><font color="' + c + '">' + cgi.escape('<' + name + '>') + "</font></b> " + cgi.escape(
-            txt.strip())
+        chat = self.controller.getPlayerPrefix(name, Settings.value(Settings.SHOW_COUNTRY_FLAG_IN_CHAT)) + \
+               cgi.escape(txt.strip())
         urls = findURLs(txt)
         if urls:
             for url in urls:
@@ -231,11 +243,11 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
     def onPlayerStateChange(self, name, state):
         if Settings.value(Settings.NOTIFY_PLAYER_STATE_CHANGE):
             if state == PlayerStates.QUIT:
-                self.notifyStateChange(name + " left")
+                self.notifyStateChange(name, " left")
             elif state == PlayerStates.AVAILABLE:
-                self.notifyStateChange(name + " becomes available")
+                self.notifyStateChange(name, " becomes available")
             elif state == PlayerStates.PLAYING:
-                self.notifyStateChange(name + " is in a game")
+                self.notifyStateChange(name, " is in a game")
         self.updateStatusBar()
 
     def onStatusMessage(self, msg):
@@ -297,6 +309,8 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.uiMuteChallengeSoundAct.setChecked(True)
         if Settings.value(Settings.NOTIFY_PLAYER_STATE_CHANGE):
             self.uiNotifyPlayerStateChangeAct.setChecked(True)
+        if Settings.value(Settings.SHOW_COUNTRY_FLAG_IN_CHAT):
+            self.uiShowCountryFlagInChatAct.setChecked(True)
         fontsetting = Settings.pythonValue(Settings.CHAT_HISTORY_FONT)
         if fontsetting:
             self.uiChatHistoryTxtB.setFont(QtGui.QFont(*fontsetting))
@@ -469,6 +483,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         else:
             self.uiLocateGeommdbAct.setVisible(False)
         self.uiNotifyPlayerStateChangeAct.toggled.connect(self.__class__.toggleNotifyPlayerStateChange)
+        self.uiShowCountryFlagInChatAct.toggled.connect(self.__class__.toggleShowCountryFlagInChat)
         if Settings.value(Settings.DEBUG_LOG):
             self.uiDebugLogAct.setChecked(True)
         self.uiDebugLogAct.triggered.connect(self.__class__.debuglogTriggered)
@@ -526,6 +541,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         model = PlayerModel(self.controller)
         self.uiPlayersTableV.setModel(model)
         self.uiPlayersTableV.clicked.connect(model.onCellClicked)
+        self.uiPlayersTableV.doubleClicked.connect(model.onCellDoubleClicked)
         self.uiPlayersTableV.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         self.uiPlayersTableV.verticalHeader().setVisible(False)
         hh = self.uiPlayersTableV.horizontalHeader()
@@ -540,13 +556,9 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         hh.resizeSection(PlayerModel.IGNORE, 25)
         hh.resizeSection(PlayerModel.PLAYER, 165)
         hh.resizeSection(PlayerModel.OPPONENT, 165)
-        hh.resizeSection(PlayerModel.ACCEPT_CHALLENGE, 25)
-        hh.resizeSection(PlayerModel.DECLINE_CHALLENGE, 25)
         hh.setResizeMode(PlayerModel.STATE, QtGui.QHeaderView.Fixed)
         hh.setResizeMode(PlayerModel.PING, QtGui.QHeaderView.Fixed)
         hh.setResizeMode(PlayerModel.IGNORE, QtGui.QHeaderView.Fixed)
-        hh.setResizeMode(PlayerModel.ACCEPT_CHALLENGE, QtGui.QHeaderView.Fixed)
-        hh.setResizeMode(PlayerModel.DECLINE_CHALLENGE, QtGui.QHeaderView.Fixed)
         self.uiPlayersTableV.setSortingEnabled(True)
         self.uiPlayersTableV.sortByColumn(PlayerModel.DEFAULT_SORT, Qt.AscendingOrder)
         hh.sortIndicatorChanged.connect(self.sortIndicatorChanged)
@@ -562,6 +574,10 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
     @staticmethod
     def toggleNotifyPlayerStateChange(state):
         Settings.setBoolean(Settings.NOTIFY_PLAYER_STATE_CHANGE, state)
+
+    @staticmethod
+    def toggleShowCountryFlagInChat(state):
+        Settings.setBoolean(Settings.SHOW_COUNTRY_FLAG_IN_CHAT, state)
 
     @staticmethod
     def toggleSound(state):

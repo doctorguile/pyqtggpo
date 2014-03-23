@@ -131,9 +131,9 @@
      </property>
     </widget>
     <addaction name="uiMuteChallengeSoundAct"/>
-    <addaction name="uiFontAct"/>
     <addaction name="uiThemeMenu"/>
     <addaction name="uiSmoothingMenu"/>
+    <addaction name="uiFontAct"/>
     <addaction name="uiCustomEmoticonsAct"/>
     <addaction name="separator"/>
     <addaction name="uiLocateGgpofbaAct"/>
@@ -142,6 +142,7 @@
     <addaction name="uiLocateGeommdbAct"/>
     <addaction name="separator"/>
     <addaction name="uiNotifyPlayerStateChangeAct"/>
+    <addaction name="uiShowCountryFlagInChatAct"/>
     <addaction name="uiDebugLogAct"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
@@ -392,6 +393,14 @@
   <action name="uiCustomEmoticonsAct">
    <property name="text">
     <string>Custom &amp;Emoticons</string>
+   </property>
+  </action>
+  <action name="uiShowCountryFlagInChatAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show &amp;country flag in chat</string>
    </property>
   </action>
  </widget>

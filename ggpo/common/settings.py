@@ -14,6 +14,7 @@ class Settings:
     SMOOTHING = 'smoothing'
     MUTE_CHALLENGE_SOUND = 'mute'
     NOTIFY_PLAYER_STATE_CHANGE = 'notifyPlayerStateChange'
+    SHOW_COUNTRY_FLAG_IN_CHAT = 'showCountryFlagInChat'
     WINDOW_GEOMETRY = 'mainWindowGeometry'
     WINDOW_STATE = 'mainWindowState'
     SPLITTER_STATE = 'splitterState'
