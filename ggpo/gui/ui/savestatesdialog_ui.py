@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ggpo/gui/ui/savestatesdialog.ui'
 #
-# Created: Sat Mar 22 23:42:41 2014
+# Created: Sun Mar 23 16:16:20 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,8 +17,9 @@ except AttributeError:
 class Ui_SavestatesDialog(object):
     def setupUi(self, SavestatesDialog):
         SavestatesDialog.setObjectName(_fromUtf8("SavestatesDialog"))
-        SavestatesDialog.resize(648, 771)
+        SavestatesDialog.resize(630, 600)
         self.verticalLayout = QtGui.QVBoxLayout(SavestatesDialog)
+        self.verticalLayout.setContentsMargins(2, 0, 2, 6)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.uiSavestatesTblv = QtGui.QTableView(SavestatesDialog)
         self.uiSavestatesTblv.setObjectName(_fromUtf8("uiSavestatesTblv"))

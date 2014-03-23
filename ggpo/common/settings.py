@@ -20,6 +20,8 @@ class Settings:
     SPLITTER_STATE = 'splitterState'
     TABLE_HEADER_STATE = 'tableHeaderState'
     EMOTICON_DIALOG_GEOMETRY = 'emoticonDialogGeometry'
+    SAVESTATES_DIALOG_GEOMETRY = 'savestatesDialogGeometry'
+    SAVESTATES_DIALOG_TABLE_HEADER_STATE = 'savestatesDialogTableHeaderState'
     COLORTHEME = 'colortheme'
     CUSTOM_THEME_FILENAME = 'customThemeFilename'
     CUSTOM_EMOTICONS = 'customEmoticons'

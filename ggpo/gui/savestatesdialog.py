@@ -5,6 +5,7 @@ from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
 import operator
 from ggpo.common.allgames import allgames
+from ggpo.common.settings import Settings
 from ggpo.common.util import findUnsupportedGamesavesDir
 from ggpo.gui.ui.savestatesdialog_ui import Ui_SavestatesDialog
 
@@ -81,7 +82,7 @@ class SavestatesDialog(QtGui.QDialog, Ui_SavestatesDialog):
         self.uiSavestatesTblv.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         self.uiSavestatesTblv.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         sm = self.uiSavestatesTblv.selectionModel()
-        sm.selectionChanged.connect(lambda: okbtn.setEnabled(sm.hasSelection()))
+        sm.selectionChanged.connect(self.onSelectionChanged)
         self.uiSavestatesTblv.verticalHeader().setVisible(False)
         hh = self.uiSavestatesTblv.horizontalHeader()
         hh.setStretchLastSection(True)
@@ -91,7 +92,29 @@ class SavestatesDialog(QtGui.QDialog, Ui_SavestatesDialog):
         hh.resizeSection(SavestatesModel.MANUFACTURER, 100)
         hh.resizeSection(SavestatesModel.YEAR, 50)
         self.uiSavestatesTblv.setSortingEnabled(True)
+        self.accepted.connect(self.saveGeometrySettings)
+        self.finished.connect(self.saveGeometrySettings)
+        self.rejected.connect(self.saveGeometrySettings)
+        self.restoreStateAndGeometry()
 
     def onAccepted(self):
         qModelIndex = self.uiSavestatesTblv.selectionModel().selectedRows()[0]
         self.fsfile = self.model._data[qModelIndex.row()][SavestatesModel.FULLPATH]
+
+    def onSelectionChanged(self):
+        self.uiButtonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(
+            self.uiSavestatesTblv.selectionModel().hasSelection())
+
+    def saveGeometrySettings(self):
+        Settings.setValue(Settings.SAVESTATES_DIALOG_GEOMETRY, self.saveGeometry())
+        Settings.setValue(Settings.SAVESTATES_DIALOG_TABLE_HEADER_STATE, self.uiSavestatesTblv.horizontalHeader().saveState())
+
+    def restoreStateAndGeometry(self):
+        saved = Settings.value(Settings.SAVESTATES_DIALOG_GEOMETRY)
+        if saved:
+            self.restoreGeometry(saved)
+        saved = Settings.value(Settings.SAVESTATES_DIALOG_TABLE_HEADER_STATE)
+        if saved:
+            self.uiSavestatesTblv.horizontalHeader().restoreState(saved)
+
+

@@ -71,3 +71,7 @@ Type `/help` to see a list of commands available
 #Version 0.09
 - display game title etc info when selecting unsupported game savestates
 - support cli command `/incoming` to list all challengers
+
+#Version 0.10
+- fix alpha3 rom issue
+- save select save state dialog windows state
