@@ -11,6 +11,38 @@ from PyQt4 import QtCore
 from ggpo.common.util import logger, findUnsupportedGamesavesDir, sha256digest
 
 
+def readLocalJsonDigest():
+    localJsonDigest = {}
+    d = findUnsupportedGamesavesDir()
+    if d:
+        localjson = os.path.join(d, SyncWorker.JSON_INDEX_FILENAME)
+        if os.path.isfile(localjson):
+            # noinspection PyBroadException
+            try:
+                localJsonDigest = json.load(file(localjson).read())
+            except:
+                pass
+        if not localJsonDigest:
+            return writeLocalJsonDigest()
+    return localJsonDigest
+
+
+def writeLocalJsonDigest():
+    localJsonDigest = {}
+    d = findUnsupportedGamesavesDir()
+    if d:
+        localjson = os.path.join(d, SyncWorker.JSON_INDEX_FILENAME)
+        for filename in glob.glob(os.path.join(d, '*.fs')):
+            localJsonDigest[os.path.basename(filename)] = sha256digest(filename)
+        # noinspection PyBroadException
+        try:
+            f = open(localjson, 'w')
+            f.write(json.dumps(localJsonDigest, sort_keys=True, indent=2))
+        except:
+            pass
+    return localJsonDigest
+
+
 class SyncWorker(QtCore.QObject):
     sigFinished = QtCore.pyqtSignal(int, int, int)
     sigStatusMessage = QtCore.pyqtSignal(str)
@@ -24,7 +56,6 @@ class SyncWorker(QtCore.QObject):
         self.added = 0
         self.updated = 0
         self.nochange = 0
-        self.localJsonDigest = {}
 
     def download(self):
         d = findUnsupportedGamesavesDir()
@@ -32,7 +63,7 @@ class SyncWorker(QtCore.QObject):
             self.sigStatusMessage.emit('Unsupported Savestates Directory is not set')
             self.sigFinished.emit(self.added, self.updated, self.nochange)
             return
-        self.readLocalJsonDigest()
+        localJsonDigest = readLocalJsonDigest()
         # noinspection PyBroadException
         try:
             # gotta love CPython's GIL, yield thread
@@ -44,8 +75,8 @@ class SyncWorker(QtCore.QObject):
                 if re.search(r'[^ .a-zA-Z0-9_-]', filename):
                     logger().error("Filename {} looks suspicious, ignoring".format(filename))
                     continue
-                if filename in self.localJsonDigest:
-                    if self.localJsonDigest[filename] == shahash:
+                if filename in localJsonDigest:
+                    if localJsonDigest[filename] == shahash:
                         self.nochange += 1
                         continue
                     else:
@@ -62,40 +93,13 @@ class SyncWorker(QtCore.QObject):
                 if not self.added and not self.updated:
                     self.sigStatusMessage.emit('All files are up to date')
                 else:
-                    self.writeLocalJsonDigest()
+                    writeLocalJsonDigest()
                     self.sigStatusMessage.emit(
                         '{} files are current, added {}, updated {}'.format(
                             self.nochange, self.added, self.updated))
         except Exception, ex:
             logger().error(str(ex))
         self.sigFinished.emit(self.added, self.updated, self.nochange)
-
-    def readLocalJsonDigest(self):
-        d = findUnsupportedGamesavesDir()
-        if d:
-            localjson = os.path.join(d, self.JSON_INDEX_FILENAME)
-            if os.path.isfile(localjson):
-                # noinspection PyBroadException
-                try:
-                    self.localJsonDigest = json.load(file(localjson).read())
-                except:
-                    pass
-            if not self.localJsonDigest:
-                self.writeLocalJsonDigest()
-
-    def writeLocalJsonDigest(self):
-        d = findUnsupportedGamesavesDir()
-        if d:
-            localjson = os.path.join(d, self.JSON_INDEX_FILENAME)
-            self.localJsonDigest = {}
-            for filename in glob.glob(os.path.join(d, '*.fs')):
-                self.localJsonDigest[os.path.basename(filename)] = sha256digest(filename)
-            # noinspection PyBroadException
-            try:
-                f = open(localjson, 'w')
-                f.write(json.dumps(self.localJsonDigest, sort_keys=True, indent=2))
-            except:
-                pass
 
 
 # noinspection PyClassHasNoInit

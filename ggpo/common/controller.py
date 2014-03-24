@@ -16,7 +16,8 @@ from ggpo.common.player import Player
 from ggpo.common.playerstate import PlayerStates
 from ggpo.common.protocol import Protocol
 from ggpo.common.settings import Settings
-from ggpo.common.util import findWine, logger, packagePathJoin
+from ggpo.common.unsupportedsavestates import readLocalJsonDigest
+from ggpo.common.util import findWine, logger, packagePathJoin, findUnsupportedGamesavesDir, sha256digest
 from ggpo.gui.colortheme import ColorTheme
 
 
@@ -34,6 +35,7 @@ class Controller(QtCore.QObject):
     sigLoginSuccess = QtCore.pyqtSignal()
     sigMotdReceived = QtCore.pyqtSignal(str, str, str)
     sigNewVersionAvailable = QtCore.pyqtSignal(str, str)
+    sigPlayerNewlyJoined = QtCore.pyqtSignal(str)
     sigPlayerStateChange = QtCore.pyqtSignal(str, int)
     sigPlayersLoaded = QtCore.pyqtSignal()
     sigServerDisconnected = QtCore.pyqtSignal()
@@ -69,6 +71,7 @@ class Controller(QtCore.QObject):
         self.fba = None
         self.checkInstallation()
         self.unsupportedRom = ''
+        self.checkUnsupportedRom()
 
         self.challengers = set()
         self.challenged = None
@@ -92,6 +95,8 @@ class Controller(QtCore.QObject):
     def addUser(self, **kwargs):
         if 'player' in kwargs:
             name = kwargs['player']
+            if name not in self.available and name not in self.awayfromkb and name not in self.playing:
+                self.sigPlayerNewlyJoined.emit(name)
             if name in self.players:
                 p = self.players[name]
                 for k, v in kwargs.items():
@@ -130,6 +135,19 @@ class Controller(QtCore.QObject):
             else:
                 self.sigStatusMessage.emit('{} not found. Required to play or spectate'.format(rom))
         return False
+
+    def checkUnsupportedRom(self):
+        if self.fba:
+            d = findUnsupportedGamesavesDir()
+            if d:
+                unsupported = os.path.join(os.path.dirname(self.fba), 'savestates', 'unsupported_ggpo.fs')
+                if os.path.isfile(unsupported):
+                    unsupported = sha256digest(unsupported)
+                    localJsonDigest = readLocalJsonDigest()
+                    for k, v in localJsonDigest.items():
+                        if v == unsupported:
+                            self.unsupportedRom = os.path.splitext(k)[0]
+                            break
 
     def connectTcp(self):
         self.tcpConnected = False

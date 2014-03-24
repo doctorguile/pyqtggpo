@@ -5,6 +5,7 @@ import logging.handlers
 import os
 import re
 import shutil
+import time
 from colortheme import ColorTheme
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
@@ -43,6 +44,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiEmoticonTbtn.setText(':)')
         self.addSplitterHandleToggleButton()
         self.uiChatHistoryTxtB.anchorClicked.connect(self.onAnchorClicked)
+        self.autoAnnounceUnsupportedTime = 0
 
     @staticmethod
     def buildInSmoothingToActionName(smooth):
@@ -228,6 +230,18 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
     def onMOTDReceived(self, channel, topic, msg):
         self.uiChatHistoryTxtB.setHtml(replaceURLs(msg) + '<br/><br/>Type /help to see a list of commands<br/><br/>')
 
+    def onPlayerNewlyJoined(self, name):
+        if self.controller.channel == 'unsupported' and self.controller.unsupportedRom and \
+                not Settings.value(Settings.DISABLE_AUTO_ANNOUNCE_UNSUPPORTED) and \
+                                time.time() - self.autoAnnounceUnsupportedTime > 3 and \
+                        self.controller.username in self.controller.playing:
+            basename = os.path.splitext(self.controller.unsupportedRom)[0]
+            desc = ''
+            if basename in allgames:
+                desc = allgames[basename][FBA_GAMEDB_DESCRIPTION]
+            QtCore.QTimer.singleShot(1000, lambda: self.controller.sendChat("* I'm playing {}".format(desc)))
+            self.autoAnnounceUnsupportedTime = time.time()
+
     def onPlayerStateChange(self, name, state):
         if Settings.value(Settings.NOTIFY_PLAYER_STATE_CHANGE):
             if state == PlayerStates.QUIT:
@@ -365,6 +379,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         controller.sigChannelsLoaded.connect(self.onListChannelsReceived)
         controller.sigMotdReceived.connect(self.onMOTDReceived)
         controller.sigActionFailed.connect(self.onActionFailed)
+        controller.sigPlayerNewlyJoined.connect(self.onPlayerNewlyJoined)
         controller.sigPlayerStateChange.connect(self.onPlayerStateChange)
         controller.sigChatReceived.connect(self.onChatReceived)
         controller.sigChallengeDeclined.connect(self.onChallengeDeclined)
@@ -481,6 +496,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.uiLocateGeommdbAct.setVisible(False)
         self.uiNotifyPlayerStateChangeAct.toggled.connect(self.__class__.toggleNotifyPlayerStateChange)
         self.uiShowCountryFlagInChatAct.toggled.connect(self.__class__.toggleShowCountryFlagInChat)
+        self.uiDisableAutoAnnounceAct.toggled.connect(self.__class__.toggleDisableAutoAnnounceUnsupported)
         if Settings.value(Settings.DEBUG_LOG):
             self.uiDebugLogAct.setChecked(True)
         self.uiDebugLogAct.triggered.connect(self.__class__.debuglogTriggered)
@@ -488,11 +504,13 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
     def setupMenuSmoothing(self):
         # unfortunately Qt Designer doesn't support QActionGroup, we have to code it up
         self.uiMenuSmoothingGroup = QtGui.QActionGroup(self.uiSmoothingMenu, exclusive=True)
+
         def onSmoothingToggled(boolean):
             if boolean:
                 result = re.search(r'[0-9]+', self.sender().text())
                 if result:
                     Settings.setValue(Settings.SMOOTHING, result.group(0))
+
         desc = defaultdictinit({0: ' More jerky', 1: ' Default', 10: ' Laggy'})
         for smooth in range(11):
             act = QtGui.QAction('&' + str(smooth) + desc[smooth], self)
@@ -567,6 +585,10 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def toggleAFK(self, state):
         self.controller.sendToggleAFK(state)
+
+    @staticmethod
+    def toggleDisableAutoAnnounceUnsupported(state):
+        Settings.setBoolean(Settings.DISABLE_AUTO_ANNOUNCE_UNSUPPORTED, state)
 
     @staticmethod
     def toggleNotifyPlayerStateChange(state):

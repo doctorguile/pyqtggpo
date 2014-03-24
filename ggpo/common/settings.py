@@ -32,6 +32,7 @@ class Settings:
     WINE_LOCATION = 'wineLocation'
     GEOIP2DB_LOCATION = 'geoip2dbLocation'
     UNSUPPORTED_GAMESAVES_DIR = 'unsupportedGamesavesDir'
+    DISABLE_AUTO_ANNOUNCE_UNSUPPORTED = 'disableAutoAnnounceUnsupported'
 
     _settings = QSettings(os.path.join(os.path.expanduser("~"), 'ggpo.ini'), QSettings.IniFormat)
 

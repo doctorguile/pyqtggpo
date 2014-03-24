@@ -74,4 +74,5 @@ Type `/help` to see a list of commands available
 
 #Version 0.10
 - fix alpha3 rom issue
-- save select save state dialog windows state
+- auto announce the game that you're playing in unsupported room when new player joins the room
+- Remember select save state dialog windows size

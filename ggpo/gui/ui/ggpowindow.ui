@@ -143,6 +143,7 @@
     <addaction name="separator"/>
     <addaction name="uiNotifyPlayerStateChangeAct"/>
     <addaction name="uiShowCountryFlagInChatAct"/>
+    <addaction name="uiDisableAutoAnnounceAct"/>
     <addaction name="uiDebugLogAct"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
@@ -401,6 +402,14 @@
    </property>
    <property name="text">
     <string>Show &amp;country flag in chat</string>
+   </property>
+  </action>
+  <action name="uiDisableAutoAnnounceAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Disable auto announce in unsupported room</string>
    </property>
   </action>
  </widget>
