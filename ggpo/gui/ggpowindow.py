@@ -194,9 +194,10 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.updateStatusBar()
 
     def onChatReceived(self, name, txt):
-        chat = self.controller.getPlayerPrefix(name, Settings.value(Settings.SHOW_COUNTRY_FLAG_IN_CHAT)) + \
-               cgi.escape(txt.strip())
+        prefix = self.controller.getPlayerPrefix(name, Settings.value(Settings.SHOW_COUNTRY_FLAG_IN_CHAT))
+        txt = cgi.escape(txt.strip()).replace(self.controller.username, "<b>{}</b>".format(self.controller.username))
         urls = findURLs(txt)
+        chat = prefix + txt
         if urls:
             for url in urls:
                 chat += " <a href='" + url + "'><font color=green>link</font></a>"
