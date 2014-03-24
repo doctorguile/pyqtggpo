@@ -40,6 +40,7 @@ https://pypi.python.org/packages/source/P/PyInstaller/PyInstaller-2.1.zip
 
 
 # Building on OSX
+    install XCode
 
 	sudo port selfupdate
 	sudo port install python27
