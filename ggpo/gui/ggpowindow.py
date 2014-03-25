@@ -37,9 +37,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.lastStateChangeMsg = ''
         self.playChallengeSound = lambda: None
         self.uiChatInputEdit.returnPressed.connect(self.returnPressed)
-        self.setupMenuAction()
-        self.setupMenuSettings()
-        self.setupMenuHelp()
+        self.setupMenu()
         self.uiEmoticonTbtn.setDefaultAction(self.uiEmoticonAct)
         self.uiEmoticonTbtn.setText(':)')
         self.addSplitterHandleToggleButton()
@@ -461,6 +459,11 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         except ImportError:
             self.playChallengeSound = self.controller.playChallengeSound
             pass
+
+    def setupMenu(self):
+        self.setupMenuAction()
+        self.setupMenuSettings()
+        self.setupMenuHelp()
 
     def setupMenuAction(self):
         self.uiAwayAct.triggered.connect(self.toggleAFK)
