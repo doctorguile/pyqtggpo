@@ -92,7 +92,7 @@
      <x>0</x>
      <y>0</y>
      <width>810</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAction">
@@ -143,6 +143,7 @@
     <addaction name="separator"/>
     <addaction name="uiNotifyPlayerStateChangeAct"/>
     <addaction name="uiShowCountryFlagInChatAct"/>
+    <addaction name="uiShowTimestampInChatAct"/>
     <addaction name="uiDisableAutoAnnounceAct"/>
     <addaction name="uiDebugLogAct"/>
    </widget>
@@ -410,6 +411,14 @@
    </property>
    <property name="text">
     <string>&amp;Disable auto announce in unsupported room</string>
+   </property>
+  </action>
+  <action name="uiShowTimestampInChatAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show timestamp in chat</string>
    </property>
   </action>
  </widget>

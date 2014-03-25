@@ -46,35 +46,6 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiChatHistoryTxtB.anchorClicked.connect(self.onAnchorClicked)
         self.autoAnnounceUnsupportedTime = 0
 
-    @staticmethod
-    def buildInSmoothingToActionName(smooth):
-        return 'uiSmoothing{}Act'.format(smooth)
-
-    @staticmethod
-    def buildInStyleToActionName(styleName):
-        return 'ui{}ThemeAct'.format(re.sub(r'[^a-zA-Z0-9]', '', styleName))
-
-    def onAnchorClicked(self, qurl):
-        if qurl.scheme() in ['http', 'https']:
-            QtGui.QDesktopServices.openUrl(qurl)
-        name = qurl.path()
-        if name:
-            if qurl.scheme() == 'accept':
-                if name in self.controller.challengers:
-                    self.controller.sendAcceptChallenge(name)
-            elif qurl.scheme() == 'decline':
-                if name in self.controller.challengers:
-                    self.controller.sendDeclineChallenge(name)
-                    self.controller.sigStatusMessage.emit("Declined {}'s challenge".format(name))
-                    self.updateStatusBar()
-
-    def onRemoteHasUpdates(self, added, updated, nochange):
-        totalchanged = added + updated
-        if totalchanged:
-            self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(
-                "{} savestate(s) added/updated.\nGo to `Action > Sync Unsupported Savestates` for updates".format(
-                    totalchanged)))
-
     def aboutDialog(self):
         QtGui.QMessageBox.information(self, 'About', copyright.about())
 
@@ -92,6 +63,19 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         button.clicked.connect(self.onToggleSidebarAction)
         layout.addWidget(button)
         handle.setLayout(layout)
+
+    def appendChat(self, text):
+        if Settings.value(Settings.SHOW_TIMESTAMP_IN_CHAT):
+            text = time.strftime("%H:%M ") + text
+        self.uiChatHistoryTxtB.append(text)
+
+    @staticmethod
+    def buildInSmoothingToActionName(smooth):
+        return 'uiSmoothing{}Act'.format(smooth)
+
+    @staticmethod
+    def buildInStyleToActionName(styleName):
+        return 'ui{}ThemeAct'.format(re.sub(r'[^a-zA-Z0-9]', '', styleName))
 
     def changeFont(self):
         font, ok = QtGui.QFontDialog.getFont()
@@ -120,10 +104,10 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                 break
 
     def ignoreAdded(self, name):
-        self.uiChatHistoryTxtB.append(ColorTheme.statusHtml("* Adding " + name + " to ignore list."))
+        self.appendChat(ColorTheme.statusHtml("* Adding " + name + " to ignore list."))
 
     def ignoreRemoved(self, name):
-        self.uiChatHistoryTxtB.append(ColorTheme.statusHtml("* Removing " + name + " from ignore list."))
+        self.appendChat(ColorTheme.statusHtml("* Removing " + name + " from ignore list."))
 
     def insertEmoticon(self):
         dlg = EmoticonDialog(self)
@@ -175,21 +159,42 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         if self.lastStateChangeMsg != msg:
             self.lastStateChangeMsg = msg
             flag = self.controller.getPlayerFlag(name) or ''
-            self.uiChatHistoryTxtB.append(flag + ColorTheme.statusHtml(msg))
+            self.appendChat(flag + ColorTheme.statusHtml(msg))
 
     def onActionFailed(self, txt):
-        self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(txt))
+        self.appendChat(ColorTheme.statusHtml(txt))
+
+    def onAnchorClicked(self, qurl):
+        if qurl.scheme() in ['http', 'https']:
+            QtGui.QDesktopServices.openUrl(qurl)
+        name = qurl.path()
+        if name:
+            if qurl.scheme() == 'accept':
+                if name in self.controller.challengers:
+                    self.controller.sendAcceptChallenge(name)
+            elif qurl.scheme() == 'decline':
+                if name in self.controller.challengers:
+                    self.controller.sendDeclineChallenge(name)
+                    self.controller.sigStatusMessage.emit("Declined {}'s challenge".format(name))
+                    self.updateStatusBar()
+
+    def onRemoteHasUpdates(self, added, updated, nochange):
+        totalchanged = added + updated
+        if totalchanged:
+            self.appendChat(ColorTheme.statusHtml(
+                "{} savestate(s) added/updated.\nGo to `Action > Sync Unsupported Savestates` for updates".format(
+                    totalchanged)))
 
     def onChallengeCancelled(self, name):
-        self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(name + " cancelled challenge"))
+        self.appendChat(ColorTheme.statusHtml(name + " cancelled challenge"))
         self.updateStatusBar()
 
     def onChallengeDeclined(self, name):
-        self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(name + " declined your challenge"))
+        self.appendChat(ColorTheme.statusHtml(name + " declined your challenge"))
         self.updateStatusBar()
 
     def onChallengeReceived(self, name):
-        self.uiChatHistoryTxtB.append(self.controller.getPlayerChallengerText(name))
+        self.appendChat(self.controller.getPlayerChallengerText(name))
         self.playChallengeSound()
         self.updateStatusBar()
 
@@ -201,7 +206,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         if urls:
             for url in urls:
                 chat += " <a href='" + url + "'><font color=green>link</font></a>"
-        self.uiChatHistoryTxtB.append(chat)
+        self.appendChat(chat)
 
     def onChannelJoined(self):
         self.updateStatusBar()
@@ -254,7 +259,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.updateStatusBar()
 
     def onStatusMessage(self, msg):
-        self.uiChatHistoryTxtB.append(ColorTheme.statusHtml(msg))
+        self.appendChat(ColorTheme.statusHtml(msg))
 
     def onToggleSidebarAction(self):
         sizes = self.uiSplitter.sizes()
@@ -314,6 +319,8 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.uiNotifyPlayerStateChangeAct.setChecked(True)
         if Settings.value(Settings.SHOW_COUNTRY_FLAG_IN_CHAT):
             self.uiShowCountryFlagInChatAct.setChecked(True)
+        if Settings.value(Settings.SHOW_TIMESTAMP_IN_CHAT):
+            self.uiShowTimestampInChatAct.setChecked(True)
         fontsetting = Settings.pythonValue(Settings.CHAT_HISTORY_FONT)
         if fontsetting:
             self.uiChatHistoryTxtB.setFont(QtGui.QFont(*fontsetting))
@@ -340,7 +347,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             if line[0] == '/':
                 if line.startswith('/incoming'):
                     for name in self.controller.challengers:
-                        self.uiChatHistoryTxtB.append(self.controller.getPlayerChallengerText(name))
+                        self.appendChat(self.controller.getPlayerChallengerText(name))
                 else:
                     CLI.process(self.controller, self.uiAwayAct.setChecked, line)
             else:
@@ -497,6 +504,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.uiLocateGeommdbAct.setVisible(False)
         self.uiNotifyPlayerStateChangeAct.toggled.connect(self.__class__.toggleNotifyPlayerStateChange)
         self.uiShowCountryFlagInChatAct.toggled.connect(self.__class__.toggleShowCountryFlagInChat)
+        self.uiShowTimestampInChatAct.toggled.connect(self.__class__.toggleShowTimestampInChatAct)
         self.uiDisableAutoAnnounceAct.toggled.connect(self.__class__.toggleDisableAutoAnnounceUnsupported)
         if Settings.value(Settings.DEBUG_LOG):
             self.uiDebugLogAct.setChecked(True)
@@ -598,6 +606,10 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
     @staticmethod
     def toggleShowCountryFlagInChat(state):
         Settings.setBoolean(Settings.SHOW_COUNTRY_FLAG_IN_CHAT, state)
+
+    @staticmethod
+    def toggleShowTimestampInChatAct(state):
+        Settings.setBoolean(Settings.SHOW_TIMESTAMP_IN_CHAT, state)
 
     @staticmethod
     def toggleSound(state):

@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ggpo/gui/ui/ggpowindow.ui'
 #
-# Created: Sun Mar 23 17:49:56 2014
-#      by: PyQt4 UI code generator 4.9.1
+# Created: Tue Mar 25 06:32:59 2014
+#      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,16 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -60,7 +69,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.uiSplitter)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 810, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 810, 21))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuAction = QtGui.QMenu(self.menubar)
         self.menuAction.setObjectName(_fromUtf8("menuAction"))
@@ -158,6 +167,9 @@ class Ui_MainWindow(object):
         self.uiDisableAutoAnnounceAct = QtGui.QAction(MainWindow)
         self.uiDisableAutoAnnounceAct.setCheckable(True)
         self.uiDisableAutoAnnounceAct.setObjectName(_fromUtf8("uiDisableAutoAnnounceAct"))
+        self.uiShowTimestampInChatAct = QtGui.QAction(MainWindow)
+        self.uiShowTimestampInChatAct.setCheckable(True)
+        self.uiShowTimestampInChatAct.setObjectName(_fromUtf8("uiShowTimestampInChatAct"))
         self.menuAction.addAction(self.uiAwayAct)
         self.menuAction.addAction(self.uiFocusOnChatAct)
         self.menuAction.addAction(self.uiEmoticonAct)
@@ -187,6 +199,7 @@ class Ui_MainWindow(object):
         self.menuSetting.addSeparator()
         self.menuSetting.addAction(self.uiNotifyPlayerStateChangeAct)
         self.menuSetting.addAction(self.uiShowCountryFlagInChatAct)
+        self.menuSetting.addAction(self.uiShowTimestampInChatAct)
         self.menuSetting.addAction(self.uiDisableAutoAnnounceAct)
         self.menuSetting.addAction(self.uiDebugLogAct)
         self.menuAbout.addAction(self.uiSRKForumAct)
@@ -212,61 +225,62 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "GGPO", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiEmoticonTbtn.setText(QtGui.QApplication.translate("MainWindow", ":)", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiAfkChk.setText(QtGui.QApplication.translate("MainWindow", "away", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuAction.setTitle(QtGui.QApplication.translate("MainWindow", "&Action", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuSetting.setTitle(QtGui.QApplication.translate("MainWindow", "S&ettings", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiThemeMenu.setTitle(QtGui.QApplication.translate("MainWindow", "&Theme", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiSmoothingMenu.setTitle(QtGui.QApplication.translate("MainWindow", "Smoothing / Input &lag", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuAbout.setTitle(QtGui.QApplication.translate("MainWindow", "&Help", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiClearChatHistoryAct.setText(QtGui.QApplication.translate("MainWindow", "Clear chat his&tory", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiClearChatHistoryAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+T", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiAwayAct.setText(QtGui.QApplication.translate("MainWindow", "Away from k&eyboard", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiAwayAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+E", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiQuitAct.setText(QtGui.QApplication.translate("MainWindow", "&Quit", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiQuitAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+Q", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiMuteChallengeSoundAct.setText(QtGui.QApplication.translate("MainWindow", "&Mute Challenge Sound", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiMuteChallengeSoundAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+M", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiFontAct.setText(QtGui.QApplication.translate("MainWindow", "&Font", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiAboutAct.setText(QtGui.QApplication.translate("MainWindow", "&About", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiStrevivalAct.setText(QtGui.QApplication.translate("MainWindow", "Strategy && &News", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiHitboxViewerAct.setText(QtGui.QApplication.translate("MainWindow", "Hitbox &Viewer", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiSafejumpGuideAct.setText(QtGui.QApplication.translate("MainWindow", "&Safejump Guide", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiMatchVideosAct.setText(QtGui.QApplication.translate("MainWindow", "&Match Videos", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiSRKForumAct.setText(QtGui.QApplication.translate("MainWindow", "Shoryuken &Forum", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiSRKWikiAct.setText(QtGui.QApplication.translate("MainWindow", "Wiki (English)", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiJPWikiAct.setText(QtGui.QApplication.translate("MainWindow", "Wiki (Japanese)", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiDarkThemeAct.setText(QtGui.QApplication.translate("MainWindow", "&Dark Orange", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiDebugLogAct.setText(QtGui.QApplication.translate("MainWindow", "Debug &Log", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiEmoticonAct.setText(QtGui.QApplication.translate("MainWindow", "&Insert Emoticon", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiEmoticonAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+I", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiLocateGgpofbaAct.setText(QtGui.QApplication.translate("MainWindow", "&Locate ggpofba.exe", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiLocateWineAct.setText(QtGui.QApplication.translate("MainWindow", "Locate &Wine", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiLocateGeommdbAct.setText(QtGui.QApplication.translate("MainWindow", "Locate &GeoIP mmdb", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiNotifyPlayerStateChangeAct.setText(QtGui.QApplication.translate("MainWindow", "&Notify Player State Change", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiFocusOnChatAct.setText(QtGui.QApplication.translate("MainWindow", "Foc&us on chat", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiFocusOnChatAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+U", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiToggleSidebarAction.setText(QtGui.QApplication.translate("MainWindow", "To&ggle Channel Sidebar", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiToggleSidebarAction.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+G", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiExpandChannelSidebarAct.setText(QtGui.QApplication.translate("MainWindow", "&+ Expand Channel Sidebar", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiExpandChannelSidebarAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+=", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiContractChannelSidebarAct.setText(QtGui.QApplication.translate("MainWindow", "&- Contract Channel Sidebar", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiContractChannelSidebarAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+-", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiContractPlayerListAct.setText(QtGui.QApplication.translate("MainWindow", "&> Contract Player List", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiContractPlayerListAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+.", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiExpandPlayerListAct.setText(QtGui.QApplication.translate("MainWindow", "&< Expand Player List", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiExpandPlayerListAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+,", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiLocateUnsupportedSavestatesDirAct.setText(QtGui.QApplication.translate("MainWindow", "Locate &Unsupported Savestates Directory", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiSyncUnsupportedSavestatesAct.setText(QtGui.QApplication.translate("MainWindow", "S&ync Unsupported Savestates", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiSelectUnsupportedSavestateAct.setText(QtGui.QApplication.translate("MainWindow", "&Select Unsupported Savestate", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiSelectUnsupportedSavestateAct.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+S", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiFireThemeAct.setText(QtGui.QApplication.translate("MainWindow", "&Fire", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiCustomQssFileAct.setText(QtGui.QApplication.translate("MainWindow", "Custom Qss File", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiNormalThemeAct.setText(QtGui.QApplication.translate("MainWindow", "&Normal", None, QtGui.QApplication.UnicodeUTF8))
-        self.action0.setText(QtGui.QApplication.translate("MainWindow", "0", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiCustomEmoticonsAct.setText(QtGui.QApplication.translate("MainWindow", "Custom &Emoticons", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiShowCountryFlagInChatAct.setText(QtGui.QApplication.translate("MainWindow", "Show &country flag in chat", None, QtGui.QApplication.UnicodeUTF8))
-        self.uiDisableAutoAnnounceAct.setText(QtGui.QApplication.translate("MainWindow", "&Disable auto announce in unsupported room", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(_translate("MainWindow", "GGPO", None))
+        self.uiEmoticonTbtn.setText(_translate("MainWindow", ":)", None))
+        self.uiAfkChk.setText(_translate("MainWindow", "away", None))
+        self.menuAction.setTitle(_translate("MainWindow", "&Action", None))
+        self.menuSetting.setTitle(_translate("MainWindow", "S&ettings", None))
+        self.uiThemeMenu.setTitle(_translate("MainWindow", "&Theme", None))
+        self.uiSmoothingMenu.setTitle(_translate("MainWindow", "Smoothing / Input &lag", None))
+        self.menuAbout.setTitle(_translate("MainWindow", "&Help", None))
+        self.uiClearChatHistoryAct.setText(_translate("MainWindow", "Clear chat his&tory", None))
+        self.uiClearChatHistoryAct.setShortcut(_translate("MainWindow", "Ctrl+T", None))
+        self.uiAwayAct.setText(_translate("MainWindow", "Away from k&eyboard", None))
+        self.uiAwayAct.setShortcut(_translate("MainWindow", "Ctrl+E", None))
+        self.uiQuitAct.setText(_translate("MainWindow", "&Quit", None))
+        self.uiQuitAct.setShortcut(_translate("MainWindow", "Ctrl+Q", None))
+        self.uiMuteChallengeSoundAct.setText(_translate("MainWindow", "&Mute Challenge Sound", None))
+        self.uiMuteChallengeSoundAct.setShortcut(_translate("MainWindow", "Ctrl+M", None))
+        self.uiFontAct.setText(_translate("MainWindow", "&Font", None))
+        self.uiAboutAct.setText(_translate("MainWindow", "&About", None))
+        self.uiStrevivalAct.setText(_translate("MainWindow", "Strategy && &News", None))
+        self.uiHitboxViewerAct.setText(_translate("MainWindow", "Hitbox &Viewer", None))
+        self.uiSafejumpGuideAct.setText(_translate("MainWindow", "&Safejump Guide", None))
+        self.uiMatchVideosAct.setText(_translate("MainWindow", "&Match Videos", None))
+        self.uiSRKForumAct.setText(_translate("MainWindow", "Shoryuken &Forum", None))
+        self.uiSRKWikiAct.setText(_translate("MainWindow", "Wiki (English)", None))
+        self.uiJPWikiAct.setText(_translate("MainWindow", "Wiki (Japanese)", None))
+        self.uiDarkThemeAct.setText(_translate("MainWindow", "&Dark Orange", None))
+        self.uiDebugLogAct.setText(_translate("MainWindow", "Debug &Log", None))
+        self.uiEmoticonAct.setText(_translate("MainWindow", "&Insert Emoticon", None))
+        self.uiEmoticonAct.setShortcut(_translate("MainWindow", "Ctrl+I", None))
+        self.uiLocateGgpofbaAct.setText(_translate("MainWindow", "&Locate ggpofba.exe", None))
+        self.uiLocateWineAct.setText(_translate("MainWindow", "Locate &Wine", None))
+        self.uiLocateGeommdbAct.setText(_translate("MainWindow", "Locate &GeoIP mmdb", None))
+        self.uiNotifyPlayerStateChangeAct.setText(_translate("MainWindow", "&Notify Player State Change", None))
+        self.uiFocusOnChatAct.setText(_translate("MainWindow", "Foc&us on chat", None))
+        self.uiFocusOnChatAct.setShortcut(_translate("MainWindow", "Ctrl+U", None))
+        self.uiToggleSidebarAction.setText(_translate("MainWindow", "To&ggle Channel Sidebar", None))
+        self.uiToggleSidebarAction.setShortcut(_translate("MainWindow", "Ctrl+G", None))
+        self.uiExpandChannelSidebarAct.setText(_translate("MainWindow", "&+ Expand Channel Sidebar", None))
+        self.uiExpandChannelSidebarAct.setShortcut(_translate("MainWindow", "Ctrl+=", None))
+        self.uiContractChannelSidebarAct.setText(_translate("MainWindow", "&- Contract Channel Sidebar", None))
+        self.uiContractChannelSidebarAct.setShortcut(_translate("MainWindow", "Ctrl+-", None))
+        self.uiContractPlayerListAct.setText(_translate("MainWindow", "&> Contract Player List", None))
+        self.uiContractPlayerListAct.setShortcut(_translate("MainWindow", "Ctrl+.", None))
+        self.uiExpandPlayerListAct.setText(_translate("MainWindow", "&< Expand Player List", None))
+        self.uiExpandPlayerListAct.setShortcut(_translate("MainWindow", "Ctrl+,", None))
+        self.uiLocateUnsupportedSavestatesDirAct.setText(_translate("MainWindow", "Locate &Unsupported Savestates Directory", None))
+        self.uiSyncUnsupportedSavestatesAct.setText(_translate("MainWindow", "S&ync Unsupported Savestates", None))
+        self.uiSelectUnsupportedSavestateAct.setText(_translate("MainWindow", "&Select Unsupported Savestate", None))
+        self.uiSelectUnsupportedSavestateAct.setShortcut(_translate("MainWindow", "Ctrl+S", None))
+        self.uiFireThemeAct.setText(_translate("MainWindow", "&Fire", None))
+        self.uiCustomQssFileAct.setText(_translate("MainWindow", "Custom Qss File", None))
+        self.uiNormalThemeAct.setText(_translate("MainWindow", "&Normal", None))
+        self.action0.setText(_translate("MainWindow", "0", None))
+        self.uiCustomEmoticonsAct.setText(_translate("MainWindow", "Custom &Emoticons", None))
+        self.uiShowCountryFlagInChatAct.setText(_translate("MainWindow", "Show &country flag in chat", None))
+        self.uiDisableAutoAnnounceAct.setText(_translate("MainWindow", "&Disable auto announce in unsupported room", None))
+        self.uiShowTimestampInChatAct.setText(_translate("MainWindow", "Show timestamp in chat", None))
 
 from ggpo.gui.completionlineedit import CompletionLineEdit

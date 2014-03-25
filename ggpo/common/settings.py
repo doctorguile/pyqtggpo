@@ -15,6 +15,7 @@ class Settings:
     MUTE_CHALLENGE_SOUND = 'mute'
     NOTIFY_PLAYER_STATE_CHANGE = 'notifyPlayerStateChange'
     SHOW_COUNTRY_FLAG_IN_CHAT = 'showCountryFlagInChat'
+    SHOW_TIMESTAMP_IN_CHAT = 'ShowTimestampInChat'
     WINDOW_GEOMETRY = 'mainWindowGeometry'
     WINDOW_STATE = 'mainWindowState'
     SPLITTER_STATE = 'splitterState'
