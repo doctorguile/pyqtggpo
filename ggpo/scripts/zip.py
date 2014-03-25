@@ -12,7 +12,7 @@ def zipdir(filepath, z):
             z.write(os.path.join(root, f))
 
 if __name__ == '__main__':
-    zipf = zipfile.ZipFile(sys.argv[1], 'w')
+    zipf = zipfile.ZipFile(sys.argv[1], 'w', zipfile.ZIP_DEFLATED)
     for path in sys.argv[2:]:
         zipdir(path, zipf)
     zipf.close()
