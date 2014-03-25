@@ -79,3 +79,6 @@ Type `/help` to see a list of commands available
 
 #Version 0.11
 - option to show timestamp in chat
+
+#Version 0.12
+- support filter when picking savestates
