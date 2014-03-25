@@ -104,31 +104,25 @@ class SavestatesDialog(QtGui.QDialog, Ui_SavestatesDialog):
         super(SavestatesDialog, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.fsfile = None
-        okbtn = self.uiButtonBox.button(QtGui.QDialogButtonBox.Ok)
-        okbtn.setEnabled(False)
-        self.accepted.connect(self.onAccepted)
+        self.uiButtonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(False)
         self.model = SavestatesModel()
-        self.model.dataChanged.connect(self.onDataChanged)
-        self.uiFilterLineEdit.textEdited.connect(self.model.setFilter)
         self.uiSavestatesTblv.setModel(self.model)
-        self.uiSavestatesTblv.doubleClicked.connect(self.accept)
         self.uiSavestatesTblv.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         self.uiSavestatesTblv.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
-        sm = self.uiSavestatesTblv.selectionModel()
-        sm.selectionChanged.connect(self.onSelectionChanged)
-        self.uiSavestatesTblv.verticalHeader().setVisible(False)
-        hh = self.uiSavestatesTblv.horizontalHeader()
-        hh.setStretchLastSection(True)
-        hh.setMinimumSectionSize(25)
-        hh.setHighlightSections(False)
-        hh.resizeSection(SavestatesModel.NAME, 100)
-        hh.resizeSection(SavestatesModel.MANUFACTURER, 100)
-        hh.resizeSection(SavestatesModel.YEAR, 50)
+        self.connectSignals()
+        self.setDefaultColumns()
         self.uiSavestatesTblv.setSortingEnabled(True)
+        self.restoreStateAndGeometry()
+
+    def connectSignals(self):
+        self.accepted.connect(self.onAccepted)
+        self.model.dataChanged.connect(self.onDataChanged)
+        self.uiFilterLineEdit.textEdited.connect(self.model.setFilter)
+        self.uiSavestatesTblv.doubleClicked.connect(self.accept)
+        self.uiSavestatesTblv.selectionModel().selectionChanged.connect(self.onSelectionChanged)
         self.accepted.connect(self.saveGeometrySettings)
         self.finished.connect(self.saveGeometrySettings)
         self.rejected.connect(self.saveGeometrySettings)
-        self.restoreStateAndGeometry()
 
     def keyPressEvent(self, e):
         if e.key() in (Qt.Key_Up, Qt.Key_Down):
@@ -179,3 +173,13 @@ class SavestatesDialog(QtGui.QDialog, Ui_SavestatesDialog):
         Settings.setValue(Settings.SAVESTATES_DIALOG_GEOMETRY, self.saveGeometry())
         Settings.setValue(Settings.SAVESTATES_DIALOG_TABLE_HEADER_STATE,
                           self.uiSavestatesTblv.horizontalHeader().saveState())
+
+    def setDefaultColumns(self):
+        self.uiSavestatesTblv.verticalHeader().setVisible(False)
+        hh = self.uiSavestatesTblv.horizontalHeader()
+        hh.setStretchLastSection(True)
+        hh.setMinimumSectionSize(25)
+        hh.setHighlightSections(False)
+        hh.resizeSection(SavestatesModel.NAME, 100)
+        hh.resizeSection(SavestatesModel.MANUFACTURER, 100)
+        hh.resizeSection(SavestatesModel.YEAR, 50)
