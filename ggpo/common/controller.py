@@ -81,9 +81,7 @@ class Controller(QtCore.QObject):
         self.available = {}
         self.playing = {}
         self.awayfromkb = {}
-        self.ignored = Settings.pythonValue(Settings.IGNORED)
-        if not self.ignored:
-            self.ignored = set()
+        self.ignored = Settings.pythonValue(Settings.IGNORED) or set()
         self.sigStatusMessage.connect(logger().info)
 
     def addIgnore(self, name):

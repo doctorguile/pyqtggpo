@@ -441,24 +441,18 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         # can't properly install PyQt4.phonon on osx yet
         if IS_OSX:
             self.playChallengeSound = self.controller.playChallengeSound
-            return
-        try:
-            from PyQt4.phonon import Phonon
-
+        elif Phonon:
             audioOutput = Phonon.AudioOutput(Phonon.MusicCategory, self)
             mediaObject = Phonon.MediaObject(self)
             Phonon.createPath(mediaObject, audioOutput)
             mediaObject.setCurrentSource(Phonon.MediaSource(':/assets/challenger-comes.mp3'))
-
             def play():
                 if not Settings.value(Settings.MUTE_CHALLENGE_SOUND):
                     mediaObject.seek(0)
                     mediaObject.play()
-
             self.playChallengeSound = play
-        except ImportError:
+        else:
             self.playChallengeSound = self.controller.playChallengeSound
-            pass
 
     def setupMenu(self):
         self.setupMenuAction()
