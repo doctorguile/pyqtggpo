@@ -1,3 +1,6 @@
+#Version 0.13
+- support custom challenge sound
+
 #Version 0.12
 - support filter when picking savestates
 

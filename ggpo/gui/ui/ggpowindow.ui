@@ -138,6 +138,7 @@
     <addaction name="separator"/>
     <addaction name="uiLocateGgpofbaAct"/>
     <addaction name="uiLocateWineAct"/>
+    <addaction name="uiLocateCustomChallengeSoundAct"/>
     <addaction name="uiLocateUnsupportedSavestatesDirAct"/>
     <addaction name="uiLocateGeommdbAct"/>
     <addaction name="separator"/>
@@ -419,6 +420,11 @@
    </property>
    <property name="text">
     <string>Show timestamp in chat</string>
+   </property>
+  </action>
+  <action name="uiLocateCustomChallengeSoundAct">
+   <property name="text">
+    <string>Locate Custom Challenge Sound</string>
    </property>
   </action>
  </widget>

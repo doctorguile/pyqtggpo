@@ -9,6 +9,7 @@ import time
 from colortheme import ColorTheme
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
+import ggpo.common.sound
 from ggpo.common.geolookup import geolookupInit
 from ggpo.common.runtime import *
 from ggpo.common import copyright
@@ -35,7 +36,6 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.expectFirstChannelResponse = True
         self.lastSplitterExpandedSizes = []
         self.lastStateChangeMsg = ''
-        self.playChallengeSound = lambda: None
         self.uiChatInputEdit.returnPressed.connect(self.returnPressed)
         self.setupMenu()
         self.uiEmoticonTbtn.setDefaultAction(self.uiEmoticonAct)
@@ -120,6 +120,12 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.controller.sendJoinChannelRequest(self.channels[it[0].text()])
             self.uiChatInputEdit.setFocus()
 
+    def locateCustomChallengeSound(self):
+        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate custom wave file', os.path.expanduser("~"),
+                                                  "wav file (*.wav)")
+        if fname:
+            Settings.setValue(Settings.CUSTOM_CHALLENGE_SOUND_LOCATION, fname)
+
     def locateGGPOFBA(self):
         fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate ggpofba.exe', os.path.expanduser("~"),
                                                   "ggpofba.exe (ggpofba.exe)")
@@ -193,7 +199,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def onChallengeReceived(self, name):
         self.appendChat(self.controller.getPlayerChallengerText(name))
-        self.playChallengeSound()
+        ggpo.common.sound.play()
         self.updateStatusBar()
 
     def onChatReceived(self, name, txt):
@@ -377,7 +383,6 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def setController(self, controller):
         self.controller = controller
-        self.setupMediaPlayer()
         self.setupUserTable()
         self.uiChatInputEdit.setController(controller)
         controller.sigChannelJoined.connect(self.onChannelJoined)
@@ -437,22 +442,6 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         return setStyle
 
-    def setupMediaPlayer(self):
-        # can't properly install PyQt4.phonon on osx yet
-        if IS_OSX:
-            self.playChallengeSound = self.controller.playChallengeSound
-        elif Phonon:
-            audioOutput = Phonon.AudioOutput(Phonon.MusicCategory, self)
-            mediaObject = Phonon.MediaObject(self)
-            Phonon.createPath(mediaObject, audioOutput)
-            mediaObject.setCurrentSource(Phonon.MediaSource(':/assets/challenger-comes.mp3'))
-            def play():
-                if not Settings.value(Settings.MUTE_CHALLENGE_SOUND):
-                    mediaObject.seek(0)
-                    mediaObject.play()
-            self.playChallengeSound = play
-        else:
-            self.playChallengeSound = self.controller.playChallengeSound
 
     def setupMenu(self):
         self.setupMenuAction()
@@ -495,6 +484,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         else:
             self.uiLocateWineAct.triggered.connect(self.locateWine)
         self.uiLocateUnsupportedSavestatesDirAct.triggered.connect(self.locateUnsupportedSavestatesDirAct)
+        self.uiLocateCustomChallengeSoundAct.triggered.connect(self.locateCustomChallengeSound)
         if GeoIP2Reader:
             self.uiLocateGeommdbAct.triggered.connect(self.locateGeoMMDB)
         else:

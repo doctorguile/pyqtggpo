@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ggpo/gui/ui/ggpowindow.ui'
+# Form implementation generated from reading ui file 'ggpowindow.ui'
 #
-# Created: Tue Mar 25 06:32:59 2014
+# Created: Tue Apr 01 00:26:51 2014
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -170,6 +170,8 @@ class Ui_MainWindow(object):
         self.uiShowTimestampInChatAct = QtGui.QAction(MainWindow)
         self.uiShowTimestampInChatAct.setCheckable(True)
         self.uiShowTimestampInChatAct.setObjectName(_fromUtf8("uiShowTimestampInChatAct"))
+        self.uiLocateCustomChallengeSoundAct = QtGui.QAction(MainWindow)
+        self.uiLocateCustomChallengeSoundAct.setObjectName(_fromUtf8("uiLocateCustomChallengeSoundAct"))
         self.menuAction.addAction(self.uiAwayAct)
         self.menuAction.addAction(self.uiFocusOnChatAct)
         self.menuAction.addAction(self.uiEmoticonAct)
@@ -194,6 +196,7 @@ class Ui_MainWindow(object):
         self.menuSetting.addSeparator()
         self.menuSetting.addAction(self.uiLocateGgpofbaAct)
         self.menuSetting.addAction(self.uiLocateWineAct)
+        self.menuSetting.addAction(self.uiLocateCustomChallengeSoundAct)
         self.menuSetting.addAction(self.uiLocateUnsupportedSavestatesDirAct)
         self.menuSetting.addAction(self.uiLocateGeommdbAct)
         self.menuSetting.addSeparator()
@@ -282,5 +285,6 @@ class Ui_MainWindow(object):
         self.uiShowCountryFlagInChatAct.setText(_translate("MainWindow", "Show &country flag in chat", None))
         self.uiDisableAutoAnnounceAct.setText(_translate("MainWindow", "&Disable auto announce in unsupported room", None))
         self.uiShowTimestampInChatAct.setText(_translate("MainWindow", "Show timestamp in chat", None))
+        self.uiLocateCustomChallengeSoundAct.setText(_translate("MainWindow", "Locate Custom Challenge Sound", None))
 
 from ggpo.gui.completionlineedit import CompletionLineEdit
