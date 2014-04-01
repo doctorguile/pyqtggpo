@@ -130,6 +130,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                                                   "wav file (*.wav)")
         if fname:
             Settings.setValue(Settings.CUSTOM_CHALLENGE_SOUND_LOCATION, fname)
+            ggpo.common.sound.play()
 
     def locateGGPOFBA(self):
         oldval = Settings.value(Settings.GGPOFBA_LOCATION)
