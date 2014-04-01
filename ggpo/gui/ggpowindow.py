@@ -121,20 +121,35 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.uiChatInputEdit.setFocus()
 
     def locateCustomChallengeSound(self):
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate custom wave file', os.path.expanduser("~"),
+        oldval = Settings.value(Settings.CUSTOM_CHALLENGE_SOUND_LOCATION)
+        if oldval and os.path.isdir(os.path.dirname(oldval)):
+            dirname = os.path.dirname(oldval)
+        else:
+            dirname = os.path.expanduser("~")
+        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate custom wave file', dirname,
                                                   "wav file (*.wav)")
         if fname:
             Settings.setValue(Settings.CUSTOM_CHALLENGE_SOUND_LOCATION, fname)
 
     def locateGGPOFBA(self):
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate ggpofba.exe', os.path.expanduser("~"),
+        oldval = Settings.value(Settings.GGPOFBA_LOCATION)
+        if oldval and os.path.isdir(os.path.dirname(oldval)):
+            dirname = os.path.dirname(oldval)
+        else:
+            dirname = os.path.expanduser("~")
+        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate ggpofba.exe', dirname,
                                                   "ggpofba.exe (ggpofba.exe)")
         if fname:
             Settings.setValue(Settings.GGPOFBA_LOCATION, fname)
             self.controller.checkInstallation()
 
     def locateGeoMMDB(self):
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate Geo mmdb file', os.path.expanduser("~"),
+        oldval = Settings.value(Settings.GEOIP2DB_LOCATION)
+        if oldval and os.path.isdir(os.path.dirname(oldval)):
+            dirname = os.path.dirname(oldval)
+        else:
+            dirname = os.path.expanduser("~")
+        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate Geo mmdb file', dirname,
                                                   "Geo mmdb (*.mmdb)")
         if fname:
             Settings.setValue(Settings.GEOIP2DB_LOCATION, fname)
@@ -408,7 +423,12 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             dlg.destroy()
 
     def setCustomQss(self):
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate Qt Stylesheet qss file', os.path.expanduser("~"),
+        oldval = Settings.value(Settings.CUSTOM_THEME_FILENAME)
+        if oldval and os.path.isdir(os.path.dirname(oldval)):
+            dirname = os.path.dirname(oldval)
+        else:
+            dirname = os.path.expanduser("~")
+        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate Qt Stylesheet qss file', dirname,
                                                   "qss file (*.qss)")
         if self.setCustomQssfile(fname):
             for a in self.uiMenuThemeGroup.actions():
