@@ -28,6 +28,8 @@ class Settings:
     CUSTOM_EMOTICONS = 'customEmoticons'
     CHAT_HISTORY_FONT = 'chatFont'
     DEBUG_LOG = 'debuglog'
+    USER_LOG_CHAT = 'userlogchat'
+    USER_LOG_PLAYHISTORY = 'userlogplayhistory'
     SAVE_USERNAME_PASSWORD = 'saveUsernameAndPassword'
     GGPOFBA_LOCATION = 'ggpofbaLocation'
     WINE_LOCATION = 'wineLocation'

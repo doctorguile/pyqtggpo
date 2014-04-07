@@ -8,7 +8,7 @@ import urllib
 import urllib2
 import time
 from PyQt4 import QtCore
-from ggpo.common.util import logger, findUnsupportedGamesavesDir, sha256digest
+from ggpo.common.util import logdebug, findUnsupportedGamesavesDir, sha256digest
 
 
 def readLocalJsonDigest():
@@ -73,7 +73,7 @@ class SyncWorker(QtCore.QObject):
 
             for filename, shahash in games.items():
                 if re.search(r'[^ .a-zA-Z0-9_-]', filename):
-                    logger().error("Filename {} looks suspicious, ignoring".format(filename))
+                    logdebug().error("Filename {} looks suspicious, ignoring".format(filename))
                     continue
                 if filename in localJsonDigest:
                     if localJsonDigest[filename] == shahash:
@@ -98,7 +98,7 @@ class SyncWorker(QtCore.QObject):
                         '{} files are current, added {}, updated {}'.format(
                             self.nochange, self.added, self.updated))
         except Exception, ex:
-            logger().error(str(ex))
+            logdebug().error(str(ex))
         self.sigFinished.emit(self.added, self.updated, self.nochange)
 
 
@@ -123,7 +123,7 @@ class UnsupportedSavestates(QtCore.QObject):
     @classmethod
     def run(cls, checkonly, statusMsgCallback=None, finishedCallback=None):
         if cls._thread:
-            logger().error('Already has a download thread running')
+            logdebug().error('Already has a download thread running')
         cls._thread = QtCore.QThread()
         cls._worker = SyncWorker(checkonly)
         cls._worker.moveToThread(cls._thread)

@@ -74,28 +74,44 @@ def findWine():
 _loggerInitialzed = False
 
 
-def logger():
+def logdebug():
     global _loggerInitialzed
     if not _loggerInitialzed:
         _loggerInitialzed = True
-        return loggerInit()
-    return logging.getLogger('GGPO')
+        loggerInit()
+    return logging.getLogger('GGPODebug')
+
+
+def loguser():
+    global _loggerInitialzed
+    if not _loggerInitialzed:
+        _loggerInitialzed = True
+        loggerInit()
+    return logging.getLogger('GGPOUser')
 
 
 def loggerInit():
-    _logger = logging.getLogger('GGPO')
-    _logger.setLevel(logging.INFO)
+    debuglog = logging.getLogger('GGPODebug')
+    debuglog.setLevel(logging.INFO)
     fh = logging.handlers.RotatingFileHandler(
-        os.path.join(expanduser("~"), 'ggpo.log'), mode='a', maxBytes=100000, backupCount=4)
+        os.path.join(expanduser("~"), 'ggpodebug.log'), mode='a', maxBytes=500000, backupCount=10)
     if Settings.value(Settings.DEBUG_LOG):
         fh.setLevel(logging.INFO)
     else:
         fh.setLevel(logging.ERROR)
     ch = logging.StreamHandler()
     ch.setLevel(logging.ERROR)
-    _logger.addHandler(fh)
-    _logger.addHandler(ch)
-    return _logger
+    debuglog.addHandler(fh)
+    debuglog.addHandler(ch)
+
+    userlog = logging.getLogger('GGPOUser')
+    userlog.setLevel(logging.INFO)
+    fh = logging.handlers.RotatingFileHandler(
+        os.path.join(expanduser("~"), 'ggpo.log'), mode='a', maxBytes=500000, backupCount=10)
+    fh.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(message)s', "%Y-%m-%d %H:%M")
+    fh.setFormatter(formatter)
+    userlog.addHandler(fh)
 
 
 def openURL(url):

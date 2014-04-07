@@ -1,3 +1,6 @@
+#Version 0.14
+- support logging chat & play history
+
 #Version 0.13
 - support custom challenge sound
 

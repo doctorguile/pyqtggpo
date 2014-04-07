@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ggpowindow.ui'
 #
-# Created: Tue Apr 01 00:26:51 2014
+# Created: Sun Apr 06 16:45:00 2014
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -79,6 +79,8 @@ class Ui_MainWindow(object):
         self.uiThemeMenu.setObjectName(_fromUtf8("uiThemeMenu"))
         self.uiSmoothingMenu = QtGui.QMenu(self.menuSetting)
         self.uiSmoothingMenu.setObjectName(_fromUtf8("uiSmoothingMenu"))
+        self.menuLogging = QtGui.QMenu(self.menuSetting)
+        self.menuLogging.setObjectName(_fromUtf8("menuLogging"))
         self.menuAbout = QtGui.QMenu(self.menubar)
         self.menuAbout.setObjectName(_fromUtf8("menuAbout"))
         MainWindow.setMenuBar(self.menubar)
@@ -172,6 +174,12 @@ class Ui_MainWindow(object):
         self.uiShowTimestampInChatAct.setObjectName(_fromUtf8("uiShowTimestampInChatAct"))
         self.uiLocateCustomChallengeSoundAct = QtGui.QAction(MainWindow)
         self.uiLocateCustomChallengeSoundAct.setObjectName(_fromUtf8("uiLocateCustomChallengeSoundAct"))
+        self.uiLogChatAct = QtGui.QAction(MainWindow)
+        self.uiLogChatAct.setCheckable(True)
+        self.uiLogChatAct.setObjectName(_fromUtf8("uiLogChatAct"))
+        self.uiLogPlayHistoryAct = QtGui.QAction(MainWindow)
+        self.uiLogPlayHistoryAct.setCheckable(True)
+        self.uiLogPlayHistoryAct.setObjectName(_fromUtf8("uiLogPlayHistoryAct"))
         self.menuAction.addAction(self.uiAwayAct)
         self.menuAction.addAction(self.uiFocusOnChatAct)
         self.menuAction.addAction(self.uiEmoticonAct)
@@ -188,6 +196,10 @@ class Ui_MainWindow(object):
         self.menuAction.addAction(self.uiSyncUnsupportedSavestatesAct)
         self.menuAction.addSeparator()
         self.menuAction.addAction(self.uiQuitAct)
+        self.menuLogging.addAction(self.uiLogChatAct)
+        self.menuLogging.addAction(self.uiLogPlayHistoryAct)
+        self.menuLogging.addSeparator()
+        self.menuLogging.addAction(self.uiDebugLogAct)
         self.menuSetting.addAction(self.uiMuteChallengeSoundAct)
         self.menuSetting.addAction(self.uiThemeMenu.menuAction())
         self.menuSetting.addAction(self.uiSmoothingMenu.menuAction())
@@ -204,7 +216,7 @@ class Ui_MainWindow(object):
         self.menuSetting.addAction(self.uiShowCountryFlagInChatAct)
         self.menuSetting.addAction(self.uiShowTimestampInChatAct)
         self.menuSetting.addAction(self.uiDisableAutoAnnounceAct)
-        self.menuSetting.addAction(self.uiDebugLogAct)
+        self.menuSetting.addAction(self.menuLogging.menuAction())
         self.menuAbout.addAction(self.uiSRKForumAct)
         self.menuAbout.addAction(self.uiSRKWikiAct)
         self.menuAbout.addAction(self.uiJPWikiAct)
@@ -235,6 +247,7 @@ class Ui_MainWindow(object):
         self.menuSetting.setTitle(_translate("MainWindow", "S&ettings", None))
         self.uiThemeMenu.setTitle(_translate("MainWindow", "&Theme", None))
         self.uiSmoothingMenu.setTitle(_translate("MainWindow", "Smoothing / Input &lag", None))
+        self.menuLogging.setTitle(_translate("MainWindow", "Logging", None))
         self.menuAbout.setTitle(_translate("MainWindow", "&Help", None))
         self.uiClearChatHistoryAct.setText(_translate("MainWindow", "Clear chat his&tory", None))
         self.uiClearChatHistoryAct.setShortcut(_translate("MainWindow", "Ctrl+T", None))
@@ -286,5 +299,7 @@ class Ui_MainWindow(object):
         self.uiDisableAutoAnnounceAct.setText(_translate("MainWindow", "&Disable auto announce in unsupported room", None))
         self.uiShowTimestampInChatAct.setText(_translate("MainWindow", "Show timestamp in chat", None))
         self.uiLocateCustomChallengeSoundAct.setText(_translate("MainWindow", "Locate Custom Challenge Sound", None))
+        self.uiLogChatAct.setText(_translate("MainWindow", "Chat history", None))
+        self.uiLogPlayHistoryAct.setText(_translate("MainWindow", "Play history", None))
 
 from ggpo.gui.completionlineedit import CompletionLineEdit

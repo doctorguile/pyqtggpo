@@ -130,6 +130,15 @@
       <string>Smoothing / Input &amp;lag</string>
      </property>
     </widget>
+    <widget class="QMenu" name="menuLogging">
+     <property name="title">
+      <string>Logging</string>
+     </property>
+     <addaction name="uiLogChatAct"/>
+     <addaction name="uiLogPlayHistoryAct"/>
+     <addaction name="separator"/>
+     <addaction name="uiDebugLogAct"/>
+    </widget>
     <addaction name="uiMuteChallengeSoundAct"/>
     <addaction name="uiThemeMenu"/>
     <addaction name="uiSmoothingMenu"/>
@@ -146,7 +155,7 @@
     <addaction name="uiShowCountryFlagInChatAct"/>
     <addaction name="uiShowTimestampInChatAct"/>
     <addaction name="uiDisableAutoAnnounceAct"/>
-    <addaction name="uiDebugLogAct"/>
+    <addaction name="menuLogging"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -425,6 +434,22 @@
   <action name="uiLocateCustomChallengeSoundAct">
    <property name="text">
     <string>Locate Custom Challenge Sound</string>
+   </property>
+  </action>
+  <action name="uiLogChatAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Chat history</string>
+   </property>
+  </action>
+  <action name="uiLogPlayHistoryAct">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Play history</string>
    </property>
   </action>
  </widget>

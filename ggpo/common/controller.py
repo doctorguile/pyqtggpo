@@ -17,7 +17,7 @@ from ggpo.common.playerstate import PlayerStates
 from ggpo.common.protocol import Protocol
 from ggpo.common.settings import Settings
 from ggpo.common.unsupportedsavestates import readLocalJsonDigest
-from ggpo.common.util import findWine, logger, packagePathJoin, findUnsupportedGamesavesDir, sha256digest
+from ggpo.common.util import findWine, logdebug, loguser, packagePathJoin, findUnsupportedGamesavesDir, sha256digest
 from ggpo.gui.colortheme import ColorTheme
 
 
@@ -82,7 +82,7 @@ class Controller(QtCore.QObject):
         self.playing = {}
         self.awayfromkb = {}
         self.ignored = Settings.pythonValue(Settings.IGNORED) or set()
-        self.sigStatusMessage.connect(logger().info)
+        self.sigStatusMessage.connect(logdebug().info)
 
     def addIgnore(self, name):
         if name != self.username:
@@ -174,7 +174,7 @@ class Controller(QtCore.QObject):
         return self.udpConnected
 
     def dispatch(self, seq, data):
-        logger().info('Dispatch ' + Protocol.outOfBandCodeToString(seq) + ' ' + repr(data))
+        logdebug().info('Dispatch ' + Protocol.outOfBandCodeToString(seq) + ' ' + repr(data))
         # out of band data
         if seq == Protocol.CHAT_DATA:
             self.parseChatResponse(data)
@@ -196,7 +196,7 @@ class Controller(QtCore.QObject):
 
     def dispatchInbandData(self, seq, data):
         if not seq in self.tcpCommandsWaitingForResponse:
-            logger().error("Sequence {} data {} not matched".format(seq, data))
+            logdebug().error("Sequence {} data {} not matched".format(seq, data))
             return
 
         origRequest = self.tcpCommandsWaitingForResponse[seq]
@@ -221,13 +221,13 @@ class Controller(QtCore.QObject):
                 status, data = Protocol.extractInt(data)
                 if status != 0:
                     codestr = Protocol.codeToString(origRequest)
-                    logger().error("{} failed, data {}".format(codestr, repr(data)))
+                    logdebug().error("{} failed, data {}".format(codestr, repr(data)))
                     self.sigActionFailed.emit(codestr)
             else:
-                logger().error("Unknown response for {}; seq {}; data {}".format(
+                logdebug().error("Unknown response for {}; seq {}; data {}".format(
                     Protocol.codeToString(origRequest), seq, repr(data)))
         else:
-            logger().error("Not handling {} response; seq {}; data {}".format(
+            logdebug().error("Not handling {} response; seq {}; data {}".format(
                 Protocol.codeToString(origRequest), seq, repr(data)))
 
     @staticmethod
@@ -239,7 +239,7 @@ class Controller(QtCore.QObject):
                 p2 = ''
                 return PlayerStates.QUIT, p1, p2, None, data
             elif code != 1:
-                logger().error("Unknown player state change code {}".format(code))
+                logdebug().error("Unknown player state change code {}".format(code))
             state, data = Protocol.extractInt(data)
             p2, data = Protocol.extractTLV(data)
             if not p2:
@@ -322,7 +322,7 @@ class Controller(QtCore.QObject):
             if len(self.tcpData) >= self.tcpResponseLen:
                 # tcpResponseLen should be >= 4
                 if self.tcpResponseLen < 4:
-                    logger().error('Cannot handle TLV payload of less than 4 bytes')
+                    logdebug().error('Cannot handle TLV payload of less than 4 bytes')
                     self.tcpData = self.tcpData[self.tcpResponseLen:]
                     self.tcpResponseLen = 0
                     self.tcpReadState = self.STATE_TCP_READ_LEN
@@ -344,7 +344,7 @@ class Controller(QtCore.QObject):
         remoteip, remoteport = addr
         if command == "GGPO PING":
             self.sendudp("GGPO PONG {}".format(secret), addr)
-            logger().info("send GGPO PONG {} to {}".format(secret, repr(addr)))
+            logdebug().info("send GGPO PONG {} to {}".format(secret, repr(addr)))
         if dgram[0:9] == "GGPO PONG":
             if secret in self.pinglist:
                 ip = self.pinglist[secret][0]
@@ -357,7 +357,7 @@ class Controller(QtCore.QObject):
 
     def parseAuthResponse(self, data):
         if len(data) < 4:
-            logger().error("Unknown auth response {}".format(repr(data)))
+            logdebug().error("Unknown auth response {}".format(repr(data)))
             return
         result, data = Protocol.extractInt(data)
         if result == 0:
@@ -408,6 +408,8 @@ class Controller(QtCore.QObject):
             msg = msg.decode('utf-8')
         except ValueError:
             msg = msg
+        if Settings.USER_LOG_CHAT:
+            loguser().info(u"<{}> {}".format(name, msg))
         self.sigChatReceived.emit(name, msg)
 
     # noinspection PyUnusedLocal
@@ -419,12 +421,12 @@ class Controller(QtCore.QObject):
     def parseListChannelsResponse(self, data):
         self.channels = {}
         if len(data) <= 8:
-            logger().error('No channels found')
+            logdebug().error('No channels found')
             self.sigChannelsLoaded.emit()
             return
         status1, data = Protocol.extractInt(data)
         status2, data = Protocol.extractInt(data)
-        logger().info("Load channels header " + repr(status1) + repr(status2))
+        logdebug().info("Load channels header " + repr(status1) + repr(status2))
         while len(data) > 4:
             room, data = Protocol.extractTLV(data)
             romname, data = Protocol.extractTLV(data)
@@ -438,10 +440,10 @@ class Controller(QtCore.QObject):
                 'title': title,
             }
             self.channels[room] = channel
-        logger().info(repr(self.channels))
+        logdebug().info(repr(self.channels))
         self.sigChannelsLoaded.emit()
         if len(data) > 0:
-            logger().error('Channel REMAINING DATA len {} {}'.format(len(data), repr(data)))
+            logdebug().error('Channel REMAINING DATA len {} {}'.format(len(data), repr(data)))
 
     def parseListUsersResponse(self, data):
         self.resetPlayers()
@@ -481,7 +483,7 @@ class Controller(QtCore.QObject):
                 self.playing[p1] = p2
         self.sigPlayersLoaded.emit()
         if len(data) > 0:
-            logger().error('List users - REMAINING DATA len {} {}'.format(len(data), repr(data)))
+            logdebug().error('List users - REMAINING DATA len {} {}'.format(len(data), repr(data)))
 
     def parseMotdResponse(self, data):
         if not data:
@@ -530,9 +532,9 @@ class Controller(QtCore.QObject):
         # if the guy I challenged accepted, remove him as challenged
         if self.challenged and self.challenged in [p1, p2] and self.username in [p1, p2]:
             self.challenged = None
-        # quark len(53) = 'quark:stream,ssf2t,challenge-07389-1393539605.46,7000'
+            # quark len(53) = 'quark:stream,ssf2t,challenge-07389-1393539605.46,7000'
         quark, data = Protocol.extractTLV(data)
-        logger().info("Quark " + repr(quark))
+        logdebug().info("Quark " + repr(quark))
         if quark.startswith('quark:served'):
             smooth = Settings.value(Settings.SMOOTHING)
             if smooth:
@@ -547,6 +549,8 @@ class Controller(QtCore.QObject):
             state, p1, p2, playerinfo, data = self.__class__.extractStateChangesResponse(data)
             if state == PlayerStates.PLAYING:
                 self.parsePlayerStartGameResponse(p1, p2, playerinfo)
+                if Settings.USER_LOG_PLAYHISTORY and self.username in [p1, p2]:
+                    loguser().info(u"[IN A GAME] {} vs {}".format(p1, p2))
             elif state == PlayerStates.AVAILABLE:
                 self.parsePlayerAvailableResponse(p1, playerinfo)
             elif state == PlayerStates.AFK:
@@ -554,16 +558,16 @@ class Controller(QtCore.QObject):
             elif state == PlayerStates.QUIT:
                 self.parsePlayerLeftResponse(p1)
             else:
-                logger().error(
+                logdebug().error(
                     "Unknown state change payload state: {} {}".format(state, repr(data)))
             if state == PlayerStates.PLAYING:
                 msg = p1 + ' ' + PlayerStates.codeToString(state) + ' ' + p2
             else:
                 msg = p1 + ' ' + PlayerStates.codeToString(state)
-            logger().info(msg)
+            logdebug().info(msg)
             count -= 1
         if len(data) > 0:
-            logger().error("stateChangesResponse, remaining data {}".format(repr(data)))
+            logdebug().error("stateChangesResponse, remaining data {}".format(repr(data)))
 
     # platform independent way of playing an external wave file
     def playChallengeSound(self):
@@ -613,7 +617,7 @@ class Controller(QtCore.QObject):
             else:
                 args = [wine, self.fba, quark]
 
-        logger().info(" ".join(args))
+        logdebug().info(" ".join(args))
         try:
             # starting python from cmd.exe and redirect stderr and we got
             # python WindowsError(6, 'The handle is invalid')
@@ -637,7 +641,7 @@ class Controller(QtCore.QObject):
                 inputs.append(self.udpSock)
             if self.tcpConnected:
                 inputs.append(self.tcpSock)
-            # windows doesn't allow select on 3 empty set
+                # windows doesn't allow select on 3 empty set
             if not inputs:
                 time.sleep(1)
                 continue
@@ -681,7 +685,7 @@ class Controller(QtCore.QObject):
                         except:
                             pass
                         if dgram:
-                            logger().info("UDP " + repr(dgram) + " from " + repr(addr))
+                            logdebug().info("UDP " + repr(dgram) + " from " + repr(addr))
                             self.handleUdpResponse(dgram, addr)
 
     def sendAcceptChallenge(self, name):
@@ -690,11 +694,11 @@ class Controller(QtCore.QObject):
             self.challengers.remove(name)
 
     def sendAndForget(self, command, data=''):
-        logger().info('Sending {} seq {} {}'.format(Protocol.codeToString(command), self.sequence, repr(data)))
+        logdebug().info('Sending {} seq {} {}'.format(Protocol.codeToString(command), self.sequence, repr(data)))
         self.sendtcp(struct.pack('!I', command) + data)
 
     def sendAndRemember(self, command, data=''):
-        logger().info('Sending {} seq {} {}'.format(Protocol.codeToString(command), self.sequence, repr(data)))
+        logdebug().info('Sending {} seq {} {}'.format(Protocol.codeToString(command), self.sequence, repr(data)))
         self.tcpCommandsWaitingForResponse[self.sequence] = command
         self.sendtcp(struct.pack('!I', command) + data)
 
@@ -732,7 +736,7 @@ class Controller(QtCore.QObject):
                 if channel != 'lobby':
                     self.rom = self.channels[channel]['rom']
             else:
-                logger().error("Invalid channel {}".format(channel))
+                logdebug().error("Invalid channel {}".format(channel))
         self.sendAndRemember(Protocol.JOIN_CHANNEL, Protocol.packTLV(self.channel))
 
     def sendListChannels(self):
@@ -761,7 +765,7 @@ class Controller(QtCore.QObject):
         num2 = randint(4000000, 900000000)
         secret = str(num1) + " " + str(num2)
         message = "GGPO PING " + secret
-        logger().info("send GGPO PING {} to {}".format(secret, repr(player.ip)))
+        logdebug().info("send GGPO PING {} to {}".format(secret, repr(player.ip)))
         self.sendudp(message, (player.ip, player.port, ))
         self.pinglist[secret] = (player.ip, player.player, time.time())
 

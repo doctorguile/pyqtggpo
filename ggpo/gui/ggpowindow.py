@@ -16,7 +16,7 @@ from ggpo.common import copyright
 from ggpo.common.cliclient import CLI
 from ggpo.common.playerstate import PlayerStates
 from ggpo.common.settings import Settings
-from ggpo.common.util import logger, openURL, findURLs, replaceURLs, findWine, findUnsupportedGamesavesDir, \
+from ggpo.common.util import logdebug, openURL, findURLs, replaceURLs, findWine, findUnsupportedGamesavesDir, \
     defaultdictinit
 from ggpo.common.unsupportedsavestates import UnsupportedSavestates
 from ggpo.common.allgames import *
@@ -90,16 +90,24 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         super(GGPOWindow, self).closeEvent(evnt)
 
     @staticmethod
-    def debuglogTriggered(value):
+    def logdebugTriggered(value):
         if value:
             level = logging.INFO
         else:
             level = logging.ERROR
         Settings.setBoolean(Settings.DEBUG_LOG, value)
-        for handler in logger().handlers:
+        for handler in logdebug().handlers:
             if isinstance(handler, logging.handlers.RotatingFileHandler):
                 handler.setLevel(level)
                 break
+
+    @staticmethod
+    def loguserChatTriggered(value):
+        Settings.setBoolean(Settings.USER_LOG_CHAT, value)
+
+    @staticmethod
+    def loguserPlayHistoryTriggered(value):
+        Settings.setBoolean(Settings.USER_LOG_PLAYHISTORY, value)
 
     def ignoreAdded(self, name):
         self.appendChat(ColorTheme.statusHtml("* Adding " + name + " to ignore list."))
@@ -516,7 +524,13 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiDisableAutoAnnounceAct.toggled.connect(self.__class__.toggleDisableAutoAnnounceUnsupported)
         if Settings.value(Settings.DEBUG_LOG):
             self.uiDebugLogAct.setChecked(True)
-        self.uiDebugLogAct.triggered.connect(self.__class__.debuglogTriggered)
+        if Settings.value(Settings.USER_LOG_CHAT):
+            self.uiLogChatAct.setChecked(True)
+        if Settings.value(Settings.USER_LOG_PLAYHISTORY):
+            self.uiLogPlayHistoryAct.setChecked(True)
+        self.uiDebugLogAct.triggered.connect(self.__class__.logdebugTriggered)
+        self.uiLogChatAct.triggered.connect(self.__class__.loguserChatTriggered)
+        self.uiLogPlayHistoryAct.triggered.connect(self.__class__.loguserPlayHistoryTriggered)
 
     def setupMenuSmoothing(self):
         # unfortunately Qt Designer doesn't support QActionGroup, we have to code it up
