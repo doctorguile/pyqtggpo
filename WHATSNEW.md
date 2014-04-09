@@ -1,3 +1,6 @@
+#Version 0.15
+- use async and no wait while playing sound on windows
+
 #Version 0.14
 - support logging chat & play history
 

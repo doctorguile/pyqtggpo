@@ -42,7 +42,12 @@ class WinSoundBackend(Backend):
         if not Settings.value(Settings.MUTE_CHALLENGE_SOUND):
             filename = self.wavfile()
             if filename:
-                winsound.PlaySound(filename, winsound.SND_FILENAME)
+                #noinspection PyBroadException
+                try:
+                    # winsound can only play one clip at a time and will throw error
+                    winsound.PlaySound(filename, winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_NOSTOP)
+                except:
+                    pass
 
 
 class ExternalPlayerBackend(Backend):
