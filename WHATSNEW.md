@@ -1,3 +1,6 @@
+#Version 0.16
+- log all exception to help with bug reports
+
 #Version 0.15
 - use async and no wait while playing sound on windows
 

@@ -2,9 +2,9 @@
 import hashlib
 import logging
 import logging.handlers
-import json
 import os
 import re
+import sys
 import urllib2
 from collections import defaultdict
 from PyQt4 import QtGui, QtCore
@@ -103,6 +103,16 @@ def loggerInit():
     ch.setLevel(logging.ERROR)
     debuglog.addHandler(fh)
     debuglog.addHandler(ch)
+
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            return
+        debuglog.error("<Uncaught exception>", exc_info=(exc_type, exc_value, exc_traceback))
+    sys.excepthook = handle_exception
+
+    if __name__ == "__main__":
+        raise RuntimeError("Test unhandled")
 
     userlog = logging.getLogger('GGPOUser')
     userlog.setLevel(logging.INFO)

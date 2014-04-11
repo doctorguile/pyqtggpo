@@ -14,7 +14,7 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
         # ggpo.gui.loadUi(__file__, self)
         self.setupUi(self)
         self.uiNewVersionLink.clicked.connect(
-            lambda: openURL('http://github.com/doctorguile/pyqtggpo'))
+            lambda: openURL('https://github.com/doctorguile/pyqtggpo/releases'))
         self.uiNewVersionLink.setVisible(False)
         versionLabel = 'v' + copyright.versionString()
         self.uiVersionLbl.setText(versionLabel)
