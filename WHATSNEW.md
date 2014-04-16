@@ -1,3 +1,6 @@
+#Version 0.17
+- add a auto login checkbox
+
 #Version 0.16
 - log all exception to help with bug reports
 

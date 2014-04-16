@@ -9,6 +9,7 @@ class Settings:
     # list of saved setting for autocomplete and avoid typos
     IGNORED = 'ignored'
     SELECTED_CHANNEL = 'channel'
+    AUTOLOGIN = 'autoLogin'
     USERNAME = 'username'
     PASSWORD = 'password'
     SMOOTHING = 'smoothing'

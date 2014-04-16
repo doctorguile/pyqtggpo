@@ -21,6 +21,8 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
         self.controller = None
         if Settings.value(Settings.SAVE_USERNAME_PASSWORD):
             self.uiSavePasswordChk.setChecked(True)
+        if Settings.value(Settings.AUTOLOGIN):
+            self.uiAutologinChk.setChecked(True)
         username = Settings.value(Settings.USERNAME)
         password = Settings.value(Settings.PASSWORD)
         if username:
@@ -55,9 +57,11 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
         if self.uiSavePasswordChk.isChecked():
             Settings.setValue(Settings.USERNAME, username)
             Settings.setValue(Settings.PASSWORD, base64.encodestring(password))
+            Settings.setBoolean(Settings.AUTOLOGIN, self.uiAutologinChk.isChecked())
         else:
             Settings.setValue(Settings.USERNAME, '')
             Settings.setValue(Settings.PASSWORD, '')
+            Settings.setBoolean(Settings.AUTOLOGIN, False)
 
         self.uiLoginBtn.setEnabled(False)
 
@@ -97,3 +101,5 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
         QtGui.QDialog.showEvent(self, QShowEvent)
         if checkUpdate():
             self.uiNewVersionLink.setVisible(True)
+        if Settings.value(Settings.AUTOLOGIN):
+            self.login()

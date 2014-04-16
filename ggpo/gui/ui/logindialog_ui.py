@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ggpo/gui/ui/logindialog.ui'
 #
-# Created: Fri Mar 14 15:47:21 2014
+# Created: Wed Apr 16 10:17:34 2014
 #      by: PyQt4 UI code generator 4.8.5
 #
 # WARNING! All changes made in this file will be lost!
@@ -57,6 +57,11 @@ class Ui_DialogLogin(object):
         self.uiSavePasswordChk.setText(QtGui.QApplication.translate("DialogLogin", "Save Password", None, QtGui.QApplication.UnicodeUTF8))
         self.uiSavePasswordChk.setObjectName(_fromUtf8("uiSavePasswordChk"))
         self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.uiSavePasswordChk)
+        self.uiAutologinChk = QtGui.QCheckBox(DialogLogin)
+        self.uiAutologinChk.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.uiAutologinChk.setText(QtGui.QApplication.translate("DialogLogin", "Auto Login", None, QtGui.QApplication.UnicodeUTF8))
+        self.uiAutologinChk.setObjectName(_fromUtf8("uiAutologinChk"))
+        self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.uiAutologinChk)
         self.verticalLayout.addLayout(self.formLayout)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
