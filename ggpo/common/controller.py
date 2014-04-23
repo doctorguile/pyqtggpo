@@ -514,7 +514,7 @@ class Controller(QtCore.QObject):
             self.awayfromkb.pop(p1, None)
             self.playing.pop(p1, None)
             if p1 in self.challengers:
-                del self.challengers[p1]
+                self.challengers.remove(p1)
             if p1 == self.challenged:
                 self.challenged = None
             self.sigPlayerStateChange.emit(p1, PlayerStates.QUIT)

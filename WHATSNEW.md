@@ -1,3 +1,6 @@
+#Version 0.18
+- fix bug reported by furntree
+
 #Version 0.17
 - add a auto login checkbox
 
