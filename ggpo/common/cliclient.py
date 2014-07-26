@@ -81,10 +81,14 @@ class CLI:
                 p = controller.players[n]
                 country = ''
                 if p.country:
-                    country = p.country.decode('utf-8', 'ignore')
+                    # getting the dreadful error
+                    # UnicodeEncodeError: 'ascii' codec can't encode character
+                    #country = p.country.decode('utf-8', 'ignore')
+                    country = p.country
                 city = ''
                 if p.city:
-                    city = p.city.decode('utf-8', 'ignore')
+                    #city = p.city.decode('utf-8', 'ignore')
+                    city = p.city
                 msg = u"{} {} {} {}".format(n, p.ip, country, city)
                 controller.sigStatusMessage.emit(msg)
 
