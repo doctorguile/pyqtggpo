@@ -424,7 +424,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         controller.sigIgnoreRemoved.connect(self.ignoreRemoved)
         controller.sigStatusMessage.connect(self.onStatusMessage)
         controller.sigServerDisconnected.connect(
-            lambda: self.onStatusMessage("Disconnected from ggpo.net. Please restart application"))
+            lambda: self.onStatusMessage("Disconnected from server. Please restart application"))
 
     def setCustomEmoticons(self):
         dlg = CustomEmoticonsDialog(self)

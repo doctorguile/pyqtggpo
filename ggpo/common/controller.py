@@ -154,7 +154,8 @@ class Controller(QtCore.QObject):
             if self.tcpSock:
                 self.tcpSock.close()
             self.tcpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.tcpSock.connect(('ggpo.net', 7000,))
+            self.tcpSock.connect(
+                (Settings.value(Settings.SERVER_ADDRESS) or 'ggpo.net', 7000,))
             self.tcpConnected = True
         except Exception:
             self.sigStatusMessage.emit("Cannot connect to GGPO server")
@@ -605,17 +606,29 @@ class Controller(QtCore.QObject):
             return
         wine = ''
         args = []
+        fba = self.fba
         if IS_WINDOWS:
-            args = [self.fba, quark, '-w']
+            if Settings.value(Settings.SERVER_ADDRESS) == 'ggpo.net':
+                ngexe = os.path.join(os.path.dirname(fba), 'ggpofba-ng.exe')
+                if os.path.exists(ngexe):
+                    fba = ngexe
+            args = [fba, quark, '-w']
         else:
             wine = findWine()
-            if not wine:
-                self.sigStatusMessage.emit("Please configure Setting > Locate wine")
-                return
-            if IS_LINUX:
-                args = [packagePathJoin('ggpo', 'scripts', 'ggpofba.sh'), wine, self.fba, quark]
+            if Settings.value(Settings.SERVER_ADDRESS) != 'ggpo.net':
+                fba = fba.replace('.exe', '.py')
+                if IS_LINUX:
+                    args = [packagePathJoin('ggpo', 'scripts', 'ggpofba.sh'), fba, quark]
+                else:
+                    args = [fba, quark]
             else:
-                args = [wine, self.fba, quark]
+                if not wine:
+                    self.sigStatusMessage.emit("Please configure Setting > Locate wine")
+                    return
+                if IS_LINUX:
+                    args = [packagePathJoin('ggpo', 'scripts', 'ggpofba.sh'), wine, fba, quark]
+                else:
+                    args = [wine, fba, quark]
 
         logdebug().info(" ".join(args))
         try:

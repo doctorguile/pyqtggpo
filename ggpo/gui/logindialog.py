@@ -25,13 +25,16 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
             self.uiAutologinChk.setChecked(True)
         username = Settings.value(Settings.USERNAME)
         password = Settings.value(Settings.PASSWORD)
+        serverAddress = Settings.value(Settings.SERVER_ADDRESS) or 'ggpo.net'
         if username:
             self.uiUsernameLine.setText(username)
         if password:
             self.uiPasswordLine.setText(base64.decodestring(password))
+        self.uiServerLine.setText(serverAddress)
         self.uiSavePasswordChk.toggled.connect(self.savePassword)
         self.uiUsernameLine.returnPressed.connect(self.login)
         self.uiPasswordLine.returnPressed.connect(self.login)
+        self.uiServerLine.returnPressed.connect(self.login)
         self.uiLoginBtn.clicked.connect(self.login)
         self.uiRegisterLink.clicked.connect(
             lambda: openURL('http://ggpo.net/forums/ucp.php?mode=register'))
@@ -43,6 +46,7 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
         if not self.uiLoginBtn.isEnabled():
             return
         username = self.uiUsernameLine.text().strip()
+        serverAddress = self.uiServerLine.text().strip() or 'ggpo.net'
         password = self.uiPasswordLine.text()
         self.uiErrorLbl.clear()
         errmsg = ''
@@ -62,12 +66,14 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
             Settings.setValue(Settings.USERNAME, '')
             Settings.setValue(Settings.PASSWORD, '')
             Settings.setBoolean(Settings.AUTOLOGIN, False)
+        Settings.setValue(Settings.SERVER_ADDRESS, serverAddress)
 
         self.uiLoginBtn.setEnabled(False)
 
         if not self.controller.connectTcp():
             # noinspection PyCallByClass,PyTypeChecker,PyArgumentList
-            QtGui.QMessageBox.warning(self, 'Error', "Cannot connect to ggpo.net")
+            QtGui.QMessageBox.warning(self, 'Error',
+                                      "Cannot connect to " + serverAddress)
             self.uiLoginBtn.setEnabled(True)
             return -1
 
@@ -80,7 +86,7 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
 
     def onServerDisconnected(self):
         self.uiLoginBtn.setEnabled(True)
-        self.displayErrorMessage("Disconnected from ggpo.net.\nPlease restart application")
+        self.displayErrorMessage("Disconnected from server.\nPlease restart application")
 
     def onStatusMessage(self, msg):
         self.uiLoginBtn.setEnabled(True)
